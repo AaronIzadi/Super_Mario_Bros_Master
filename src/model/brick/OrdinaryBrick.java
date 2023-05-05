@@ -1,11 +1,11 @@
 package model.brick;
 
 import graphic.manager.GameEngine;
-import graphic.manager.MapHandler;
+import graphic.manager.MapManager;
 import model.hero.HeroType;
 import model.prize.Prize;
-import graphic.game_view.Animation;
-import graphic.game_view.ImageLoader;
+import graphic.view.Animation;
+import graphic.view.ImageLoader;
 
 import java.awt.image.BufferedImage;
 
@@ -34,7 +34,7 @@ public class OrdinaryBrick extends Brick {
 
     @Override
     public Prize reveal(GameEngine engine) {
-        MapHandler manager = engine.getMapManager();
+        MapManager manager = engine.getMapManager();
         if (!manager.getHero().isSuper())
             return null;
 

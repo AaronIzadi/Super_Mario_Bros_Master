@@ -1,13 +1,13 @@
 package model.prize;
 
 import graphic.manager.GameEngine;
-import model.GameObj;
+import model.GameObject;
 import model.hero.Hero;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class PrizeItems extends GameObj implements Prize {
+public abstract class PrizeItems extends GameObject implements Prize {
 
     private boolean revealed = false;
     private int point;

@@ -3,8 +3,8 @@ package model.prize;
 import graphic.manager.GameEngine;
 import model.hero.Hero;
 import model.hero.HeroForm;
-import graphic.game_view.Animation;
-import graphic.game_view.ImageLoader;
+import graphic.view.Animation;
+import graphic.view.ImageLoader;
 
 import java.awt.image.BufferedImage;
 

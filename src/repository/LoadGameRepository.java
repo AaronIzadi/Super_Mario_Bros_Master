@@ -1,7 +1,7 @@
 package repository;
 
-import graphic.manager.MapHandler;
-import graphic.game_view.ImageLoader;
+import graphic.manager.MapManager;
+import graphic.view.ImageLoader;
 import model.Map;
 import model.hero.Hero;
 import org.json.simple.JSONObject;
@@ -91,13 +91,13 @@ public class LoadGameRepository {
         return hero;
     }
 
-    public Map getMap(MapHandler mapHandler, ImageLoader imageLoader, int fileNumber) throws IOException {
+    public Map getMap(MapManager mapManager, ImageLoader imageLoader, int fileNumber) throws IOException {
 
         jsonToReadFile(fileNumber);
         String mapPath = (String) object.get("Map path");
-        mapHandler.createMap(imageLoader, mapPath);
+        mapManager.createMap(imageLoader, mapPath);
 
-        return mapHandler.getMap();
+        return mapManager.getMap();
     }
 
 

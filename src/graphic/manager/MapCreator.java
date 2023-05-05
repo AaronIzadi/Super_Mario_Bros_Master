@@ -3,7 +3,7 @@ package graphic.manager;
 import model.Flag;
 import model.brick.*;
 import model.prize.*;
-import graphic.game_view.ImageLoader;
+import graphic.view.ImageLoader;
 import model.Map;
 import model.enemy.Goomba;
 import model.enemy.KoopaTroopa;

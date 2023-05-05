@@ -1,7 +1,7 @@
 package model.prize;
 
 import graphic.manager.GameEngine;
-import model.GameObj;
+import model.GameObject;
 import model.hero.Hero;
 import model.hero.HeroType;
 
@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-public class Coin extends GameObj implements Prize {
+public class Coin extends GameObject implements Prize {
 
     private int point;
     private boolean revealed, acquired = false;

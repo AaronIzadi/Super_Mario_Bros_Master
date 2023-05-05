@@ -6,12 +6,12 @@ import javax.sound.sampled.Clip;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 
-public class SoundHandler {
+public class SoundManager {
 
     private Clip background;
     private long clipTime = 0;
 
-    public SoundHandler() {
+    public SoundManager() {
         background = getClip(loadAudio("background"));
     }
 

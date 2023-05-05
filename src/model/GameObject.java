@@ -3,7 +3,7 @@ package model;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class GameObj {
+public abstract class GameObject {
 
     private double x, y;
 
@@ -17,7 +17,7 @@ public abstract class GameObj {
 
     private boolean falling, jumping;
 
-    public GameObj(double x, double y, BufferedImage style) {
+    public GameObject(double x, double y, BufferedImage style) {
         setLocation(x, y);
         setStyle(style);
 

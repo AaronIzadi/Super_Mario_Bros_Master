@@ -1,9 +1,8 @@
 package graphic.manager;
 
-import model.GameObj;
+import model.GameObject;
 import model.Map;
 import model.brick.Brick;
-import model.brick.BrickType;
 import model.brick.Hole;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
@@ -12,16 +11,16 @@ import model.hero.Hero;
 import model.prize.PrizeItems;
 import model.prize.Coin;
 import model.prize.Prize;
-import graphic.game_view.ImageLoader;
+import graphic.view.ImageLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MapHandler {
+public class MapManager {
 
     private Map map = new Map();
 
-    public MapHandler() {
+    public MapManager() {
     }
 
     public void updateLocations() {
@@ -146,8 +145,7 @@ public class MapHandler {
         Hero hero = getHero();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
-        ArrayList<Hole> holes = map.getHoles();
-        ArrayList<GameObj> toBeRemoved = new ArrayList<>();
+        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
@@ -158,12 +156,12 @@ public class MapHandler {
         for (Brick brick : bricks) {
             Rectangle brickTopBounds = brick.getTopBounds();
             if (heroBottomBounds.intersects(brickTopBounds)) {
-                if (brick.getType() != BrickType.HOLE) {
+                if (!(brick instanceof Hole)) {
                     hero.setY(brick.getY() - hero.getDimension().height + 1);
                     hero.setFalling(false);
                     hero.setVelY(0);
                 } else {
-                    hero.setY(brick.getY());
+                    hero.setY(720 - hero.getDimension().height - 1);
                     hero.setVelY(0);
                     hero.setFalling(true);
                     hero.onTouchHole(engine);
@@ -213,7 +211,7 @@ public class MapHandler {
         Hero hero = getHero();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
-        ArrayList<GameObj> toBeRemoved = new ArrayList<>();
+        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         boolean marioDies = false;
         boolean toRight = hero.getToRight();
@@ -351,14 +349,14 @@ public class MapHandler {
 
     private void checkPrizeContact(GameEngine engine) {
         ArrayList<Prize> prizes = map.getRevealedPrizes();
-        ArrayList<GameObj> toBeRemoved = new ArrayList<>();
+        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         Rectangle marioBounds = getHero().getBounds();
         for (Prize prize : prizes) {
             Rectangle prizeBounds = prize.getBounds();
             if (prizeBounds.intersects(marioBounds)) {
                 prize.onTouch(getHero(), engine);
-                toBeRemoved.add((GameObj) prize);
+                toBeRemoved.add((GameObject) prize);
             } else if (prize instanceof Coin) {
                 prize.onTouch(getHero(), engine);
             }
@@ -371,7 +369,7 @@ public class MapHandler {
         ArrayList<Fireball> fireballs = map.getFireballs();
         ArrayList<Enemy> enemies = map.getEnemies();
         ArrayList<Brick> bricks = map.getAllBricks();
-        ArrayList<GameObj> toBeRemoved = new ArrayList<>();
+        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         for (Fireball fireball : fireballs) {
             Rectangle fireballBounds = fireball.getBounds();
@@ -396,11 +394,11 @@ public class MapHandler {
         removeObjects(toBeRemoved);
     }
 
-    private void removeObjects(ArrayList<GameObj> list) {
+    private void removeObjects(ArrayList<GameObject> list) {
         if (list == null)
             return;
 
-        for (GameObj object : list) {
+        for (GameObject object : list) {
             if (object instanceof Fireball) {
                 map.removeFireball((Fireball) object);
             } else if (object instanceof Enemy) {

@@ -8,6 +8,5 @@ public class Hole extends Brick{
         super(x, y, style);
         setBreakable(false);
         setEmpty(true);
-        setType(BrickType.HOLE);
     }
 }

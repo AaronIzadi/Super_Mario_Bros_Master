@@ -9,11 +9,11 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 
 
-public class InputHandler implements KeyListener, MouseListener {
+public class InputManager implements KeyListener, MouseListener {
 
     private final GameEngine engine;
 
-    InputHandler(GameEngine engine) {
+    InputManager(GameEngine engine) {
         this.engine = engine;
     }
 

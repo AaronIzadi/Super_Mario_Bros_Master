@@ -1,4 +1,4 @@
-package graphic.game_view;
+package graphic.view;
 
 public enum StartScreenSelection {
     LOAD_SCREEN(0),

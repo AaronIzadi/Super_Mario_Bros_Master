@@ -2,16 +2,16 @@ package model.hero;
 
 import graphic.manager.Camera;
 import graphic.manager.GameEngine;
-import graphic.game_view.Animation;
-import model.GameObj;
-import graphic.game_view.ImageLoader;
+import graphic.view.Animation;
+import model.GameObject;
+import graphic.view.ImageLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Hero extends GameObj {
+public class Hero extends GameObject {
     private int remainingLives;
     private int coins;
     private int points;
@@ -90,9 +90,11 @@ public class Hero extends GameObj {
     }
 
     public void onTouchHole(GameEngine engine) {
-        remainingLives--;
+        remainingLives = remainingLives - 1;
+        heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
         if (engine.getHero() != null) {
             engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
+            engine.getHero().setHeroForm(engine.getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
         }
         engine.playMarioDies();
         setDimension(48, 48);

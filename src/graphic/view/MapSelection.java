@@ -1,4 +1,4 @@
-package graphic.game_view;
+package graphic.view;
 
 import java.awt.*;
 import java.util.ArrayList;

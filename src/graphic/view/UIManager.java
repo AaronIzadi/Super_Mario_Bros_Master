@@ -1,4 +1,4 @@
-package graphic.game_view;
+package graphic.view;
 
 import graphic.manager.GameEngine;
 import graphic.manager.GameState;
@@ -11,12 +11,10 @@ import java.io.InputStream;
 
 public class UIManager extends JPanel {
 
-    private GameEngine engine;
+    private final GameEngine engine;
     private Font gameFont;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
-
-    private final BufferedImage hole;
     private final BufferedImage coinIcon;
     private final BufferedImage selectIcon;
     private final MapSelection mapSelection;
@@ -42,8 +40,6 @@ public class UIManager extends JPanel {
         this.storeScreenImage = loader.loadImage("/store-screen.png");
         this.loadGameScreen = loader.loadImage("/load-screen.png");
         this.pauseScreen = loader.loadImage("/pause-screen.png");
-        this.hole = loader.loadImage("/hole.png");
-
 
         try {
             InputStream input = getClass().getResourceAsStream("/graphic/media/font/mario-font.ttf");

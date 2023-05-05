@@ -1,14 +1,12 @@
 package model.brick;
 
 import graphic.manager.GameEngine;
-import model.GameObj;
+import model.GameObject;
 import model.prize.Prize;
 
 import java.awt.image.BufferedImage;
 
-public abstract class Brick extends GameObj {
-
-    private BrickType type = BrickType.GROUND_BRICK ;
+public abstract class Brick extends GameObject {
     private boolean breakable;
 
     private boolean empty;
@@ -42,11 +40,4 @@ public abstract class Brick extends GameObj {
         return null;
     }
 
-    public void setType(BrickType type) {
-        this.type = type;
-    }
-
-    public BrickType getType() {
-        return type;
-    }
 }

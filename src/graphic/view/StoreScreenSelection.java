@@ -1,4 +1,4 @@
-package graphic.game_view;
+package graphic.view;
 
 public enum StoreScreenSelection {
     MARIO(0),

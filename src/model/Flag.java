@@ -2,7 +2,7 @@ package model;
 
 import java.awt.image.BufferedImage;
 
-public class Flag extends GameObj {
+public class Flag extends GameObject {
 
     private boolean touched = false;
 

@@ -1,33 +1,32 @@
-package graphic.game_view;
+package graphic.view;
 
-public enum PauseScreenSelection {
+public enum LoadGameScreenSelection {
 
-    GO_TO_MAIN_MENU(0),
-    SAVE_ON_FILE_1(1),
-    SAVE_ON_FILE_2(2),
-    SAVE_ON_FILE_3(3);
+    NEW_GAME(0),
+    LOAD_GAME_1(1),
+    LOAD_GAME_2(2),
+    LOAD_GAME_3(3);
 
 
     private final int lineNumber;
 
-    PauseScreenSelection(int lineNumber) {
+    LoadGameScreenSelection(int lineNumber) {
         this.lineNumber = lineNumber;
     }
 
-    public PauseScreenSelection getSelection(int number) {
+    public LoadGameScreenSelection getSelection(int number) {
         if (number == 0)
-            return GO_TO_MAIN_MENU;
+            return NEW_GAME;
         else if (number == 1)
-            return SAVE_ON_FILE_1;
+            return LOAD_GAME_1;
         else if (number == 2)
-            return SAVE_ON_FILE_2;
+            return LOAD_GAME_2;
         else if (number == 3)
-            return SAVE_ON_FILE_3;
+            return LOAD_GAME_3;
         else
             return null;
     }
-
-    public PauseScreenSelection select(boolean toUp) {
+    public LoadGameScreenSelection select(boolean toUp) {
 
         int selection;
 

@@ -1,7 +1,7 @@
 package model.hero;
 
-import graphic.game_view.Animation;
-import graphic.game_view.ImageLoader;
+import graphic.view.Animation;
+import graphic.view.ImageLoader;
 
 import java.awt.image.BufferedImage;
 

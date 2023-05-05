@@ -1,4 +1,4 @@
-package graphic.game_view;
+package graphic.view;
 
 import model.hero.HeroType;
 
