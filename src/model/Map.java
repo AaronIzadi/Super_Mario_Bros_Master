@@ -28,7 +28,7 @@ public class Map {
     private ArrayList<Fireball> fireballs = new ArrayList<>();
     private Flag endPoint;
     private BufferedImage backgroundImage;
-    private final double bottomBorder = 720 - 95;
+    private final double bottomBorder = 720 - 96;
     private String path;
 
 
