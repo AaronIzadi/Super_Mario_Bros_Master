@@ -52,7 +52,7 @@ public class GameEngine implements Runnable {
         mapManager = new MapManager();
 
         JFrame frame = new JFrame("Super Mario Bros.");
-        Image icon = Toolkit.getDefaultToolkit().getImage("/icon.png");
+        Image icon = Toolkit.getDefaultToolkit().getImage("src/graphic/media/icon.jpg");
         frame.setIconImage(icon);
         frame.add(uiManager);
         frame.addKeyListener(inputManager);
