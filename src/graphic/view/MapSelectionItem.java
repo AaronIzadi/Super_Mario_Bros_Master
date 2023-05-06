@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 public class MapSelectionItem {
 
-    private BufferedImage image;
     private final String name;
     private Point location;
     private Dimension dimension;
@@ -17,7 +16,7 @@ public class MapSelectionItem {
         this.name = map;
 
         ImageLoader loader = new ImageLoader(HeroType.MARIO);
-        this.image = loader.loadImage("/maps/" + map);
+        BufferedImage image = loader.loadImage("/maps/" + map);
 
         this.dimension = new Dimension();
     }

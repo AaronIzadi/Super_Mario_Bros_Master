@@ -2,6 +2,7 @@ package model.hero;
 
 import graphic.view.Animation;
 import graphic.view.ImageLoader;
+import model.prize.Fireball;
 
 import java.awt.image.BufferedImage;
 

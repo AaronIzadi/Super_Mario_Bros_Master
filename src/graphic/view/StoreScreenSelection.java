@@ -7,7 +7,6 @@ public enum StoreScreenSelection {
     ROSS(3),
     TOAD(4);
 
-
     private final int columnNumber;
 
     StoreScreenSelection(int columnNumber) {

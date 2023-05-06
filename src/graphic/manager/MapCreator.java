@@ -2,6 +2,7 @@ package graphic.manager;
 
 import model.Flag;
 import model.brick.*;
+import model.enemy.Spiny;
 import model.prize.*;
 import graphic.view.ImageLoader;
 import model.Map;
@@ -18,13 +19,15 @@ class MapCreator {
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneUpMushroom, fireFlower, coin;
     private final BufferedImage ordinaryBrick, surpriseBrick, groundBrick, pipe, hole;
-    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, endFlag;
+    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, endFlag;
 
 
     MapCreator(ImageLoader imageLoader) {
 
         this.imageLoader = imageLoader;
         BufferedImage sprite = imageLoader.loadImage("/sprite.png");
+        this.spinyLeft = imageLoader.loadImage("/spiny-left.png");
+        this.spinyRight = imageLoader.loadImage("/spiny-right.png");
         this.backgroundImage = imageLoader.loadImage("/background.png");
         this.hole = imageLoader.loadImage("/hole.png");
         this.superMushroom = imageLoader.getSubImage(sprite, 2, 5, 48, 48);
@@ -43,7 +46,7 @@ class MapCreator {
 
     }
 
-    Map createMap(String mapPath, int i) {
+    Map createMap(String mapPath) {
         BufferedImage mapImage = imageLoader.loadImage(mapPath);
 
         if (mapImage == null) {
@@ -68,6 +71,7 @@ class MapCreator {
         int koopa = new Color(255, 0, 255).getRGB();
         int end = new Color(160, 0, 160).getRGB();
         int hole = new Color(200, 191, 231).getRGB();
+        int spiny = new Color(128,255,128).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -101,6 +105,10 @@ class MapCreator {
                     KoopaTroopa enemy = new KoopaTroopa(xLocation, yLocation, this.koopaLeft);
                     enemy.setRightImage(koopaRight);
                     createdMap.addEnemy(enemy);
+                } else if (currentPixel == spiny) {
+                    Spiny enemy = new Spiny(xLocation, yLocation, this.spinyLeft);
+                    enemy.setRightImage(spinyRight);
+                    createdMap.addEnemy(enemy);
                 } else if (currentPixel == hero) {
                     Hero heroObject = new Hero(xLocation, yLocation);
                     createdMap.setHero(heroObject);
@@ -111,7 +119,7 @@ class MapCreator {
             }
         }
 
-        System.out.println("Map is being created.");
+        System.out.println("Loading map.");
         return createdMap;
     }
 

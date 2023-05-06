@@ -12,7 +12,6 @@ public class ImageLoader {
 
     private BufferedImage heroForms;
     private BufferedImage brickAnimation;
-    private int type;
     private final String marioFormsPath = "/mario-forms.png";
     private final String luigiFormsPath = "/luigi-forms.png";
     private final String rossFormsPath = "/ross-forms.png";
@@ -22,9 +21,7 @@ public class ImageLoader {
 
     public ImageLoader(int heroType) {
 
-        this.type = heroType;
-
-        switch (type) {
+        switch (heroType) {
             case HeroType.LUIGI:
                 heroForms = loadImage(luigiFormsPath);
                 break;
@@ -81,11 +78,11 @@ public class ImageLoader {
         int col = 1;
         int width = 52, height = 48;
 
-        if (marioForm == 1) { //super mario
+        if (marioForm == 1) {
             col = 4;
             width = 48;
             height = 96;
-        } else if (marioForm == 2) { //fire mario
+        } else if (marioForm == 2) {
             col = 7;
             width = 48;
             height = 96;
@@ -102,11 +99,11 @@ public class ImageLoader {
         int col = 2;
         int width = 52, height = 48;
 
-        if (marioForm == 1) { //super mario
+        if (marioForm == 1) {
             col = 5;
             width = 48;
             height = 96;
-        } else if (marioForm == 2) { //fire mario
+        } else if (marioForm == 2) {
             col = 8;
             width = 48;
             height = 96;
@@ -130,11 +127,4 @@ public class ImageLoader {
         return getSubImage(loadImage("/sprite.png"), 3, 4, 24, 24);
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
 }

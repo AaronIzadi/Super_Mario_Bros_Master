@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public class SoundManager {
 
-    private Clip background;
+    private final Clip background;
     private long clipTime = 0;
 
     public SoundManager() {
@@ -76,7 +76,6 @@ public class SoundManager {
     public void playGameOver() {
         Clip clip = getClip(loadAudio("gameOver"));
         clip.start();
-
     }
 
     public void playStomp() {
@@ -98,7 +97,7 @@ public class SoundManager {
 
     }
 
-    public void playMarioDies() {
+    public void playHeroDies() {
 
         Clip clip = getClip(loadAudio("marioDies"));
         clip.start();

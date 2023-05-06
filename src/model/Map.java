@@ -4,7 +4,7 @@ import model.brick.Brick;
 import model.brick.Hole;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
-import model.hero.Fireball;
+import model.prize.Fireball;
 import model.hero.Hero;
 import model.prize.PrizeItems;
 import model.prize.Coin;
@@ -28,7 +28,6 @@ public class Map {
     private ArrayList<Fireball> fireballs = new ArrayList<>();
     private Flag endPoint;
     private BufferedImage backgroundImage;
-    private final double bottomBorder = 720 - 95;
     private String path;
 
 
@@ -94,7 +93,7 @@ public class Map {
         drawBricks(g2);
         drawEnemies(g2);
         drawFireballs(g2);
-        drawMario(g2);
+        drawHero(g2);
         endPoint.draw(g2);
     }
 
@@ -136,7 +135,7 @@ public class Map {
         }
     }
 
-    private void drawMario(Graphics2D g2) {
+    private void drawHero(Graphics2D g2) {
         hero.draw(g2);
     }
 
@@ -175,6 +174,7 @@ public class Map {
     }
 
     public double getBottomBorder() {
+        double bottomBorder = 720 - 95;
         return bottomBorder;
     }
 
@@ -234,11 +234,5 @@ public class Map {
         this.holes.add(hole);
     }
 
-    public ArrayList<Hole> getHoles() {
-        return holes;
-    }
 
-    public BufferedImage getBackgroundImage() {
-        return backgroundImage;
-    }
 }

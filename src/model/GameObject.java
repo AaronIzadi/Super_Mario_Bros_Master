@@ -13,6 +13,8 @@ public abstract class GameObject {
 
     private BufferedImage style;
 
+    private boolean toRight;
+
     private double gravityAcc;
 
     private boolean falling, jumping;
@@ -156,5 +158,13 @@ public abstract class GameObject {
 
     public void setJumping(boolean jumping) {
         this.jumping = jumping;
+    }
+
+    public void setToRight(boolean toRight) {
+        this.toRight = toRight;
+    }
+
+    public boolean isToRight() {
+        return toRight;
     }
 }

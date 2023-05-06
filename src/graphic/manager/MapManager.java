@@ -6,7 +6,8 @@ import model.brick.Brick;
 import model.brick.Hole;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
-import model.hero.Fireball;
+import model.enemy.Spiny;
+import model.prize.Fireball;
 import model.hero.Hero;
 import model.prize.PrizeItems;
 import model.prize.Coin;
@@ -40,7 +41,7 @@ public class MapManager {
 
     public boolean createMap(ImageLoader loader, String path) {
         MapCreator mapCreator = new MapCreator(loader);
-        map = mapCreator.createMap("/maps/" + path, 400);
+        map = mapCreator.createMap("/maps/" + path);
 
         return map != null;
     }
@@ -114,32 +115,13 @@ public class MapManager {
 
         checkBottomCollisions(engine);
         checkTopCollisions(engine);
-        checkMarioHorizontalCollision(engine);
+        checkHeroHorizontalCollision(engine);
         checkEnemyCollisions();
         checkPrizeCollision();
         checkPrizeContact(engine);
         checkFireballContact();
-        //checkHoleCollisions(engine);
     }
 
-    private void checkHoleCollisions(GameEngine engine) {
-
-        Hero hero = getHero();
-        ArrayList<Hole> holes = map.getHoles();
-
-        Rectangle heroBottomBounds = hero.getBottomBounds();
-
-        for (Hole hole : holes) {
-            Rectangle holeTopBounds = hole.getTopBounds();
-            if (heroBottomBounds.intersects(holeTopBounds)) {
-                hero.setY(hole.getY());
-                hero.setVelY(0);
-                hero.setFalling(true);
-                hero.onTouchHole(engine);
-                resetCurrentMap(engine);
-            }
-        }
-    }
 
     private void checkBottomCollisions(GameEngine engine) {
         Hero hero = getHero();
@@ -171,7 +153,7 @@ public class MapManager {
         }
         for (Enemy enemy : enemies) {
             Rectangle enemyTopBounds = enemy.getTopBounds();
-            if (heroBottomBounds.intersects(enemyTopBounds)) {
+            if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny)) {
                 hero.acquirePoints(100);
                 if (engine.getHero() != null) {
                     engine.getHero().acquirePoints(100);
@@ -194,10 +176,10 @@ public class MapManager {
         Hero hero = getHero();
         ArrayList<Brick> bricks = map.getAllBricks();
 
-        Rectangle marioTopBounds = hero.getTopBounds();
+        Rectangle heroTopBounds = hero.getTopBounds();
         for (Brick brick : bricks) {
             Rectangle brickBottomBounds = brick.getBottomBounds();
-            if (marioTopBounds.intersects(brickBottomBounds)) {
+            if (heroTopBounds.intersects(brickBottomBounds)) {
                 hero.setVelY(0);
                 hero.setY(brick.getY() + brick.getDimension().height);
                 Prize prize = brick.reveal(engine);
@@ -207,7 +189,7 @@ public class MapManager {
         }
     }
 
-    private void checkMarioHorizontalCollision(GameEngine engine) {
+    private void checkHeroHorizontalCollision(GameEngine engine) {
         Hero hero = getHero();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
@@ -253,6 +235,17 @@ public class MapManager {
     private void checkEnemyCollisions() {
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
+
+        for (Enemy enemy : enemies) {
+            if (enemy instanceof Spiny && getHero().getY() + getHero().getStyle().getHeight() == map.getBottomBorder()) {
+                Spiny spiny = (Spiny) enemy;
+                if (Math.abs(spiny.getX() - getHero().getX()) <= 192) {
+                    spiny.moveFaster();
+                } else {
+                    spiny.moveNormal();
+                }
+            }
+        }
 
         for (Enemy enemy : enemies) {
             boolean standsOnBrick = false;

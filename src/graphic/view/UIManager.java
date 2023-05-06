@@ -129,6 +129,7 @@ public class UIManager extends JPanel {
         int stringLength = g2.getFontMetrics().stringWidth(acquiredPoints);
         int stringHeight = g2.getFontMetrics().getHeight();
         g2.drawString(acquiredPoints, (getWidth() - stringLength) / 2, getHeight() - stringHeight * 4);
+        engine.playGameOver();
     }
 
     private void drawStoreScreen(Graphics2D g2) {

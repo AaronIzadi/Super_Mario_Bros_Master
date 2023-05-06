@@ -1,4 +1,4 @@
-package model.hero;
+package model.prize;
 
 
 import model.GameObject;

@@ -3,6 +3,8 @@ package graphic.manager;
 import graphic.view.*;
 import graphic.view.UIManager;
 import model.Map;
+import model.enemy.Enemy;
+import model.enemy.Spiny;
 import model.hero.Hero;
 import model.hero.HeroType;
 import repository.LoadGameRepository;
@@ -11,6 +13,7 @@ import repository.SaveGameRepository;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameEngine implements Runnable {
 
@@ -168,11 +171,11 @@ public class GameEngine implements Runnable {
 
     private void updateCamera() {
         Hero hero = mapManager.getHero();
-        double marioVelocityX = hero.getVelX();
+        double heroVelocityX = hero.getVelX();
         double shiftAmount = 0;
 
-        if (marioVelocityX > 0 && hero.getX() - 600 > camera.getX()) {
-            shiftAmount = marioVelocityX;
+        if (heroVelocityX > 0 && hero.getX() - 600 > camera.getX()) {
+            shiftAmount = heroVelocityX;
         }
 
         camera.moveCam(shiftAmount, 0);
@@ -300,7 +303,10 @@ public class GameEngine implements Runnable {
                 changeSelectedMap(false);
             }
         } else if (gameState == GameState.RUNNING) {
+
             Hero hero = mapManager.getHero();
+            ArrayList<Enemy> enemies = mapManager.getMap().getEnemies();
+
             if (input == ButtonAction.JUMP) {
                 if (hero.getType() == HeroType.LUIGI) {
                     hero.jumpForLuigi(this);
@@ -487,8 +493,12 @@ public class GameEngine implements Runnable {
         soundManager.playSuperMushroom();
     }
 
-    public void playMarioDies() {
-        soundManager.playMarioDies();
+    public void playHeroDies() {
+        soundManager.playHeroDies();
+    }
+
+    public void playGameOver() {
+        soundManager.playGameOver();
     }
 
     public void playJump() {

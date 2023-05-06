@@ -5,6 +5,7 @@ import graphic.manager.GameEngine;
 import graphic.view.Animation;
 import model.GameObject;
 import graphic.view.ImageLoader;
+import model.prize.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -76,7 +77,7 @@ public class Hero extends GameObject {
             if (engine.getHero() != null) {
                 engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
             }
-            engine.playMarioDies();
+            engine.playHeroDies();
             return true;
         } else {
             engine.shakeCamera();
@@ -92,11 +93,13 @@ public class Hero extends GameObject {
     public void onTouchHole(GameEngine engine) {
         remainingLives = remainingLives - 1;
         heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
+        points = points > 30 ? points - 30 : 0;
         if (engine.getHero() != null) {
             engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
             engine.getHero().setHeroForm(engine.getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
+            engine.getHero().setPoints(engine.getHero().points > 30 ? engine.getHero().points - 30 : 0);
         }
-        engine.playMarioDies();
+        engine.playHeroDies();
         setDimension(48, 48);
     }
 
