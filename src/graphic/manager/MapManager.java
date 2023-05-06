@@ -6,6 +6,7 @@ import model.brick.Brick;
 import model.brick.Hole;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
+import model.enemy.Piranha;
 import model.enemy.Spiny;
 import model.prize.Fireball;
 import model.hero.Hero;
@@ -153,7 +154,7 @@ public class MapManager {
         }
         for (Enemy enemy : enemies) {
             Rectangle enemyTopBounds = enemy.getTopBounds();
-            if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny)) {
+            if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny) && !(enemy instanceof Piranha)) {
                 hero.acquirePoints(100);
                 if (engine.getHero() != null) {
                     engine.getHero().acquirePoints(100);

@@ -2,6 +2,7 @@ package graphic.manager;
 
 import model.Flag;
 import model.brick.*;
+import model.enemy.Piranha;
 import model.enemy.Spiny;
 import model.prize.*;
 import graphic.view.ImageLoader;
@@ -19,7 +20,7 @@ class MapCreator {
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneUpMushroom, fireFlower, coin;
     private final BufferedImage ordinaryBrick, surpriseBrick, groundBrick, pipe, hole;
-    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, endFlag;
+    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, endFlag;
 
 
     MapCreator(ImageLoader imageLoader) {
@@ -30,6 +31,7 @@ class MapCreator {
         this.spinyRight = imageLoader.loadImage("/spiny-right.png");
         this.backgroundImage = imageLoader.loadImage("/background.png");
         this.hole = imageLoader.loadImage("/hole.png");
+        this.piranha = imageLoader.loadImage("/piranha.png");
         this.superMushroom = imageLoader.getSubImage(sprite, 2, 5, 48, 48);
         this.oneUpMushroom = imageLoader.getSubImage(sprite, 3, 5, 48, 48);
         this.fireFlower = imageLoader.getSubImage(sprite, 4, 5, 48, 48);
@@ -72,6 +74,7 @@ class MapCreator {
         int end = new Color(160, 0, 160).getRGB();
         int hole = new Color(200, 191, 231).getRGB();
         int spiny = new Color(128,255,128).getRGB();
+        int piranha = new Color(200, 124, 124).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -108,6 +111,10 @@ class MapCreator {
                 } else if (currentPixel == spiny) {
                     Spiny enemy = new Spiny(xLocation, yLocation, this.spinyLeft);
                     enemy.setRightImage(spinyRight);
+                    createdMap.addEnemy(enemy);
+                } else if (currentPixel == piranha) {
+                    Piranha enemy = new Piranha(xLocation, yLocation, this.piranha);
+                    enemy.setRightImage(this.piranha);
                     createdMap.addEnemy(enemy);
                 } else if (currentPixel == hero) {
                     Hero heroObject = new Hero(xLocation, yLocation);
