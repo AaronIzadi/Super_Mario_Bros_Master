@@ -8,15 +8,19 @@ import graphic.view.ImageLoader;
 
 import java.awt.image.BufferedImage;
 
-public class SuperMushroom extends PrizeItems {
+public class MagicFlower extends PrizeItems {
 
-    public SuperMushroom(double x, double y, BufferedImage style) {
+    public MagicFlower(double x, double y, BufferedImage style) {
         super(x, y, style);
-        setPoint(30);
+        setPoint(20);
     }
 
     @Override
     public void onTouch(Hero hero, GameEngine engine) {
-        super.onTouch(hero, engine);
     }
+
+    @Override
+    public void updateLocation() {
+    }
+
 }

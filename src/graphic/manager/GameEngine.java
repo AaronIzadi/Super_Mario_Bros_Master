@@ -4,7 +4,6 @@ import graphic.view.*;
 import graphic.view.UIManager;
 import model.Map;
 import model.enemy.Enemy;
-import model.enemy.Spiny;
 import model.hero.Hero;
 import model.hero.HeroType;
 import repository.LoadGameRepository;

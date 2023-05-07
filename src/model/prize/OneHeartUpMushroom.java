@@ -5,21 +5,19 @@ import model.hero.Hero;
 
 import java.awt.image.BufferedImage;
 
-public class OrdinaryMushroom extends PrizeItems {
+public class OneHeartUpMushroom extends PrizeItems {
 
-    public OrdinaryMushroom(double x, double y, BufferedImage style) {
+    public OneHeartUpMushroom(double x, double y, BufferedImage style) {
         super(x, y, style);
-        setPoint(200);
+        setPoint(50);
     }
 
     @Override
     public void onTouch(Hero hero, GameEngine engine) {
         hero.acquirePoints(getPoint());
-        if (engine.getHero() != null) {
-            engine.getHero().acquirePoints(getPoint());
-        }
         hero.setRemainingLives(hero.getRemainingLives() + 1);
         if (engine.getHero() != null) {
+            engine.getHero().acquirePoints(getPoint());
             engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() + 1);
         }
         engine.playOneUp();

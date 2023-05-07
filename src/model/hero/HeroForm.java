@@ -79,10 +79,6 @@ public class HeroForm {
         this.animation = animation;
     }
 
-    public boolean isCanShootFire() {
-        return CanShootFire;
-    }
-
     public void setCanShootFire(boolean canShootFire) {
         CanShootFire = canShootFire;
     }

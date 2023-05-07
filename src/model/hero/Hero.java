@@ -21,8 +21,8 @@ public class Hero extends GameObject {
     private int type = HeroType.MARIO;
     private boolean toRight = true;
     private List<Integer> typesOwned = new LinkedList<>();
-
     private String mapPath;
+    private boolean tookStar;
 
     public Hero(double x, double y) {
         super(x, y, null);
@@ -247,5 +247,13 @@ public class Hero extends GameObject {
 
     public String getMapPath() {
         return mapPath;
+    }
+
+    public void setTookStar(boolean tookStar) {
+        this.tookStar = tookStar;
+    }
+
+    public boolean ifTookStar() {
+        return tookStar;
     }
 }

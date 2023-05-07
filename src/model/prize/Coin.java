@@ -11,9 +11,9 @@ import java.awt.image.BufferedImage;
 
 public class Coin extends GameObject implements Prize {
 
-    private int point;
+    private final int point;
     private boolean revealed, acquired = false;
-    private int revealBoundary;
+    private final int revealBoundary;
 
     public Coin(double x, double y, BufferedImage style, int point) {
         super(x, y, style);

@@ -18,9 +18,9 @@ class MapCreator {
 
     private final ImageLoader imageLoader;
     private final BufferedImage backgroundImage;
-    private final BufferedImage superMushroom, oneUpMushroom, fireFlower, coin;
+    private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private final BufferedImage ordinaryBrick, surpriseBrick, groundBrick, pipe, hole;
-    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, endFlag;
+    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, magicStar, endFlag;
 
 
     MapCreator(ImageLoader imageLoader) {
@@ -33,8 +33,9 @@ class MapCreator {
         this.hole = imageLoader.loadImage("/hole.png");
         this.piranha = imageLoader.loadImage("/piranha.png");
         this.superMushroom = imageLoader.getSubImage(sprite, 2, 5, 48, 48);
-        this.oneUpMushroom = imageLoader.getSubImage(sprite, 3, 5, 48, 48);
+        this.oneHeartUpMushroom = imageLoader.getSubImage(sprite, 3, 5, 48, 48);
         this.fireFlower = imageLoader.getSubImage(sprite, 4, 5, 48, 48);
+        this.magicStar = imageLoader.getSubImage(sprite, 5, 5, 48, 48);
         this.coin = imageLoader.getSubImage(sprite, 1, 5, 48, 48);
         this.ordinaryBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
         this.surpriseBrick = imageLoader.getSubImage(sprite, 2, 1, 48, 48);
@@ -73,7 +74,7 @@ class MapCreator {
         int koopa = new Color(255, 0, 255).getRGB();
         int end = new Color(160, 0, 160).getRGB();
         int hole = new Color(200, 191, 231).getRGB();
-        int spiny = new Color(128,255,128).getRGB();
+        int spiny = new Color(128, 255, 128).getRGB();
         int piranha = new Color(200, 124, 124).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
@@ -136,12 +137,14 @@ class MapCreator {
 
         if (random == 0) { //super mushroom
             generated = new SuperMushroom(x, y, this.superMushroom);
-        } else if (random == 1) { //fire flower
-            generated = new FireFlower(x, y, this.fireFlower);
-        } else if (random == 2) { //one up mushroom
-            generated = new OrdinaryMushroom(x, y, this.oneUpMushroom);
+        } else if (random == 1) { //magic flower
+            generated = new MagicFlower(x, y, this.fireFlower);
+        } else if (random == 2) { //one heart up mushroom
+            generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
+        } else if (random == 3) { //magic star
+            generated = new MagicStar(x, y, this.magicStar);
         } else { //coin
-            generated = new Coin(x, y, this.coin, 50);
+            generated = new Coin(x, y, this.coin, 10);
         }
 
         return generated;
