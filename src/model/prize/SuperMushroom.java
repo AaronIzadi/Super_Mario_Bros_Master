@@ -15,8 +15,4 @@ public class SuperMushroom extends PrizeItems {
         setPoint(30);
     }
 
-    @Override
-    public void onTouch(Hero hero, GameEngine engine) {
-        super.onTouch(hero, engine);
-    }
 }

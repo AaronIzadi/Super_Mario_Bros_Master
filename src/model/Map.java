@@ -4,11 +4,8 @@ import model.brick.Brick;
 import model.brick.Hole;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
-import model.prize.Fireball;
+import model.prize.*;
 import model.hero.Hero;
-import model.prize.PrizeItems;
-import model.prize.Coin;
-import model.prize.Prize;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -174,8 +171,7 @@ public class Map {
     }
 
     public double getBottomBorder() {
-        double bottomBorder = 720 - 95;
-        return bottomBorder;
+        return 720 - 95;
     }
 
     public void addRevealedPrize(Prize prize) {

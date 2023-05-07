@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Hero extends GameObject {
     private int remainingLives;
@@ -70,24 +72,37 @@ public class Hero extends GameObject {
         this.toRight = toRight;
     }
 
+    public void setTimer(){
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                setTookStar(false);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 15000);
+    }
     public boolean onTouchEnemy(GameEngine engine) {
 
-        if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
-            remainingLives--;
-            if (engine.getHero() != null) {
-                engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
+        if (!ifTookStar()){
+            if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
+                remainingLives--;
+                if (engine.getHero() != null) {
+                    engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
+                }
+                engine.playHeroDies();
+                return true;
+            } else {
+                engine.shakeCamera();
+                heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
+                if (engine.getHero() != null) {
+                    engine.getHero().setHeroForm(engine.getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
+                }
+                setDimension(48, 48);
+                return false;
             }
-            engine.playHeroDies();
-            return true;
-        } else {
-            engine.shakeCamera();
-            heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
-            if (engine.getHero() != null) {
-                engine.getHero().setHeroForm(engine.getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
-            }
-            setDimension(48, 48);
-            return false;
         }
+        return false;
     }
 
     public void onTouchHole(GameEngine engine) {

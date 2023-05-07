@@ -14,6 +14,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
 
     private boolean revealed = false;
     private int point;
+    private boolean isTouched;
 
     public PrizeItems(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -21,6 +22,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
     }
 
     public void onTouch(Hero hero, GameEngine engine){
+        isTouched = true;
         hero.acquirePoints(getPoint());
         if (engine.getHero() != null) {
             engine.getHero().acquirePoints(getPoint());
@@ -41,7 +43,8 @@ public abstract class PrizeItems extends GameObject implements Prize {
                 engine.getHero().setDimension(48, 96);
             }
             engine.playSuperMushroom();
-        }else if (hero.getHeroForm().isSuper() && !hero.getHeroForm().ifCanShootFire()){
+        }
+        else{
             BufferedImage[] leftFrames = imageLoader.getLeftFrames(HeroForm.FIRE);
             BufferedImage[] rightFrames = imageLoader.getRightFrames(HeroForm.FIRE);
 
@@ -63,7 +66,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
     }
 
     @Override
-    public void updateLocation() {
+    public void updateLocation(){
         if (revealed) {
             super.updateLocation();
         }
@@ -84,5 +87,10 @@ public abstract class PrizeItems extends GameObject implements Prize {
 
     public void setPoint(int point) {
         this.point = point;
+    }
+
+
+    public boolean isTouched() {
+        return isTouched;
     }
 }

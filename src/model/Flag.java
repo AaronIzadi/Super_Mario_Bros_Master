@@ -11,7 +11,7 @@ public class Flag extends GameObject {
     }
 
     @Override
-    public void updateLocation() {
+    public void updateLocation(){
         if (touched) {
             if (getY() + getDimension().getHeight() >= 576) {
                 setFalling(false);

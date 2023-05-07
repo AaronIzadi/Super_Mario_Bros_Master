@@ -42,7 +42,7 @@ public abstract class GameObject {
         }
     }
 
-    public void updateLocation() {
+    public void updateLocation(){
         if (jumping && velY <= 0) {
             jumping = false;
             falling = true;

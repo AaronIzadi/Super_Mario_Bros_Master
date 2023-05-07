@@ -43,7 +43,6 @@ public class MapManager {
     public boolean createMap(ImageLoader loader, String path) {
         MapCreator mapCreator = new MapCreator(loader);
         map = mapCreator.createMap("/maps/" + path);
-
         return map != null;
     }
 
