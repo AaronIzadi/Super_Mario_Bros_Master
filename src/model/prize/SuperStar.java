@@ -35,6 +35,7 @@ public class SuperStar extends PrizeItems {
                 setJumping(false);
             }
         };
+
         Timer timer = new Timer();
         timer.schedule(task, 1000);
     }
