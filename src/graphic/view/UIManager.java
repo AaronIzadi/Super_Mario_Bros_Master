@@ -152,7 +152,7 @@ public class UIManager extends JPanel {
             g2.drawString(buy, 320, 500);
 
             setFontAndColor(g2);
-            g2.drawString("25", 370, 535);
+            g2.drawString("15", 370, 535);
         }
         //Prince Peach
         if (!engine.ownsPrincePeach()) {
@@ -160,7 +160,7 @@ public class UIManager extends JPanel {
             g2.drawString(buy, 560, 500);
 
             setFontAndColor(g2);
-            g2.drawString("50", 610, 535);
+            g2.drawString("40", 610, 535);
         }
         //Ross
         if (!engine.ownsRoss()) {
@@ -168,7 +168,7 @@ public class UIManager extends JPanel {
             g2.drawString(buy, 780, 500);
 
             setFontAndColor(g2);
-            g2.drawString("40", 830, 535);
+            g2.drawString("30", 830, 535);
         }
         //Toad
         if (!engine.ownsToad()) {
@@ -176,7 +176,7 @@ public class UIManager extends JPanel {
             g2.drawString(buy, 1000, 500);
 
             setFontAndColor(g2);
-            g2.drawString("45", 1050, 535);
+            g2.drawString("35", 1050, 535);
         }
     }
 

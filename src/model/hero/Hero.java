@@ -82,6 +82,17 @@ public class Hero extends GameObject {
         Timer timer = new Timer();
         timer.schedule(task, 15000);
     }
+
+    public void setTimerToRun(){
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                setTookStar(false);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 1000);
+    }
     public boolean onTouchEnemy(GameEngine engine) {
 
         if (!ifTookStar()){

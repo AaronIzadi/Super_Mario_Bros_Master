@@ -5,9 +5,7 @@ import model.Map;
 import model.brick.Brick;
 import model.brick.Hole;
 import model.brick.OrdinaryBrick;
-import model.enemy.Enemy;
-import model.enemy.Piranha;
-import model.enemy.Spiny;
+import model.enemy.*;
 import model.prize.Fireball;
 import model.hero.Hero;
 import model.prize.PrizeItems;
@@ -17,6 +15,8 @@ import graphic.view.ImageLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MapManager {
 
@@ -119,7 +119,7 @@ public class MapManager {
         checkEnemyCollisions();
         checkPrizeCollision();
         checkPrizeContact(engine);
-        checkFireballContact();
+        checkFireballContact(engine);
     }
 
 
@@ -154,12 +154,29 @@ public class MapManager {
         for (Enemy enemy : enemies) {
             Rectangle enemyTopBounds = enemy.getTopBounds();
             if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny) && !(enemy instanceof Piranha)) {
-                hero.acquirePoints(100);
-                if (engine.getHero() != null) {
-                    engine.getHero().acquirePoints(100);
+                if (enemy instanceof KoopaTroopa) {
+                    KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
+                    if (!koopaTroopa.isHit()) {
+                        koopaTroopa.setHit(true);
+                        koopaTroopa.setXHit(koopaTroopa.getX());
+                        koopaTroopa.moveAfterHit();
+                        hero.setTimerToRun();
+                    } else if (koopaTroopa.isHit() && Math.abs(koopaTroopa.getXHit() - koopaTroopa.getX()) == 96.0) {
+                        acquirePoints(2);
+                        if (engine.getHero() != null) {
+                            engine.getHero().acquirePoints(2);
+                        }
+                        toBeRemoved.add(enemy);
+                        engine.playStomp();
+                    }
+                } else {
+                    acquirePoints(1);
+                    if (engine.getHero() != null) {
+                        engine.getHero().acquirePoints(1);
+                    }
+                    toBeRemoved.add(enemy);
+                    engine.playStomp();
                 }
-                toBeRemoved.add(enemy);
-                engine.playStomp();
             }
         }
 
@@ -170,6 +187,17 @@ public class MapManager {
         }
 
         removeObjects(toBeRemoved);
+    }
+
+    public void setTimer() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("3s");
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 3000);
     }
 
     private void checkTopCollisions(GameEngine engine) {
@@ -195,15 +223,15 @@ public class MapManager {
         ArrayList<Enemy> enemies = map.getEnemies();
         ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
-        boolean marioDies = false;
+        boolean heroDies = false;
         boolean toRight = hero.getToRight();
 
-        Rectangle marioBounds = toRight ? hero.getRightBounds() : hero.getLeftBounds();
+        Rectangle heroBounds = toRight ? hero.getRightBounds() : hero.getLeftBounds();
 
         for (Brick brick : bricks) {
             Rectangle brickBounds = !toRight ? brick.getRightBounds() : brick.getLeftBounds();
 
-            if (marioBounds.intersects(brickBounds)) {
+            if (heroBounds.intersects(brickBounds)) {
                 hero.setVelX(0);
                 if (toRight)
                     hero.setX(brick.getX() - hero.getDimension().width);
@@ -214,8 +242,8 @@ public class MapManager {
 
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
-            if (marioBounds.intersects(enemyBounds) && !hero.isFalling()) {
-                marioDies = hero.onTouchEnemy(engine);
+            if (heroBounds.intersects(enemyBounds) && !hero.isFalling()) {
+                heroDies = hero.onTouchEnemy(engine);
                 toBeRemoved.add(enemy);
             }
         }
@@ -227,7 +255,7 @@ public class MapManager {
             hero.setX(engine.getCameraLocation().getX());
         }
 
-        if (marioDies) {
+        if (heroDies) {
             resetCurrentMap(engine);
         }
     }
@@ -358,7 +386,7 @@ public class MapManager {
         removeObjects(toBeRemoved);
     }
 
-    private void checkFireballContact() {
+    private void checkFireballContact(GameEngine engine) {
         ArrayList<Fireball> fireballs = map.getFireballs();
         ArrayList<Enemy> enemies = map.getEnemies();
         ArrayList<Brick> bricks = map.getAllBricks();
@@ -370,7 +398,27 @@ public class MapManager {
             for (Enemy enemy : enemies) {
                 Rectangle enemyBounds = enemy.getBounds();
                 if (fireballBounds.intersects(enemyBounds)) {
-                    acquirePoints(100);
+                    if (enemy instanceof Goomba) {
+                        acquirePoints(1);
+                        if (engine.getHero() != null) {
+                            engine.getHero().acquirePoints(1);
+                        }
+                    } else if (enemy instanceof KoopaTroopa) {
+                        acquirePoints(2);
+                        if (engine.getHero() != null) {
+                            engine.getHero().acquirePoints(2);
+                        }
+                    } else if (enemy instanceof Spiny) {
+                        acquirePoints(3);
+                        if (engine.getHero() != null) {
+                            engine.getHero().acquirePoints(3);
+                        }
+                    } else {
+                        acquirePoints(1);
+                        if (engine.getHero() != null) {
+                            engine.getHero().acquirePoints(1);
+                        }
+                    }
                     toBeRemoved.add(enemy);
                     toBeRemoved.add(fireball);
                 }

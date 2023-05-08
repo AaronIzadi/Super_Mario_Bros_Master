@@ -43,20 +43,20 @@ public abstract class GameObject {
     }
 
     public void updateLocation(){
-        if (jumping && velY <= 0) {
-            jumping = false;
-            falling = true;
-        } else if (jumping) {
-            velY = velY - gravityAcc;
-            y = y - velY;
+        if (isJumping() && getVelY() <= 0) {
+            setJumping(false);
+            setFalling(true);
+        } else if (isJumping()) {
+            setVelY(getVelY() - getGravityAcc());
+            setY(getY() - getVelY());
         }
 
-        if (falling) {
-            y = y + velY;
-            velY = velY + gravityAcc;
+        if (isFalling()) {
+            setY(getY() + getVelY());
+            setVelY(getVelY() + getGravityAcc());
         }
 
-        x = x + velX;
+        setX(getX() + getVelX());
     }
 
     public void setLocation(double x, double y) {

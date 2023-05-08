@@ -529,19 +529,19 @@ public class GameEngine implements Runnable {
     }
 
     public boolean canBuyLuigi() {
-        return mapManager.getHero().getCoins() >= 25;
+        return mapManager.getHero().getCoins() >= 15;
     }
 
     public boolean canBuyPrincePeach() {
-        return mapManager.getHero().getCoins() >= 50;
-    }
-
-    public boolean canBuyRoss() {
         return mapManager.getHero().getCoins() >= 40;
     }
 
+    public boolean canBuyRoss() {
+        return mapManager.getHero().getCoins() >= 30;
+    }
+
     public boolean canBuyToad() {
-        return mapManager.getHero().getCoins() >= 45;
+        return mapManager.getHero().getCoins() >= 35;
     }
 
     public boolean ownsLuigi() {
