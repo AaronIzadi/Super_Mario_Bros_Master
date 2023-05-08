@@ -4,7 +4,7 @@ import model.GameObject;
 import model.Map;
 import model.brick.Brick;
 import model.brick.Hole;
-import model.brick.OneCoinBrick;
+import model.brick.CoinBrick;
 import model.brick.OrdinaryBrick;
 import model.enemy.*;
 import model.prize.Fireball;
@@ -440,8 +440,8 @@ public class MapManager {
         map.addRevealedBrick(ordinaryBrick);
     }
 
-    public void addRevealedBrick(OneCoinBrick oneCoinBrick) {
-        map.addRevealedBrick(oneCoinBrick);
+    public void addRevealedBrick(CoinBrick coinBrick) {
+        map.addRevealedBrick(coinBrick);
     }
 
     public void updateTime() {

@@ -1,9 +1,8 @@
 package model;
 
-import graphic.manager.GameEngine;
 import model.brick.Brick;
 import model.brick.Hole;
-import model.brick.OneCoinBrick;
+import model.brick.CoinBrick;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
 import model.prize.*;
@@ -162,10 +161,10 @@ public class Map {
 
         for (Iterator<Brick> brickIterator = revealedBricks.iterator(); brickIterator.hasNext(); ) {
             Brick brick = brickIterator.next();
-            OneCoinBrick ifOneCoin;
+            CoinBrick ifOneCoin;
             OrdinaryBrick ifOrdinary;
-            if (brick instanceof OneCoinBrick) {
-                ifOneCoin = (OneCoinBrick) brick;
+            if (brick instanceof CoinBrick) {
+                ifOneCoin = (CoinBrick) brick;
                 ifOneCoin.animate();
                 if (ifOneCoin.getFrames() < 0) {
                     bricks.remove(brick);
@@ -210,8 +209,8 @@ public class Map {
         revealedBricks.add(ordinaryBrick);
     }
 
-    public void addRevealedBrick(OneCoinBrick oneCoinBrick) {
-        revealedBricks.add(oneCoinBrick);
+    public void addRevealedBrick(CoinBrick coinBrick) {
+        revealedBricks.add(coinBrick);
     }
 
     public void removeFireball(Fireball object) {

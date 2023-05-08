@@ -9,14 +9,14 @@ import model.prize.Prize;
 
 import java.awt.image.BufferedImage;
 
-public class OneCoinBrick extends SurpriseBrick{
+public class CoinBrick extends SurpriseBrick{
 
     private Prize prize;
     private Animation animation;
     private boolean breaking;
     private int frames;
 
-    public OneCoinBrick(double x, double y, BufferedImage style, Prize prize) {
+    public CoinBrick(double x, double y, BufferedImage style, Prize prize) {
         super(x, y, style, prize);
         setBreakable(false);
         setEmpty(false);

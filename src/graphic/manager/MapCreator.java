@@ -101,11 +101,11 @@ class MapCreator {
                     map.addBrick(brick);
                 } else if (currentPixel == oneCoinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
-                    Brick brick = new OneCoinBrick(xLocation, yLocation, this.oneCoinBrick, prize);
+                    Brick brick = new CoinBrick(xLocation, yLocation, this.oneCoinBrick, prize);
                     map.addBrick(brick);
                 } else if (currentPixel == fiveCoinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
-                    Brick brick = new FiveCoinBrick(xLocation, yLocation, this.fiveCoinBrick, prize);
+                    Brick brick = new MultiCoinBrick(xLocation, yLocation, this.fiveCoinBrick, prize);
                     map.addBrick(brick);
                 } else if (currentPixel == pipe) {
                     Brick brick = new Pipe(xLocation, yLocation, this.pipe);
@@ -145,15 +145,15 @@ class MapCreator {
 
     private Prize generateRandomPrize(double x, double y) {
         Prize generated;
-        int random = (int) (Math.random() * 12);
+        int random = (int) (Math.random() * 15);
 
-        if (random == 0) { //super mushroom
+        if (random == 0 || random == 1 || random == 2) { //super mushroom
             generated = new SuperMushroom(x, y, this.superMushroom);
-        } else if (random == 1) { //fire flower
+        } else if (random == 3 || random == 4) { //fire flower
             generated = new FireFlower(x, y, this.fireFlower);
-        } else if (random == 2) { //one heart up mushroom
+        } else if (random == 5 || random == 6) { //one heart up mushroom
             generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
-        } else if (random == 3) { //superstar
+        } else if (random == 7) { //superstar
             generated = new SuperStar(x, y, this.superStar);
         } else { //coin
             generated = new Coin(x, y, this.coin, 10);

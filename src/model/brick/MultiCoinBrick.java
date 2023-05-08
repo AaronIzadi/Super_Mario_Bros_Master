@@ -1,24 +1,22 @@
 package model.brick;
 
 import graphic.manager.GameEngine;
+import model.prize.Coin;
 import model.prize.Prize;
 
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 
-public class FiveCoinBrick extends SurpriseBrick {
+public class MultiCoinBrick extends SurpriseBrick {
 
-    private final LinkedList<Prize> prizes = new LinkedList<>();
+    private Prize prize;
     private int numberOfCoinsLeft;
 
-    public FiveCoinBrick(double x, double y, BufferedImage style, Prize prize) {
+    public MultiCoinBrick(double x, double y, BufferedImage style, Prize prize) {
         super(x, y, style, prize);
         setBreakable(false);
         setEmpty(false);
         this.numberOfCoinsLeft = 5;
-        for (int i = 0; i < numberOfCoinsLeft; i++) {
-            prizes.add(prize);
-        }
+        this.prize = prize;
     }
 
     @Override
@@ -29,11 +27,13 @@ public class FiveCoinBrick extends SurpriseBrick {
 
         Prize toReturn = null;
 
-        if (prizes != null && numberOfCoinsLeft > 0) {
-            prizes.get(0).reveal();
-            toReturn = prizes.get(0);
-            prizes.remove(numberOfCoinsLeft - 1);
+
+        if (numberOfCoinsLeft > 0) {
+            Coin coin = new Coin(((Coin) prize).getX(), ((Coin) prize).getY(), ((Coin) prize).getStyle(), 10);
             numberOfCoinsLeft--;
+            toReturn = prize;
+            prize.reveal();
+            prize = coin;
         }
 
         if (numberOfCoinsLeft <= 0) {
