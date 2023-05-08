@@ -19,7 +19,7 @@ class MapCreator {
     private final ImageLoader imageLoader;
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private final BufferedImage ordinaryBrick, surpriseBrick, groundBrick, pipe, hole;
+    private final BufferedImage ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, hole;
     private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, superStar, endFlag;
 
 
@@ -39,6 +39,8 @@ class MapCreator {
         this.coin = imageLoader.getSubImage(sprite, 1, 5, 48, 48);
         this.ordinaryBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
         this.surpriseBrick = imageLoader.getSubImage(sprite, 2, 1, 48, 48);
+        this.oneCoinBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
+        this.fiveCoinBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
         this.groundBrick = imageLoader.getSubImage(sprite, 2, 2, 48, 48);
         this.pipe = imageLoader.getSubImage(sprite, 3, 1, 96, 96);
         this.goombaLeft = imageLoader.getSubImage(sprite, 2, 4, 48, 48);
@@ -76,6 +78,8 @@ class MapCreator {
         int hole = new Color(200, 191, 231).getRGB();
         int spiny = new Color(128, 255, 128).getRGB();
         int piranha = new Color(200, 124, 124).getRGB();
+        int oneCoinBrick = new Color(255, 124, 0).getRGB();
+        int fiveCoinBrick = new Color(20, 100, 40).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -94,6 +98,14 @@ class MapCreator {
                 } else if (currentPixel == surpriseBrick) {
                     Prize prize = generateRandomPrize(xLocation, yLocation);
                     Brick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
+                    map.addBrick(brick);
+                } else if (currentPixel == oneCoinBrick) {
+                    Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
+                    Brick brick = new OneCoinBrick(xLocation, yLocation, this.oneCoinBrick, prize);
+                    map.addBrick(brick);
+                } else if (currentPixel == fiveCoinBrick) {
+                    Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
+                    Brick brick = new FiveCoinBrick(xLocation, yLocation, this.fiveCoinBrick, prize);
                     map.addBrick(brick);
                 } else if (currentPixel == pipe) {
                     Brick brick = new Pipe(xLocation, yLocation, this.pipe);

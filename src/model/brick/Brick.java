@@ -6,7 +6,7 @@ import model.prize.Prize;
 
 import java.awt.image.BufferedImage;
 
-public abstract class Brick extends GameObject {
+public class Brick extends GameObject {
     private boolean breakable;
 
     private boolean empty;

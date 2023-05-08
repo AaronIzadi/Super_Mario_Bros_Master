@@ -4,6 +4,7 @@ import model.GameObject;
 import model.Map;
 import model.brick.Brick;
 import model.brick.Hole;
+import model.brick.OneCoinBrick;
 import model.brick.OrdinaryBrick;
 import model.enemy.*;
 import model.prize.Fireball;
@@ -15,12 +16,12 @@ import graphic.view.ImageLoader;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MapManager {
 
     private Map map = new Map();
+
+    private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
     public MapManager() {
     }
@@ -36,8 +37,6 @@ public class MapManager {
         Hero hero = getHero();
         hero.resetLocation();
         engine.resetCamera();
-        createMap(engine.getImageLoader(), map.getPath());
-        map.setHero(hero);
     }
 
     public boolean createMap(ImageLoader loader, String path) {
@@ -127,7 +126,6 @@ public class MapManager {
         Hero hero = getHero();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
-        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
@@ -189,16 +187,6 @@ public class MapManager {
         removeObjects(toBeRemoved);
     }
 
-    public void setTimer() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("3s");
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000);
-    }
 
     private void checkTopCollisions(GameEngine engine) {
         Hero hero = getHero();
@@ -221,7 +209,6 @@ public class MapManager {
         Hero hero = getHero();
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
-        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         boolean heroDies = false;
         boolean toRight = hero.getToRight();
@@ -244,6 +231,7 @@ public class MapManager {
             Rectangle enemyBounds = enemy.getBounds();
             if (heroBounds.intersects(enemyBounds) && !hero.isFalling()) {
                 heroDies = hero.onTouchEnemy(engine);
+
                 toBeRemoved.add(enemy);
             }
         }
@@ -370,7 +358,6 @@ public class MapManager {
 
     private void checkPrizeContact(GameEngine engine) {
         ArrayList<Prize> prizes = map.getRevealedPrizes();
-        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         Rectangle marioBounds = getHero().getBounds();
         for (Prize prize : prizes) {
@@ -390,7 +377,6 @@ public class MapManager {
         ArrayList<Fireball> fireballs = map.getFireballs();
         ArrayList<Enemy> enemies = map.getEnemies();
         ArrayList<Brick> bricks = map.getAllBricks();
-        ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
         for (Fireball fireball : fireballs) {
             Rectangle fireballBounds = fireball.getBounds();
@@ -436,9 +422,9 @@ public class MapManager {
     }
 
     private void removeObjects(ArrayList<GameObject> list) {
-        if (list == null)
+        if (list == null){
             return;
-
+        }
         for (GameObject object : list) {
             if (object instanceof Fireball) {
                 map.removeFireball((Fireball) object);
@@ -452,6 +438,10 @@ public class MapManager {
 
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {
         map.addRevealedBrick(ordinaryBrick);
+    }
+
+    public void addRevealedBrick(OneCoinBrick oneCoinBrick) {
+        map.addRevealedBrick(oneCoinBrick);
     }
 
     public void updateTime() {

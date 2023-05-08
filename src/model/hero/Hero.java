@@ -98,8 +98,11 @@ public class Hero extends GameObject {
         if (!ifTookStar()){
             if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
                 remainingLives--;
+                points = points > 20 ? points - 20 : 0;
                 if (engine.getHero() != null) {
                     engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
+                    engine.getHero().setPoints(engine.getHero().points > 20 ? engine.getHero().points - 20 : 0);
+
                 }
                 engine.playHeroDies();
                 return true;

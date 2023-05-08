@@ -1,7 +1,9 @@
 package model;
 
+import graphic.manager.GameEngine;
 import model.brick.Brick;
 import model.brick.Hole;
+import model.brick.OneCoinBrick;
 import model.brick.OrdinaryBrick;
 import model.enemy.Enemy;
 import model.prize.*;
@@ -18,7 +20,7 @@ public class Map {
     private Hero hero;
     private ArrayList<Brick> bricks = new ArrayList<>();
     private ArrayList<Hole> holes = new ArrayList<>();
-     private ArrayList<Enemy> enemies = new ArrayList<>();
+    private ArrayList<Enemy> enemies = new ArrayList<>();
     private ArrayList<Brick> groundBricks = new ArrayList<>();
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
@@ -159,11 +161,25 @@ public class Map {
         }
 
         for (Iterator<Brick> brickIterator = revealedBricks.iterator(); brickIterator.hasNext(); ) {
-            OrdinaryBrick brick = (OrdinaryBrick) brickIterator.next();
-            brick.animate();
-            if (brick.getFrames() < 0) {
-                bricks.remove(brick);
-                brickIterator.remove();
+            Brick brick = brickIterator.next();
+            OneCoinBrick ifOneCoin;
+            OrdinaryBrick ifOrdinary;
+            if (brick instanceof OneCoinBrick) {
+                ifOneCoin = (OneCoinBrick) brick;
+                ifOneCoin.animate();
+                if (ifOneCoin.getFrames() < 0) {
+                    bricks.remove(brick);
+                    getHero().acquirePoints(1);
+                    brickIterator.remove();
+                }
+            } else {
+                ifOrdinary = (OrdinaryBrick) brick;
+                ifOrdinary.animate();
+                if (ifOrdinary.getFrames() < 0) {
+                    bricks.remove(brick);
+                    getHero().acquirePoints(1);
+                    brickIterator.remove();
+                }
             }
         }
 
@@ -192,6 +208,10 @@ public class Map {
 
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {
         revealedBricks.add(ordinaryBrick);
+    }
+
+    public void addRevealedBrick(OneCoinBrick oneCoinBrick) {
+        revealedBricks.add(oneCoinBrick);
     }
 
     public void removeFireball(Fireball object) {
