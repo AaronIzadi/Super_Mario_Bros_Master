@@ -1,7 +1,7 @@
 package model.hero;
 
 import graphic.manager.Camera;
-import graphic.manager.GameEngine;
+import logic.GameEngine;
 import graphic.view.Animation;
 import model.GameObject;
 import graphic.view.ImageLoader;
@@ -22,7 +22,6 @@ public class Hero extends GameObject {
     private HeroForm heroForm;
     private int type;
     private boolean toRight = true;
-    private List<Integer> typesOwned = new LinkedList<>();
     private String mapPath;
     private boolean tookStar;
 
@@ -99,9 +98,9 @@ public class Hero extends GameObject {
             if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
                 remainingLives--;
                 points = points > 20 ? points - 20 : 0;
-                if (engine.getHero() != null) {
-                    engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
-                    engine.getHero().setPoints(engine.getHero().points > 20 ? engine.getHero().points - 20 : 0);
+                if (engine.getUserData().getHero() != null) {
+                    engine.getUserData().getHero().setRemainingLives(engine.getUserData().getHero().getRemainingLives() - 1);
+                    engine.getUserData().getHero().setPoints(engine.getUserData().getHero().points > 20 ? engine.getUserData().getHero().points - 20 : 0);
 
                 }
                 engine.playHeroDies();
@@ -109,8 +108,8 @@ public class Hero extends GameObject {
             } else {
                 engine.shakeCamera();
                 heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
-                if (engine.getHero() != null) {
-                    engine.getHero().setHeroForm(engine.getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
+                if (engine.getUserData().getHero() != null) {
+                    engine.getUserData().getHero().setHeroForm(engine.getUserData().getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
                 }
                 setDimension(48, 48);
                 return false;
@@ -123,10 +122,10 @@ public class Hero extends GameObject {
         remainingLives = remainingLives - 1;
         heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
         points = points > 30 ? points - 30 : 0;
-        if (engine.getHero() != null) {
-            engine.getHero().setRemainingLives(engine.getHero().getRemainingLives() - 1);
-            engine.getHero().setHeroForm(engine.getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
-            engine.getHero().setPoints(engine.getHero().points > 30 ? engine.getHero().points - 30 : 0);
+        if (engine.getUserData().getHero() != null) {
+            engine.getUserData().getHero().setRemainingLives(engine.getUserData().getHero().getRemainingLives() - 1);
+            engine.getUserData().getHero().setHeroForm(engine.getUserData().getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
+            engine.getUserData().getHero().setPoints(engine.getUserData().getHero().points > 30 ? engine.getUserData().getHero().points - 30 : 0);
         }
         engine.playHeroDies();
         setDimension(48, 48);
@@ -260,14 +259,6 @@ public class Hero extends GameObject {
 
     public void acquireCoinForToad() {
         setExtraCoin();
-    }
-
-    public void setTypesOwned(List<Integer> typesOwned) {
-        this.typesOwned = typesOwned;
-    }
-
-    public List<Integer> getTypesOwned() {
-        return typesOwned;
     }
 
     public void setMapPath(String mapPath) {

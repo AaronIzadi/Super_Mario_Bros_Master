@@ -1,5 +1,8 @@
 package graphic.manager;
 
+import logic.ButtonAction;
+import logic.GameEngine;
+import logic.GameState;
 import org.json.simple.parser.ParseException;
 
 import java.awt.event.KeyEvent;
@@ -13,7 +16,7 @@ public class InputManager implements KeyListener, MouseListener {
 
     private final GameEngine engine;
 
-    InputManager(GameEngine engine) {
+    public InputManager(GameEngine engine) {
         this.engine = engine;
     }
 

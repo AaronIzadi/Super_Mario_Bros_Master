@@ -1,6 +1,6 @@
 package model.prize;
 
-import graphic.manager.GameEngine;
+import logic.GameEngine;
 import model.GameObject;
 import model.hero.Hero;
 import model.hero.HeroType;
@@ -38,16 +38,16 @@ public class Coin extends GameObject implements Prize {
         if (!acquired) {
             acquired = true;
             hero.acquirePoints(point);
-            if (engine.getHero() != null) {
-                engine.getHero().acquirePoints(point);
+            if (engine.getUserData().getHero() != null) {
+                engine.getUserData().getHero().acquirePoints(point);
             }
             if (hero.getType() == HeroType.TOAD) {
                 hero.acquireCoinForToad();
-                engine.getHero().acquireCoinForToad();
+                engine.getUserData().getHero().acquireCoinForToad();
             } else {
                 hero.acquireCoin();
-                if (engine.getHero() != null) {
-                    engine.getHero().acquireCoin();
+                if (engine.getUserData().getHero() != null) {
+                    engine.getUserData().getHero().acquireCoin();
                 }
             }
             engine.playCoin();

@@ -1,10 +1,9 @@
 package model.brick;
 
-import graphic.manager.GameEngine;
-import graphic.manager.MapManager;
+import logic.GameEngine;
+import logic.MapManager;
 import graphic.view.Animation;
 import graphic.view.ImageLoader;
-import model.hero.HeroType;
 import model.prize.Prize;
 
 import java.awt.image.BufferedImage;

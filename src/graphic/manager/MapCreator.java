@@ -14,7 +14,7 @@ import model.hero.Hero;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class MapCreator {
+public class MapCreator {
 
     private int heroType;
     private final ImageLoader imageLoader;
@@ -24,7 +24,7 @@ class MapCreator {
     private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, superStar, endFlag;
 
 
-    MapCreator(ImageLoader imageLoader) {
+    public MapCreator(ImageLoader imageLoader) {
 
         this.imageLoader = imageLoader;
         BufferedImage sprite = imageLoader.loadImage("/sprite.png");
@@ -52,7 +52,7 @@ class MapCreator {
 
     }
 
-    Map createMap(String mapPath) {
+    public Map createMap(String mapPath) {
         BufferedImage mapImage = imageLoader.loadImage(mapPath);
 
         if (mapImage == null) {

@@ -1,6 +1,6 @@
 package model.brick;
 
-import graphic.manager.GameEngine;
+import logic.GameEngine;
 import model.GameObject;
 import model.prize.Prize;
 

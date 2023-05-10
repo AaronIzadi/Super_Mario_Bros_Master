@@ -1,5 +1,6 @@
 package repository;
 
+import logic.UserData;
 import model.hero.Hero;
 import org.json.simple.JSONObject;
 
@@ -7,7 +8,7 @@ import java.io.FileWriter;
 
 public class SaveGameRepository {
 
-    private JSONObject object = new JSONObject();
+    private final JSONObject object = new JSONObject();
 
     public static final int FILE_1 = 1;
     public static final int FILE_2 = 2;
@@ -18,7 +19,9 @@ public class SaveGameRepository {
     public static final String pathToFile3 = "data/data-game-3.txt";
 
 
-    public void addHero(Hero hero, int fileNumber) {
+    public void addUserData(UserData userData, int fileNumber) {
+
+        Hero hero = userData.getHero();
 
         object.put("Hero Type", hero.getType());
         object.put("Hero form is super", hero.getHeroForm().isSuper());
@@ -31,23 +34,18 @@ public class SaveGameRepository {
         object.put("Dimensional Y", hero.getY());
         object.put("Coins", hero.getCoins());
         object.put("To right", hero.getToRight());
-        object.put("Vel X", hero.getVelX());
-        object.put("Vel Y", hero.getVelY());
         object.put("Dimensional height", hero.getDimension().height);
         object.put("Dimensional width", hero.getDimension().width);
         object.put("Gravity Acc", hero.getGravityAcc());
         object.put("Falling", hero.isFalling());
         object.put("Jumping", hero.isJumping());
-        object.put("Types owned", hero.getTypesOwned());
+
+        object.put("Types owned", userData.getTypesOwned());
+
+        object.put("Map path", userData.getHero().getMapPath());
 
         addToFile(fileNumber);
     }
-
-    public void addMap(Hero hero, int fileNumber) {
-        object.put("Map path", hero.getMapPath());
-        addToFile(fileNumber);
-    }
-
     private void addToFile(int fileNumber) {
         if (fileNumber == FILE_1) {
             try (FileWriter file = new FileWriter(pathToFile1)) {

@@ -1,7 +1,8 @@
 package repository;
 
-import graphic.manager.MapManager;
+import logic.MapManager;
 import graphic.view.ImageLoader;
+import logic.UserData;
 import model.Map;
 import model.hero.Hero;
 import org.json.simple.JSONObject;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoadGameRepository {
@@ -27,10 +29,8 @@ public class LoadGameRepository {
     public static final String pathToFile1 = "data/data-game-1.txt";
     public static final String pathToFile2 = "data/data-game-2.txt";
     public static final String pathToFile3 = "data/data-game-3.txt";
-    public Hero hero;
 
-
-    public Hero getHero(int fileNumber) throws IOException {
+    public UserData getUserData(int fileNumber) throws IOException {
 
         jsonToReadFile(fileNumber);
 
@@ -50,8 +50,6 @@ public class LoadGameRepository {
         Long coinsAsLong = (Long) object.get("Coins");
         int coins = coinsAsLong.intValue();
         Boolean toRight = (Boolean) object.get("To right");
-        Double velX = (Double) object.get("Vel X");
-        Double velY = (Double) object.get("Vel Y");
         Long heightAsLong = (Long) object.get("Dimensional height");
         int height = heightAsLong.intValue();
         Long widthAsLong = (Long) object.get("Dimensional width");
@@ -59,14 +57,15 @@ public class LoadGameRepository {
         Double gravityAcc = (Double) object.get("Gravity Acc");
         Boolean falling = (Boolean) object.get("Falling");
         Boolean jumping = (Boolean) object.get("Jumping");
-        List<Long> typesOwnedAsLong = (List<Long>) object.get("Types owned");
-        List<Integer> typesOwned = null;
+        ArrayList<Long> typesOwnedAsLong = (ArrayList<Long>) object.get("Types owned");
+        ArrayList<Integer> typesOwned = null;
         for (Long types : typesOwnedAsLong) {
             typesOwned.add(types.intValue());
         }
         String mapPath = (String) object.get("Map path");
 
         Hero hero = new Hero(x, y);
+        UserData userData = UserData.getInstance();
 
         hero.setType(type);
         hero.setRemainingLives(lives);
@@ -74,21 +73,19 @@ public class LoadGameRepository {
         hero.setInvincibilityTimer(timer);
         hero.setCoins(coins);
         hero.setToRight(toRight);
-        hero.setVelX(velX);
-        hero.setVelY(velY);
         hero.setDimension(new Dimension(width, height));
         hero.setGravityAcc(gravityAcc);
         hero.setFalling(falling);
         hero.setJumping(jumping);
-        hero.setTypesOwned(typesOwned);
         hero.getHeroForm().setType(formType);
         hero.getHeroForm().setSuper(isSuper);
         hero.getHeroForm().setCanShootFire(canShootFire);
         hero.setMapPath(mapPath);
 
-        this.hero = hero;
+        userData.setTypesOwned(typesOwned);
+        userData.setHero(hero);
 
-        return hero;
+        return userData;
     }
 
     public Map getMap(MapManager mapManager, ImageLoader imageLoader, int fileNumber) throws IOException {

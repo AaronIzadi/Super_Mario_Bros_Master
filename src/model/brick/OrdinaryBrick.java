@@ -1,8 +1,7 @@
 package model.brick;
 
-import graphic.manager.GameEngine;
-import graphic.manager.MapManager;
-import model.hero.HeroType;
+import logic.GameEngine;
+import logic.MapManager;
 import model.prize.Prize;
 import graphic.view.Animation;
 import graphic.view.ImageLoader;

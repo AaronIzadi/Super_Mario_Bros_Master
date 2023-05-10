@@ -1,4 +1,4 @@
-package graphic.manager;
+package logic;
 
 public enum GameState {
     GAME_OVER,

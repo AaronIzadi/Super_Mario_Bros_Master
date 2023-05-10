@@ -1,6 +1,6 @@
 package model.brick;
 
-import graphic.manager.GameEngine;
+import logic.GameEngine;
 import model.prize.Prize;
 
 import java.awt.image.BufferedImage;

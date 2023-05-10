@@ -1,6 +1,6 @@
 package model.prize;
 
-import graphic.manager.GameEngine;
+import logic.GameEngine;
 import graphic.view.Animation;
 import graphic.view.ImageLoader;
 import model.GameObject;
@@ -24,8 +24,8 @@ public abstract class PrizeItems extends GameObject implements Prize {
     public void onTouch(Hero hero, GameEngine engine){
         isTouched = true;
         hero.acquirePoints(getPoint());
-        if (engine.getHero() != null) {
-            engine.getHero().acquirePoints(getPoint());
+        if (engine.getUserData().getHero() != null) {
+            engine.getUserData().getHero().acquirePoints(getPoint());
         }
 
         ImageLoader imageLoader = new ImageLoader();
@@ -40,9 +40,9 @@ public abstract class PrizeItems extends GameObject implements Prize {
             HeroForm newForm = new HeroForm(animation, true, false, hero.getType());
             hero.setHeroForm(newForm);
             hero.setDimension(48, 96);
-            if (engine.getHero() != null) {
-                engine.getHero().setHeroForm(newForm);
-                engine.getHero().setDimension(48, 96);
+            if (engine.getUserData().getHero() != null) {
+                engine.getUserData().getHero().setHeroForm(newForm);
+                engine.getUserData().getHero().setDimension(48, 96);
             }
         }
         else{
@@ -53,9 +53,9 @@ public abstract class PrizeItems extends GameObject implements Prize {
             HeroForm newForm = new HeroForm(animation, true, true, hero.getType());
             hero.setHeroForm(newForm);
             hero.setDimension(48, 96);
-            if (engine.getHero() != null) {
-                engine.getHero().setHeroForm(newForm);
-                engine.getHero().setDimension(48, 96);
+            if (engine.getUserData().getHero() != null) {
+                engine.getUserData().getHero().setHeroForm(newForm);
+                engine.getUserData().getHero().setDimension(48, 96);
             }
         }
         engine.playSuperMushroom();
@@ -90,8 +90,4 @@ public abstract class PrizeItems extends GameObject implements Prize {
         this.point = point;
     }
 
-
-    public boolean isTouched() {
-        return isTouched;
-    }
 }

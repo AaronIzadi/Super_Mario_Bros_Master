@@ -1,6 +1,6 @@
 package model.prize;
 
-import graphic.manager.GameEngine;
+import logic.GameEngine;
 import model.hero.Hero;
 
 import java.awt.*;

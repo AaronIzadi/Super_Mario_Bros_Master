@@ -1,8 +1,5 @@
 package model.prize;
 
-import graphic.manager.GameEngine;
-import model.hero.Hero;
-
 import java.awt.image.BufferedImage;
 
 public class FireFlower extends PrizeItems {
