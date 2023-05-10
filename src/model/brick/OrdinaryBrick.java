@@ -25,7 +25,7 @@ public class OrdinaryBrick extends Brick {
     }
 
     private void setAnimation() {
-        ImageLoader imageLoader = new ImageLoader();
+        ImageLoader imageLoader = ImageLoader.getInstance();
         BufferedImage[] leftFrames = imageLoader.getBrickFrames();
 
         animation = new Animation(leftFrames, leftFrames);

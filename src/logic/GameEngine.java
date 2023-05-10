@@ -36,13 +36,13 @@ public class GameEngine implements Runnable {
     }
 
     private void initial() {
-        imageLoader = new ImageLoader();
+        imageLoader = ImageLoader.getInstance();
         InputManager inputManager = new InputManager(this);
         gameState = GameState.START_SCREEN;
         camera = new Camera();
         uiManager = new UIManager(this, WIDTH, HEIGHT);
         soundManager = new SoundManager();
-        mapManager = new MapManager();
+        mapManager = MapManager.getInstance();
         userData = UserData.getInstance();
 
         JFrame frame = new JFrame("Super Mario Bros.");
@@ -83,7 +83,7 @@ public class GameEngine implements Runnable {
         String path = uiManager.selectMapViaMouse(uiManager.getMousePosition());
         if (path != null) {
             createMap(path);
-            mapManager.getHero().setMapPath(path);
+            //     mapManager.getHero().setMapPath(path);
         }
     }
 
@@ -91,7 +91,7 @@ public class GameEngine implements Runnable {
         String path = uiManager.selectMapViaKeyboard(selectedMap);
         if (path != null) {
             createMap(path);
-            mapManager.getHero().setMapPath(path);
+            //        mapManager.getHero().setMapPath(path);
         }
     }
 
@@ -100,7 +100,9 @@ public class GameEngine implements Runnable {
     }
 
     private void createMap(String path) {
-        boolean loaded = mapManager.createMap(imageLoader, path);
+        boolean loaded = mapManager.createMap(path);
+        userData.setHero(mapManager.getHero());
+        userData.setMap(mapManager.getMap());
         if (loaded) {
             setGameState(GameState.RUNNING);
             soundManager.restartBackground();
@@ -110,7 +112,9 @@ public class GameEngine implements Runnable {
     }
 
     private Map createMap(String path, Hero hero) {
-        boolean loaded = mapManager.createMap(imageLoader, path, hero);
+        boolean loaded = mapManager.createMap(path, hero);
+        userData.setHero(mapManager.getHero());
+        userData.setMap(mapManager.getMap());
         if (loaded) {
             setGameState(GameState.RUNNING);
             soundManager.restartBackground();
@@ -308,7 +312,6 @@ public class GameEngine implements Runnable {
                 changeSelectedMap(false);
             }
         } else if (gameState == GameState.RUNNING) {
-
             if (input == ButtonAction.JUMP) {
                 if (userData.getHero().getType() == HeroType.LUIGI) {
                     userData.getHero().jumpForLuigi(this);
@@ -387,11 +390,12 @@ public class GameEngine implements Runnable {
 
     private void loadGame(int fileNumber) throws IOException {
         Hero hero = userData.getLoadGameRepository().getUserData(fileNumber).getHero();
+        userData.setHero(hero);
         mapManager.setMap(createMap(hero.getMapPath(), hero));
         mapManager.setHero(hero);
     }
 
-    private void saveGame(int fileNumber){
+    private void saveGame(int fileNumber) {
         mapManager.getHero().setMapPath(mapManager.getMap().getPath());
         userData.getSaveGameRepository().addUserData(userData, fileNumber);
     }

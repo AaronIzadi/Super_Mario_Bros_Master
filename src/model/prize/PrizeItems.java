@@ -28,7 +28,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
             engine.getUserData().getHero().acquirePoints(getPoint());
         }
 
-        ImageLoader imageLoader = new ImageLoader();
+        ImageLoader imageLoader = ImageLoader.getInstance();
 
         BufferedImage[] leftFrames;
         BufferedImage[] rightFrames;

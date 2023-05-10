@@ -19,16 +19,20 @@ public class ImageLoader {
     private final String PrincePeachFormsPath = "/prince peach-forms.png";
     private int heroType;
 
-
+    private static final ImageLoader instance = new ImageLoader();
     public ImageLoader(int heroType) {
         this.heroType = heroType;
         setHeroForms(heroType);
         brickAnimation = loadImage("/brick-animation.png");
     }
 
-    public ImageLoader() {
+    private ImageLoader() {
         setHeroForms(heroType);
         brickAnimation = loadImage("/brick-animation.png");
+    }
+
+    public static ImageLoader getInstance() {
+        return instance;
     }
 
     public BufferedImage loadImage(String path) {

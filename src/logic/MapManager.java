@@ -20,9 +20,14 @@ public class MapManager {
     private Map map = new Map();
     private Hero hero;
 
+    private static final MapManager instance = new MapManager();
+
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
-    public MapManager() {
+    private MapManager() { }
+
+    public static MapManager getInstance() {
+        return instance;
     }
 
     public void updateLocations() {
@@ -38,15 +43,16 @@ public class MapManager {
         engine.resetCamera();
     }
 
-    public boolean createMap(ImageLoader loader, String path) {
-        MapCreator mapCreator = new MapCreator(loader);
+    public boolean createMap(String path) {
+        MapCreator mapCreator = new MapCreator(ImageLoader.getInstance());
         map = mapCreator.createMap("/maps/" + path);
+        hero = map.getHero();
         return map != null;
     }
 
-    public boolean createMap(ImageLoader loader, String path, Hero hero) {
-        loader.setHeroForms(hero.getType());
-        MapCreator mapCreator = new MapCreator(loader);
+    public boolean createMap(String path, Hero hero) {
+        ImageLoader.getInstance().setHeroForms(hero.getType());
+        MapCreator mapCreator = new MapCreator(ImageLoader.getInstance());
         mapCreator.setHeroType(hero.getType());
         map = mapCreator.createMap("/maps/" + path);
         map.setHero(hero);

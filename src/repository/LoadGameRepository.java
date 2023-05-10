@@ -84,17 +84,18 @@ public class LoadGameRepository {
 
         userData.setTypesOwned(typesOwned);
         userData.setHero(hero);
+        userData.setMap(getMap(fileNumber));
 
         return userData;
     }
 
-    public Map getMap(MapManager mapManager, ImageLoader imageLoader, int fileNumber) throws IOException {
+    public Map getMap(int fileNumber) throws IOException {
 
         jsonToReadFile(fileNumber);
         String mapPath = (String) object.get("Map path");
-        mapManager.createMap(imageLoader, mapPath);
+        MapManager.getInstance().createMap(mapPath);
 
-        return mapManager.getMap();
+        return MapManager.getInstance().getMap();
     }
 
 
