@@ -27,7 +27,7 @@ public class CoinBrick extends SurpriseBrick{
     }
 
     private void setAnimation() {
-        ImageLoader imageLoader = new ImageLoader(HeroType.MARIO);
+        ImageLoader imageLoader = new ImageLoader();
         BufferedImage[] leftFrames = imageLoader.getBrickFrames();
 
         animation = new Animation(leftFrames, leftFrames);

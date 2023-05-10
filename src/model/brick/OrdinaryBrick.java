@@ -26,7 +26,7 @@ public class OrdinaryBrick extends Brick {
     }
 
     private void setAnimation() {
-        ImageLoader imageLoader = new ImageLoader(HeroType.MARIO);
+        ImageLoader imageLoader = new ImageLoader();
         BufferedImage[] leftFrames = imageLoader.getBrickFrames();
 
         animation = new Animation(leftFrames, leftFrames);

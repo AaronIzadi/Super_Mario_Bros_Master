@@ -20,7 +20,7 @@ public class Hero extends GameObject {
     private int points;
     private double invincibilityTimer;
     private HeroForm heroForm;
-    private int type = HeroType.MARIO;
+    private int type;
     private boolean toRight = true;
     private List<Integer> typesOwned = new LinkedList<>();
     private String mapPath;
@@ -220,7 +220,7 @@ public class Hero extends GameObject {
     public void jumpForLuigi(GameEngine engine) {
         if (!isJumping() && !isFalling()) {
             setJumping(true);
-            setVelY(15);
+            setVelY(13);
             engine.playJump();
         }
     }
@@ -245,9 +245,9 @@ public class Hero extends GameObject {
 
     public void moveForRoss(boolean toRight, Camera camera) {
         if (toRight) {
-            setVelX(8);
+            setVelX(7);
         } else if (camera.getX() < getX()) {
-            setVelX(-8);
+            setVelX(-7);
         }
 
         this.toRight = toRight;

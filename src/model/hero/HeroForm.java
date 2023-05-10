@@ -102,4 +102,5 @@ public class HeroForm {
     public boolean ifCanShootFire() {
         return CanShootFire;
     }
+
 }

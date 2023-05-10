@@ -7,11 +7,8 @@ import model.brick.Hole;
 import model.brick.CoinBrick;
 import model.brick.OrdinaryBrick;
 import model.enemy.*;
-import model.prize.Fireball;
+import model.prize.*;
 import model.hero.Hero;
-import model.prize.PrizeItems;
-import model.prize.Coin;
-import model.prize.Prize;
 import graphic.view.ImageLoader;
 
 import java.awt.*;
@@ -20,6 +17,7 @@ import java.util.ArrayList;
 public class MapManager {
 
     private Map map = new Map();
+    private int type;
 
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
@@ -41,10 +39,21 @@ public class MapManager {
 
     public boolean createMap(ImageLoader loader, String path) {
         MapCreator mapCreator = new MapCreator(loader);
+        mapCreator.setHeroType(type);
         map = mapCreator.createMap("/maps/" + path);
+        map.setHero(getHero());
         return map != null;
     }
 
+    public boolean createMap(ImageLoader loader, String path, Hero hero) {
+        loader.setHeroForms(type);
+        MapCreator mapCreator = new MapCreator(loader);
+        mapCreator.setHeroType(type);
+        map = mapCreator.createMap("/maps/" + path);
+        map.setHero(hero);
+        setHero(hero);
+        return map != null;
+    }
 
     public void acquirePoints(int point) {
         map.getHero().acquirePoints(point);
@@ -238,11 +247,6 @@ public class MapManager {
         removeObjects(toBeRemoved);
 
 
-        if (hero.getX() <= engine.getCameraLocation().getX() && hero.getVelX() < 0) {
-            hero.setVelX(0);
-            hero.setX(engine.getCameraLocation().getX());
-        }
-
         if (heroDies) {
             resetCurrentMap(engine);
         }
@@ -365,6 +369,10 @@ public class MapManager {
             if (prizeBounds.intersects(marioBounds)) {
                 prize.onTouch(getHero(), engine);
                 toBeRemoved.add((GameObject) prize);
+                if (prize instanceof FireFlower) {
+                    engine.playFireFlower();
+
+                }
             } else if (prize instanceof Coin) {
                 prize.onTouch(getHero(), engine);
             }
@@ -422,7 +430,7 @@ public class MapManager {
     }
 
     private void removeObjects(ArrayList<GameObject> list) {
-        if (list == null){
+        if (list == null) {
             return;
         }
         for (GameObject object : list) {
@@ -451,5 +459,9 @@ public class MapManager {
 
     public int getRemainingTime() {
         return (int) map.getRemainingTime();
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

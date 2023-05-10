@@ -28,11 +28,13 @@ public abstract class PrizeItems extends GameObject implements Prize {
             engine.getHero().acquirePoints(getPoint());
         }
 
-        ImageLoader imageLoader = new ImageLoader(hero.getType());
+        ImageLoader imageLoader = new ImageLoader();
 
+        BufferedImage[] leftFrames;
+        BufferedImage[] rightFrames;
         if (!hero.getHeroForm().isSuper()) {
-            BufferedImage[] leftFrames = imageLoader.getLeftFrames(HeroForm.SUPER);
-            BufferedImage[] rightFrames = imageLoader.getRightFrames(HeroForm.SUPER);
+            leftFrames = imageLoader.getLeftFrames(HeroForm.SUPER);
+            rightFrames = imageLoader.getRightFrames(HeroForm.SUPER);
 
             Animation animation = new Animation(leftFrames, rightFrames);
             HeroForm newForm = new HeroForm(animation, true, false, hero.getType());
@@ -42,11 +44,10 @@ public abstract class PrizeItems extends GameObject implements Prize {
                 engine.getHero().setHeroForm(newForm);
                 engine.getHero().setDimension(48, 96);
             }
-            engine.playSuperMushroom();
         }
         else{
-            BufferedImage[] leftFrames = imageLoader.getLeftFrames(HeroForm.FIRE);
-            BufferedImage[] rightFrames = imageLoader.getRightFrames(HeroForm.FIRE);
+            leftFrames = imageLoader.getLeftFrames(HeroForm.FIRE);
+            rightFrames = imageLoader.getRightFrames(HeroForm.FIRE);
 
             Animation animation = new Animation(leftFrames, rightFrames);
             HeroForm newForm = new HeroForm(animation, true, true, hero.getType());
@@ -56,8 +57,8 @@ public abstract class PrizeItems extends GameObject implements Prize {
                 engine.getHero().setHeroForm(newForm);
                 engine.getHero().setDimension(48, 96);
             }
-            engine.playSuperMushroom();
         }
+        engine.playSuperMushroom();
     };
 
     @Override

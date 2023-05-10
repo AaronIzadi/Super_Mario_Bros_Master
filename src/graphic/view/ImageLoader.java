@@ -11,34 +11,23 @@ import java.util.Objects;
 public class ImageLoader {
 
     private BufferedImage heroForms;
-    private BufferedImage brickAnimation;
+    private final BufferedImage brickAnimation;
     private final String marioFormsPath = "/mario-forms.png";
     private final String luigiFormsPath = "/luigi-forms.png";
     private final String rossFormsPath = "/ross-forms.png";
     private final String toadFormsPath = "/toad-forms.png";
     private final String PrincePeachFormsPath = "/prince peach-forms.png";
+    private int heroType;
 
 
     public ImageLoader(int heroType) {
+        this.heroType = heroType;
+        setHeroForms(heroType);
+        brickAnimation = loadImage("/brick-animation.png");
+    }
 
-        switch (heroType) {
-            case HeroType.LUIGI:
-                heroForms = loadImage(luigiFormsPath);
-                break;
-            case HeroType.ROSS:
-                heroForms = loadImage(rossFormsPath);
-                break;
-            case HeroType.TOAD:
-                heroForms = loadImage(toadFormsPath);
-                break;
-            case HeroType.PRINCE_PEACH:
-                heroForms = loadImage(PrincePeachFormsPath);
-                break;
-            default:
-                heroForms = loadImage(marioFormsPath);
-                break;
-        }
-
+    public ImageLoader() {
+        setHeroForms(heroType);
         brickAnimation = loadImage("/brick-animation.png");
     }
 
@@ -127,4 +116,33 @@ public class ImageLoader {
         return getSubImage(loadImage("/sprite.png"), 3, 4, 24, 24);
     }
 
+
+    public void setHeroType(int heroType) {
+        this.heroType = heroType;
+    }
+
+    public int getHeroType(int type) {
+        return heroType;
+    }
+
+    public void setHeroForms(int heroType) {
+
+        switch (heroType) {
+            case HeroType.LUIGI:
+                heroForms = loadImage(luigiFormsPath);
+                break;
+            case HeroType.ROSS:
+                heroForms = loadImage(rossFormsPath);
+                break;
+            case HeroType.TOAD:
+                heroForms = loadImage(toadFormsPath);
+                break;
+            case HeroType.PRINCE_PEACH:
+                heroForms = loadImage(PrincePeachFormsPath);
+                break;
+            default:
+                heroForms = loadImage(marioFormsPath);
+                break;
+        }
+    }
 }

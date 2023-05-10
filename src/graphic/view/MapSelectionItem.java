@@ -15,7 +15,7 @@ public class MapSelectionItem {
         this.location = location;
         this.name = map;
 
-        ImageLoader loader = new ImageLoader(HeroType.MARIO);
+        ImageLoader loader = new ImageLoader();
         BufferedImage image = loader.loadImage("/maps/" + map);
 
         this.dimension = new Dimension();

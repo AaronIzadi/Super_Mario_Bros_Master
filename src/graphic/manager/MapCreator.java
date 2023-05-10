@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 
 class MapCreator {
 
+    private int heroType;
     private final ImageLoader imageLoader;
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
@@ -131,6 +132,7 @@ class MapCreator {
                     map.addEnemy(enemy);
                 } else if (currentPixel == hero) {
                     Hero heroObject = new Hero(xLocation, yLocation);
+                    heroObject.setType(heroType);
                     map.setHero(heroObject);
                 } else if (currentPixel == end) {
                     Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
@@ -145,15 +147,15 @@ class MapCreator {
 
     private Prize generateRandomPrize(double x, double y) {
         Prize generated;
-        int random = (int) (Math.random() * 15);
+        int random = (int) (Math.random() * 12);
 
-        if (random == 0 || random == 1 || random == 2) { //super mushroom
+        if (random == 0 || random == 1) { //super mushroom
             generated = new SuperMushroom(x, y, this.superMushroom);
-        } else if (random == 3 || random == 4) { //fire flower
+        } else if (random == 2 || random == 3) { //fire flower
             generated = new FireFlower(x, y, this.fireFlower);
-        } else if (random == 5 || random == 6) { //one heart up mushroom
+        } else if (random == 4) { //one heart up mushroom
             generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
-        } else if (random == 7) { //superstar
+        } else if (random == 5) { //superstar
             generated = new SuperStar(x, y, this.superStar);
         } else { //coin
             generated = new Coin(x, y, this.coin, 10);
@@ -161,4 +163,7 @@ class MapCreator {
         return generated;
     }
 
+    public void setHeroType(int heroType) {
+        this.heroType = heroType;
+    }
 }
