@@ -2,6 +2,7 @@ package repository;
 
 import logic.UserData;
 import model.hero.Hero;
+import model.hero.HeroType;
 import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
@@ -9,11 +10,9 @@ import java.io.FileWriter;
 public class SaveGameRepository {
 
     private final JSONObject object = new JSONObject();
-
     public static final int FILE_1 = 1;
     public static final int FILE_2 = 2;
     public static final int FILE_3 = 3;
-
     public static final String pathToFile1 = "data/data-game-1.txt";
     public static final String pathToFile2 = "data/data-game-2.txt";
     public static final String pathToFile3 = "data/data-game-3.txt";
@@ -40,7 +39,10 @@ public class SaveGameRepository {
         object.put("Falling", hero.isFalling());
         object.put("Jumping", hero.isJumping());
 
-        object.put("Types owned", userData.getTypesOwned());
+        object.put("Owns Luigi", userData.getTypesOwned()[HeroType.LUIGI]);
+        object.put("Owns Prince Peach", userData.getTypesOwned()[HeroType.PRINCE_PEACH]);
+        object.put("Owns Ross", userData.getTypesOwned()[HeroType.ROSS]);
+        object.put("Owns Toad", userData.getTypesOwned()[HeroType.TOAD]);
 
         object.put("Map path", userData.getHero().getMapPath());
 

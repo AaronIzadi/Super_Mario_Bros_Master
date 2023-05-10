@@ -90,7 +90,6 @@ public class UIManager extends JPanel {
                 drawVictoryScreen(g2);
             }
         }
-
         g2.dispose();
     }
 
@@ -122,11 +121,7 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(50f));
         g2.setColor(new Color(238, 28, 46));
         String acquiredPoints;
-        if (engine.getUserData().getHero() != null){
-            acquiredPoints = "Score:" + engine.getUserData().getHero().getPoints();
-        }else{
-            acquiredPoints = "Score:" + engine.getScore();
-        }
+        acquiredPoints = "Score:" + engine.getScore();
         int stringLength = g2.getFontMetrics().stringWidth(acquiredPoints);
         int stringHeight = g2.getFontMetrics().getHeight();
         g2.drawString(acquiredPoints, (getWidth() - stringLength) / 2, getHeight() - stringHeight * 4);
@@ -148,7 +143,7 @@ public class UIManager extends JPanel {
 
         //Luigi
         String buy = "Buy for";
-        if (!engine.getUserData().getTypesOwned().contains(HeroType.LUIGI)) {
+        if (!engine.getUserData().getTypesOwned()[HeroType.LUIGI]) {
             setFontAndColor(g2);
             g2.drawString(buy, 320, 500);
 
@@ -156,7 +151,7 @@ public class UIManager extends JPanel {
             g2.drawString("15", 370, 535);
         }
         //Prince Peach
-        if (!engine.getUserData().getTypesOwned().contains(HeroType.PRINCE_PEACH)) {
+        if (!engine.getUserData().getTypesOwned()[HeroType.PRINCE_PEACH]) {
             setFontAndColor(g2);
             g2.drawString(buy, 560, 500);
 
@@ -164,7 +159,7 @@ public class UIManager extends JPanel {
             g2.drawString("40", 610, 535);
         }
         //Ross
-        if (!engine.getUserData().getTypesOwned().contains(HeroType.ROSS)) {
+        if (!engine.getUserData().getTypesOwned()[HeroType.ROSS]) {
             setFontAndColor(g2);
             g2.drawString(buy, 780, 500);
 
@@ -172,7 +167,7 @@ public class UIManager extends JPanel {
             g2.drawString("30", 830, 535);
         }
         //Toad
-        if (!engine.getUserData().getTypesOwned().contains(HeroType.TOAD)) {
+        if (!engine.getUserData().getTypesOwned()[HeroType.TOAD]) {
             setFontAndColor(g2);
             g2.drawString(buy, 1000, 500);
 
@@ -196,11 +191,9 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(30f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        if (engine.getUserData().getHero() != null) {
-            displayedStr = "" + engine.getUserData().getHero().getCoins();
-        } else {
-            displayedStr = "" + engine.getCoins();
-        }
+
+        displayedStr = "" + engine.getCoins();
+
         g2.drawImage(coinIcon, getWidth() - 115, 10, null);
         g2.drawString(displayedStr, getWidth() - 65, 50);
     }
@@ -209,11 +202,8 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(30f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        if (engine.getUserData().getHero() != null) {
-            displayedStr = "" + engine.getUserData().getHero().getRemainingLives();
-        } else {
-            displayedStr = "" + engine.getRemainingLives();
-        }
+
+        displayedStr = "" + engine.getRemainingLives();
         g2.drawImage(heartIcon, 50, 10, null);
         g2.drawString(displayedStr, 100, 50);
     }
@@ -222,11 +212,7 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(25f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        if (engine.getUserData().getHero() != null) {
-            displayedStr = "Points: " + engine.getUserData().getHero().getPoints();
-        } else {
-            displayedStr = "Points: " + engine.getScore();
-        }
+        displayedStr = "Points: " + engine.getScore();
         g2.drawString(displayedStr, 300, 50);
     }
 

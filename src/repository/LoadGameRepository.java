@@ -5,6 +5,7 @@ import graphic.view.ImageLoader;
 import logic.UserData;
 import model.Map;
 import model.hero.Hero;
+import model.hero.HeroType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -21,7 +22,6 @@ import java.util.List;
 public class LoadGameRepository {
 
     private JSONObject object = new JSONObject();
-
     public static final int FILE_1 = 1;
     public static final int FILE_2 = 2;
     public static final int FILE_3 = 3;
@@ -57,12 +57,13 @@ public class LoadGameRepository {
         Double gravityAcc = (Double) object.get("Gravity Acc");
         Boolean falling = (Boolean) object.get("Falling");
         Boolean jumping = (Boolean) object.get("Jumping");
-        ArrayList<Long> typesOwnedAsLong = (ArrayList<Long>) object.get("Types owned");
-        ArrayList<Integer> typesOwned = null;
-        for (Long types : typesOwnedAsLong) {
-            typesOwned.add(types.intValue());
-        }
         String mapPath = (String) object.get("Map path");
+        boolean[] typesOwned = new boolean[5];
+        typesOwned[HeroType.MARIO] = true;
+        typesOwned[HeroType.LUIGI] = (Boolean) object.get("Owns Luigi");
+        typesOwned[HeroType.PRINCE_PEACH] =  (Boolean) object.get("Owns Prince Peach");
+        typesOwned[HeroType.ROSS] = (Boolean) object.get("Owns Ross");
+        typesOwned[HeroType.TOAD] = (Boolean) object.get("Owns Toad");
 
         Hero hero = new Hero(x, y);
         UserData userData = UserData.getInstance();

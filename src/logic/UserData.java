@@ -2,6 +2,7 @@ package logic;
 
 import model.Map;
 import model.hero.Hero;
+import model.hero.HeroType;
 import repository.LoadGameRepository;
 import repository.SaveGameRepository;
 
@@ -11,20 +12,28 @@ public class UserData {
 
     private Hero hero;
     private Map map;
-    private ArrayList<Integer> typesOwned;
+    private boolean[] typesOwned;
     private final LoadGameRepository loadGameRepository;
     private final SaveGameRepository saveGameRepository;
-
     private static final UserData instance = new UserData();
 
     private UserData(){
-        this.typesOwned = new ArrayList<>();
         this.loadGameRepository = new LoadGameRepository();
         this.saveGameRepository = new SaveGameRepository();
+        this.typesOwned = new boolean[5];
+        setTypesOwned();
     }
 
     public static UserData getInstance() {
         return instance;
+    }
+
+    private void setTypesOwned(){
+        typesOwned[HeroType.MARIO] = true;
+        typesOwned[HeroType.LUIGI] = false;
+        typesOwned[HeroType.PRINCE_PEACH] = false;
+        typesOwned[HeroType.ROSS] = false;
+        typesOwned[HeroType.TOAD] = false;
     }
 
     public Hero getHero() {
@@ -43,11 +52,11 @@ public class UserData {
         this.map = map;
     }
 
-    public ArrayList<Integer> getTypesOwned() {
+    public boolean[] getTypesOwned() {
         return typesOwned;
     }
 
-    public void setTypesOwned(ArrayList<Integer> typesOwned) {
+    public void setTypesOwned(boolean[] typesOwned) {
         this.typesOwned = typesOwned;
     }
 

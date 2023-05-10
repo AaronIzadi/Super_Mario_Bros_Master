@@ -24,16 +24,17 @@ public class MapManager {
 
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
-    private MapManager() { }
+    private MapManager() {
+    }
 
     public static MapManager getInstance() {
         return instance;
     }
 
     public void updateLocations() {
-        if (map == null)
+        if (map == null) {
             return;
-
+        }
         map.updateLocations();
     }
 
@@ -44,7 +45,7 @@ public class MapManager {
     }
 
     public boolean createMap(String path) {
-        MapCreator mapCreator = new MapCreator(ImageLoader.getInstance());
+        MapCreator mapCreator = new MapCreator();
         map = mapCreator.createMap("/maps/" + path);
         hero = map.getHero();
         return map != null;
@@ -52,10 +53,10 @@ public class MapManager {
 
     public boolean createMap(String path, Hero hero) {
         ImageLoader.getInstance().setHeroForms(hero.getType());
-        MapCreator mapCreator = new MapCreator(ImageLoader.getInstance());
-        mapCreator.setHeroType(hero.getType());
+        ImageLoader.getInstance().setHeroType(hero.getType());
+        MapCreator mapCreator = new MapCreator();
+        mapCreator.setHero(hero);
         map = mapCreator.createMap("/maps/" + path);
-        map.setHero(hero);
         setHero(hero);
         return map != null;
     }
@@ -139,7 +140,6 @@ public class MapManager {
     private void checkBottomCollisions(GameEngine engine) {
         ArrayList<Brick> bricks = map.getAllBricks();
         ArrayList<Enemy> enemies = map.getEnemies();
-
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
         if (!hero.isJumping()) {
@@ -172,19 +172,13 @@ public class MapManager {
                         koopaTroopa.setXHit(koopaTroopa.getX());
                         koopaTroopa.moveAfterHit();
                         hero.setTimerToRun();
-                    } else if (koopaTroopa.isHit() && Math.abs(koopaTroopa.getXHit() - koopaTroopa.getX()) == 96.0) {
+                    } else {
                         acquirePoints(2);
-                        if (engine.getUserData().getHero() != null) {
-                            engine.getUserData().getHero().acquirePoints(2);
-                        }
                         toBeRemoved.add(enemy);
                         engine.playStomp();
                     }
                 } else {
                     acquirePoints(1);
-                    if (engine.getUserData().getHero() != null) {
-                        engine.getUserData().getHero().acquirePoints(1);
-                    }
                     toBeRemoved.add(enemy);
                     engine.playStomp();
                 }
@@ -203,7 +197,6 @@ public class MapManager {
 
     private void checkTopCollisions(GameEngine engine) {
         ArrayList<Brick> bricks = map.getAllBricks();
-
         Rectangle heroTopBounds = hero.getTopBounds();
         for (Brick brick : bricks) {
             Rectangle brickBottomBounds = brick.getBottomBounds();
@@ -231,10 +224,11 @@ public class MapManager {
 
             if (heroBounds.intersects(brickBounds)) {
                 hero.setVelX(0);
-                if (toRight)
+                if (toRight) {
                     hero.setX(brick.getX() - hero.getDimension().width);
-                else
+                } else {
                     hero.setX(brick.getX() + brick.getDimension().width);
+                }
             }
         }
 
@@ -247,7 +241,6 @@ public class MapManager {
             }
         }
         removeObjects(toBeRemoved);
-
 
         if (heroDies) {
             resetCurrentMap(engine);
@@ -396,24 +389,12 @@ public class MapManager {
                 if (fireballBounds.intersects(enemyBounds)) {
                     if (enemy instanceof Goomba) {
                         acquirePoints(1);
-                        if (engine.getUserData().getHero() != null) {
-                            engine.getUserData().getHero().acquirePoints(1);
-                        }
                     } else if (enemy instanceof KoopaTroopa) {
                         acquirePoints(2);
-                        if (engine.getUserData().getHero() != null) {
-                            engine.getUserData().getHero().acquirePoints(2);
-                        }
                     } else if (enemy instanceof Spiny) {
                         acquirePoints(3);
-                        if (engine.getUserData().getHero() != null) {
-                            engine.getUserData().getHero().acquirePoints(3);
-                        }
                     } else {
                         acquirePoints(1);
-                        if (engine.getUserData().getHero() != null) {
-                            engine.getUserData().getHero().acquirePoints(1);
-                        }
                     }
                     toBeRemoved.add(enemy);
                     toBeRemoved.add(fireball);

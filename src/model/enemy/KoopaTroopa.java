@@ -53,9 +53,9 @@ public class KoopaTroopa extends Enemy {
 
     public void moveAfterHit() {
         if (lastVelX > 0) {
-            setX(getX() + 96);
+            setX(getX() + 48);
         } else {
-            setX(getX() - 96);
+            setX(getX() - 48);
         }
     }
 

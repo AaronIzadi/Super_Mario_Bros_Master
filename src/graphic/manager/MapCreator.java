@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 public class MapCreator {
 
     private int heroType;
+    private Hero hero;
     private final ImageLoader imageLoader;
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
@@ -24,9 +25,8 @@ public class MapCreator {
     private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, superStar, endFlag;
 
 
-    public MapCreator(ImageLoader imageLoader) {
-
-        this.imageLoader = imageLoader;
+    public MapCreator() {
+        this.imageLoader = ImageLoader.getInstance();
         BufferedImage sprite = imageLoader.loadImage("/sprite.png");
         this.spinyLeft = imageLoader.loadImage("/spiny-left.png");
         this.spinyRight = imageLoader.loadImage("/spiny-right.png");
@@ -131,9 +131,18 @@ public class MapCreator {
                     enemy.setRightImage(this.piranha);
                     map.addEnemy(enemy);
                 } else if (currentPixel == hero) {
-                    Hero heroObject = new Hero(xLocation, yLocation);
-                    heroObject.setType(heroType);
-                    map.setHero(heroObject);
+                    if (this.hero == null) {
+                        Hero heroObject = new Hero(xLocation, yLocation);
+                        heroObject.setType(heroType);
+                        map.setHero(heroObject);
+                    } else {
+                        this.hero.setX(xLocation);
+                        this.hero.setY(yLocation);
+                        setHeroType();
+                        imageLoader.setHeroForms(heroType);
+                        imageLoader.setHeroType(heroType);
+                        map.setHero(this.hero);
+                    }
                 } else if (currentPixel == end) {
                     Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
                     map.setEndPoint(endPoint);
@@ -163,7 +172,11 @@ public class MapCreator {
         return generated;
     }
 
-    public void setHeroType(int heroType) {
-        this.heroType = heroType;
+    private void setHeroType() {
+        this.heroType = this.hero.getType();
+    }
+
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 }

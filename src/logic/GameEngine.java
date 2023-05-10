@@ -113,7 +113,7 @@ public class GameEngine implements Runnable {
 
     private Map createMap(String path, Hero hero) {
         boolean loaded = mapManager.createMap(path, hero);
-        userData.setHero(mapManager.getHero());
+        userData.setHero(hero);
         userData.setMap(mapManager.getMap());
         if (loaded) {
             setGameState(GameState.RUNNING);
@@ -267,7 +267,7 @@ public class GameEngine implements Runnable {
                 loadNewHero(HeroType.MARIO);
                 setGameState(GameState.RUNNING);
             } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.LUIGI) {
-                if (userData.getTypesOwned().contains(HeroType.LUIGI)) {
+                if (userData.getTypesOwned()[HeroType.LUIGI]) {
                     loadNewHero(HeroType.LUIGI);
                 } else if (userData.getHero().getCoins() >= 15) {
                     mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 15);
@@ -275,7 +275,7 @@ public class GameEngine implements Runnable {
                 }
                 setGameState(GameState.RUNNING);
             } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.PRINCE_PEACH) {
-                if (userData.getTypesOwned().contains(HeroType.PRINCE_PEACH)) {
+                if (userData.getTypesOwned()[HeroType.PRINCE_PEACH]) {
                     loadNewHero(HeroType.PRINCE_PEACH);
                 } else if (userData.getHero().getCoins() >= 40) {
                     mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 40);
@@ -283,7 +283,7 @@ public class GameEngine implements Runnable {
                 }
                 setGameState(GameState.RUNNING);
             } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.ROSS) {
-                if (userData.getTypesOwned().contains(HeroType.ROSS)) {
+                if (userData.getTypesOwned()[HeroType.ROSS]) {
                     loadNewHero(HeroType.ROSS);
                 } else if (userData.getHero().getCoins() >= 30) {
                     mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 30);
@@ -291,7 +291,7 @@ public class GameEngine implements Runnable {
                 }
                 setGameState(GameState.RUNNING);
             } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.TOAD) {
-                if (userData.getTypesOwned().contains(HeroType.TOAD)) {
+                if (userData.getTypesOwned()[HeroType.TOAD]) {
                     loadNewHero(HeroType.TOAD);
                 } else if (userData.getHero().getCoins() >= 35) {
                     mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 35);
@@ -372,7 +372,7 @@ public class GameEngine implements Runnable {
     }
 
     private void buyAndLoadNewHero(int type) {
-        userData.getTypesOwned().add(type);
+        userData.getTypesOwned()[type] = true;
         loadNewHero(type);
     }
 
@@ -389,10 +389,11 @@ public class GameEngine implements Runnable {
     }
 
     private void loadGame(int fileNumber) throws IOException {
-        Hero hero = userData.getLoadGameRepository().getUserData(fileNumber).getHero();
-        userData.setHero(hero);
-        mapManager.setMap(createMap(hero.getMapPath(), hero));
-        mapManager.setHero(hero);
+        userData = userData.getLoadGameRepository().getUserData(fileNumber);
+        userData.setHero(userData.getHero());
+        userData.setTypesOwned(userData.getTypesOwned());
+        mapManager.setMap(createMap(userData.getHero().getMapPath(), userData.getHero()));
+        mapManager.setHero(userData.getHero());
     }
 
     private void saveGame(int fileNumber) {
