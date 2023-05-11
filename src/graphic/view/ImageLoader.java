@@ -9,25 +9,12 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ImageLoader {
-
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
-    private final String marioFormsPath = "/mario-forms.png";
-    private final String luigiFormsPath = "/luigi-forms.png";
-    private final String rossFormsPath = "/ross-forms.png";
-    private final String toadFormsPath = "/toad-forms.png";
-    private final String PrincePeachFormsPath = "/prince peach-forms.png";
     private int heroType;
-
     private static final ImageLoader instance = new ImageLoader();
-    public ImageLoader(int heroType) {
-        this.heroType = heroType;
-        setHeroForms(heroType);
-        brickAnimation = loadImage("/brick-animation.png");
-    }
 
     private ImageLoader() {
-        setHeroForms(heroType);
         brickAnimation = loadImage("/brick-animation.png");
     }
 
@@ -123,29 +110,29 @@ public class ImageLoader {
 
     public void setHeroType(int heroType) {
         this.heroType = heroType;
+        setHeroForms(heroType);
     }
 
     public int getHeroType(int type) {
         return heroType;
     }
 
-    public void setHeroForms(int heroType) {
-
+    private void setHeroForms(int heroType) {
         switch (heroType) {
             case HeroType.LUIGI:
-                heroForms = loadImage(luigiFormsPath);
+                heroForms = loadImage("/luigi-forms.png");
                 break;
             case HeroType.ROSS:
-                heroForms = loadImage(rossFormsPath);
+                heroForms = loadImage("/ross-forms.png");
                 break;
             case HeroType.TOAD:
-                heroForms = loadImage(toadFormsPath);
+                heroForms = loadImage("/toad-forms.png");
                 break;
             case HeroType.PRINCE_PEACH:
-                heroForms = loadImage(PrincePeachFormsPath);
+                heroForms = loadImage("/prince peach-forms.png");
                 break;
             default:
-                heroForms = loadImage(marioFormsPath);
+                heroForms = loadImage("/mario-forms.png");
                 break;
         }
     }

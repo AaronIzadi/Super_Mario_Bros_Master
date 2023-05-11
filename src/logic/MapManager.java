@@ -52,10 +52,8 @@ public class MapManager {
     }
 
     public boolean createMap(String path, Hero hero) {
-        ImageLoader.getInstance().setHeroForms(hero.getType());
         ImageLoader.getInstance().setHeroType(hero.getType());
-        MapCreator mapCreator = new MapCreator();
-        mapCreator.setHero(hero);
+        MapCreator mapCreator = new MapCreator(hero);
         map = mapCreator.createMap("/maps/" + path);
         setHero(hero);
         return map != null;

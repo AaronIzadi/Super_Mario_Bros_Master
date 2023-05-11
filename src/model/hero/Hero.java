@@ -34,7 +34,8 @@ public class Hero extends GameObject {
         coins = 0;
         invincibilityTimer = 0;
 
-        ImageLoader imageLoader = new ImageLoader(type);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.setHeroType(type);
         BufferedImage[] leftFrames = imageLoader.getLeftFrames(HeroForm.SMALL);
         BufferedImage[] rightFrames = imageLoader.getRightFrames(HeroForm.SMALL);
 

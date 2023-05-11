@@ -24,7 +24,9 @@ public class HeroForm {
         this.isSuper = isSuper;
         this.CanShootFire = CanShootFire;
 
-        fireballStyle = new ImageLoader(type).getFireballImage(type);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.setHeroType(type);
+        fireballStyle = imageLoader.getFireballImage(type);
     }
 
     public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY) {

@@ -18,15 +18,26 @@ public class MapCreator {
 
     private int heroType;
     private Hero hero;
-    private final ImageLoader imageLoader;
-    private final BufferedImage backgroundImage;
-    private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private final BufferedImage ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, hole;
-    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, superStar, endFlag;
+    private ImageLoader imageLoader;
+    private BufferedImage backgroundImage;
+    private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
+    private BufferedImage ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, hole;
+    private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, superStar, endFlag;
 
 
     public MapCreator() {
         this.imageLoader = ImageLoader.getInstance();
+        loadImages();
+    }
+
+    public MapCreator(Hero hero) {
+        this.hero = hero;
+        this.imageLoader = ImageLoader.getInstance();
+        imageLoader.setHeroType(hero.getType());
+        loadImages();
+    }
+
+    private void loadImages() {
         BufferedImage sprite = imageLoader.loadImage("/sprite.png");
         this.spinyLeft = imageLoader.loadImage("/spiny-left.png");
         this.spinyRight = imageLoader.loadImage("/spiny-right.png");
@@ -49,7 +60,6 @@ public class MapCreator {
         this.koopaLeft = imageLoader.getSubImage(sprite, 1, 3, 48, 64);
         this.koopaRight = imageLoader.getSubImage(sprite, 4, 3, 48, 64);
         this.endFlag = imageLoader.getSubImage(sprite, 5, 1, 48, 48);
-
     }
 
     public Map createMap(String mapPath) {
@@ -58,6 +68,10 @@ public class MapCreator {
         if (mapImage == null) {
             System.out.println("Given path is invalid...");
             return null;
+        }
+
+        if (this.hero != null) {
+            updateImageLoader(heroType);
         }
 
         Map map = new Map();
@@ -133,14 +147,14 @@ public class MapCreator {
                 } else if (currentPixel == hero) {
                     if (this.hero == null) {
                         Hero heroObject = new Hero(xLocation, yLocation);
-                        heroObject.setType(heroType);
+                        //  heroObject.setType(heroType);
                         map.setHero(heroObject);
                     } else {
                         this.hero.setX(xLocation);
                         this.hero.setY(yLocation);
                         setHeroType();
-                        imageLoader.setHeroForms(heroType);
                         imageLoader.setHeroType(heroType);
+                        updateImageLoader(heroType);
                         map.setHero(this.hero);
                     }
                 } else if (currentPixel == end) {
@@ -170,6 +184,11 @@ public class MapCreator {
             generated = new Coin(x, y, this.coin, 10);
         }
         return generated;
+    }
+
+    private void updateImageLoader(int heroType) {
+        imageLoader.setHeroType(heroType);
+        imageLoader = ImageLoader.getInstance();
     }
 
     private void setHeroType() {

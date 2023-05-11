@@ -6,8 +6,6 @@ import model.hero.HeroType;
 import repository.LoadGameRepository;
 import repository.SaveGameRepository;
 
-import java.util.ArrayList;
-
 public class UserData {
 
     private Hero hero;

@@ -380,7 +380,6 @@ public class GameEngine implements Runnable {
         mapManager.getHero().setType(type);
         mapManager.getHero().getHeroForm().setType(type);
         imageLoader.setHeroType(type);
-        imageLoader.setHeroForms(type);
         userData.getHero().setType(type);
     }
 

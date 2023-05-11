@@ -25,6 +25,7 @@ public class LoadGameRepository {
     public static final int FILE_1 = 1;
     public static final int FILE_2 = 2;
     public static final int FILE_3 = 3;
+    private Hero hero;
 
     public static final String pathToFile1 = "data/data-game-1.txt";
     public static final String pathToFile2 = "data/data-game-2.txt";
@@ -61,7 +62,7 @@ public class LoadGameRepository {
         boolean[] typesOwned = new boolean[5];
         typesOwned[HeroType.MARIO] = true;
         typesOwned[HeroType.LUIGI] = (Boolean) object.get("Owns Luigi");
-        typesOwned[HeroType.PRINCE_PEACH] =  (Boolean) object.get("Owns Prince Peach");
+        typesOwned[HeroType.PRINCE_PEACH] = (Boolean) object.get("Owns Prince Peach");
         typesOwned[HeroType.ROSS] = (Boolean) object.get("Owns Ross");
         typesOwned[HeroType.TOAD] = (Boolean) object.get("Owns Toad");
 
@@ -85,6 +86,7 @@ public class LoadGameRepository {
 
         userData.setTypesOwned(typesOwned);
         userData.setHero(hero);
+        this.hero = hero;
         userData.setMap(getMap(fileNumber));
 
         return userData;
@@ -94,7 +96,7 @@ public class LoadGameRepository {
 
         jsonToReadFile(fileNumber);
         String mapPath = (String) object.get("Map path");
-        MapManager.getInstance().createMap(mapPath);
+        MapManager.getInstance().createMap(mapPath, hero);
 
         return MapManager.getInstance().getMap();
     }
