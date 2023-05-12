@@ -1,4 +1,4 @@
-package model.brick;
+package model.obstacle;
 
 import logic.GameEngine;
 import model.prize.Prize;

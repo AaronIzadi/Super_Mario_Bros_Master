@@ -8,6 +8,4 @@ public class HeroType {
     public static final int ROSS = 3;
     public static final int TOAD = 4;
 
-    public HeroType(){}
-
 }

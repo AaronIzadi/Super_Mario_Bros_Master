@@ -3,19 +3,65 @@ package graphic.view;
 import model.hero.HeroType;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
 public class ImageLoader {
-    private int heroType;
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
+    private final BufferedImage backgroundImage;
+    private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
+    private final BufferedImage border, ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
+    private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
+    private final BufferedImage heartIcon;
+    private final BufferedImage coinIcon;
+    private final BufferedImage selectIcon;
+    private final Image icon;
     private static final ImageLoader instance = new ImageLoader();
 
     private ImageLoader() {
-        brickAnimation = loadImage("/brick-animation.png");
+        this.brickAnimation = loadImage("/brick-animation.png");
+        BufferedImage sprite = loadImage("/sprite.png");
+        this.spinyLeft = loadImage("/spiny-left.png");
+        this.spinyRight = loadImage("/spiny-right.png");
+        this.backgroundImage = loadImage("/background.png");
+        this.hole = loadImage("/hole.png");
+        this.piranhaOpen = loadImage("/piranha-open.png");
+        this.piranhaClose = loadImage("/piranha-close.png");
+        this.smallPipe = loadImage("/pipe-small.png");
+        this.border = loadImage("/border-brick.png");
+        this.heartIcon = loadImage("/heart-icon.png");
+        this.coinIcon = getSubImage(sprite, 1, 5, 48, 48);
+        this.selectIcon = loadImage("/select-icon.png");
+        this.startScreenImage = loadImage("/start-screen.png");
+        this.helpScreenImage = loadImage("/help-screen.png");
+        this.aboutScreenImage = loadImage("/about-screen.png");
+        this.gameOverScreen = loadImage("/game-over.png");
+        this.storeScreenImage = loadImage("/store-screen.png");
+        this.loadGameScreen = loadImage("/load-screen.png");
+        this.pauseScreen = loadImage("/pause-screen.png");
+        this.superMushroom = getSubImage(sprite, 2, 5, 48, 48);
+        this.oneHeartUpMushroom = getSubImage(sprite, 3, 5, 48, 48);
+        this.fireFlower = getSubImage(sprite, 4, 5, 48, 48);
+        this.superStar = getSubImage(sprite, 5, 5, 48, 48);
+        this.coin = getSubImage(sprite, 1, 5, 48, 48);
+        this.ordinaryBrick = getSubImage(sprite, 1, 1, 48, 48);
+        this.surpriseBrick = getSubImage(sprite, 2, 1, 48, 48);
+        this.oneCoinBrick = getSubImage(sprite, 1, 1, 48, 48);
+        this.fiveCoinBrick = getSubImage(sprite, 1, 1, 48, 48);
+        this.groundBrick = getSubImage(sprite, 2, 2, 48, 48);
+        this.pipe = getSubImage(sprite, 3, 1, 96, 96);
+        this.goombaLeft = getSubImage(sprite, 2, 4, 48, 48);
+        this.goombaRight = getSubImage(sprite, 5, 4, 48, 48);
+        this.koopaLeft = getSubImage(sprite, 1, 3, 48, 64);
+        this.koopaRight = getSubImage(sprite, 4, 3, 48, 64);
+        this.endFlag = getSubImage(sprite, 5, 1, 48, 48);
+        this.icon = Toolkit.getDefaultToolkit().getImage("src/graphic/media/icon.jpg");
+
     }
 
     public static ImageLoader getInstance() {
@@ -103,13 +149,12 @@ public class ImageLoader {
         return frames;
     }
 
-    public BufferedImage getFireballImage(int type) {
+    public BufferedImage getFireballImage() {
             return getSubImage(loadImage("/sprite.png"), 3, 4, 24, 24);
     }
 
 
     public void setHeroType(int heroType) {
-        this.heroType = heroType;
         setHeroForms(heroType);
     }
 
@@ -131,5 +176,153 @@ public class ImageLoader {
                 heroForms = loadImage("/mario-forms.png");
                 break;
         }
+    }
+
+    public BufferedImage getHeroForms() {
+        return heroForms;
+    }
+
+    public BufferedImage getBrickAnimation() {
+        return brickAnimation;
+    }
+
+    public BufferedImage getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public BufferedImage getSuperMushroom() {
+        return superMushroom;
+    }
+
+    public BufferedImage getOneHeartUpMushroom() {
+        return oneHeartUpMushroom;
+    }
+
+    public BufferedImage getFireFlower() {
+        return fireFlower;
+    }
+
+    public BufferedImage getCoin() {
+        return coin;
+    }
+
+    public BufferedImage getBorder() {
+        return border;
+    }
+
+    public BufferedImage getOrdinaryBrick() {
+        return ordinaryBrick;
+    }
+
+    public BufferedImage getSurpriseBrick() {
+        return surpriseBrick;
+    }
+
+    public BufferedImage getOneCoinBrick() {
+        return oneCoinBrick;
+    }
+
+    public BufferedImage getFiveCoinBrick() {
+        return fiveCoinBrick;
+    }
+
+    public BufferedImage getGroundBrick() {
+        return groundBrick;
+    }
+
+    public BufferedImage getPipe() {
+        return pipe;
+    }
+
+    public BufferedImage getSmallPipe() {
+        return smallPipe;
+    }
+
+    public BufferedImage getHole() {
+        return hole;
+    }
+
+    public BufferedImage getGoombaLeft() {
+        return goombaLeft;
+    }
+
+    public BufferedImage getGoombaRight() {
+        return goombaRight;
+    }
+
+    public BufferedImage getKoopaLeft() {
+        return koopaLeft;
+    }
+
+    public BufferedImage getKoopaRight() {
+        return koopaRight;
+    }
+
+    public BufferedImage getSpinyLeft() {
+        return spinyLeft;
+    }
+
+    public BufferedImage getSpinyRight() {
+        return spinyRight;
+    }
+
+    public BufferedImage getPiranhaOpen() {
+        return piranhaOpen;
+    }
+
+    public BufferedImage getPiranhaClose() {
+        return piranhaClose;
+    }
+
+    public BufferedImage getSuperStar() {
+        return superStar;
+    }
+
+    public BufferedImage getEndFlag() {
+        return endFlag;
+    }
+
+    public BufferedImage getStartScreenImage() {
+        return startScreenImage;
+    }
+
+    public BufferedImage getAboutScreenImage() {
+        return aboutScreenImage;
+    }
+
+    public BufferedImage getHelpScreenImage() {
+        return helpScreenImage;
+    }
+
+    public BufferedImage getGameOverScreen() {
+        return gameOverScreen;
+    }
+
+    public BufferedImage getStoreScreenImage() {
+        return storeScreenImage;
+    }
+
+    public BufferedImage getLoadGameScreen() {
+        return loadGameScreen;
+    }
+
+    public BufferedImage getPauseScreen() {
+        return pauseScreen;
+    }
+
+    public BufferedImage getHeartIcon() {
+        return heartIcon;
+    }
+
+    public BufferedImage getCoinIcon() {
+        return coinIcon;
+    }
+
+    public BufferedImage getSelectIcon() {
+        return selectIcon;
+    }
+
+    public Image getIcon() {
+        return icon;
     }
 }

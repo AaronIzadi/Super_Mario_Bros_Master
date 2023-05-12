@@ -7,17 +7,10 @@ import org.json.simple.JSONObject;
 
 import java.io.FileWriter;
 
+import static repository.SavePaths.*;
+
 public class SaveGameRepository {
-
     private final JSONObject object = new JSONObject();
-    public static final int FILE_1 = 1;
-    public static final int FILE_2 = 2;
-    public static final int FILE_3 = 3;
-    public static final String pathToFile1 = "data/data-game-1.txt";
-    public static final String pathToFile2 = "data/data-game-2.txt";
-    public static final String pathToFile3 = "data/data-game-3.txt";
-
-
     public void addUserData(UserData userData, int fileNumber) {
 
         Hero hero = userData.getHero();
@@ -49,24 +42,14 @@ public class SaveGameRepository {
         addToFile(fileNumber);
     }
     private void addToFile(int fileNumber) {
-        if (fileNumber == FILE_1) {
-            try (FileWriter file = new FileWriter(pathToFile1)) {
-                file.write(object.toString());
-            } catch (Exception e) {
-                System.out.println("ERROR AT SAVING GAME!");
-            }
-        } else if (fileNumber == FILE_2) {
-            try (FileWriter file = new FileWriter(pathToFile2)) {
-                file.write(object.toString());
-            } catch (Exception e) {
-                System.out.println("ERROR AT SAVING GAME!");
-            }
-        } else if (fileNumber == FILE_3) {
-            try (FileWriter file = new FileWriter(pathToFile3)) {
-                file.write(object.toString());
-            } catch (Exception e) {
-                System.out.println("ERROR AT SAVING GAME!");
-            }
+        if (!isFileIdValid(fileNumber)) {
+            return;
+        }
+
+        try (FileWriter file = new FileWriter(filePaths[fileNumber])) {
+            file.write(object.toString());
+        } catch (Exception e) {
+            System.out.println("ERROR AT SAVING GAME ON SLOT " + fileNumber + " !");
         }
     }
 

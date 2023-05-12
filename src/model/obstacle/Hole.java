@@ -1,4 +1,4 @@
-package model.brick;
+package model.obstacle;
 
 import java.awt.image.BufferedImage;
 

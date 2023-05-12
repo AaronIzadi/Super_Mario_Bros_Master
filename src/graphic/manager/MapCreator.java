@@ -1,7 +1,8 @@
 package graphic.manager;
 
 import model.Flag;
-import model.brick.*;
+import model.hero.Mario;
+import model.obstacle.*;
 import model.enemy.Piranha;
 import model.enemy.Spiny;
 import model.prize.*;
@@ -38,31 +39,30 @@ public class MapCreator {
     }
 
     private void loadImages() {
-        BufferedImage sprite = imageLoader.loadImage("/sprite.png");
-        this.spinyLeft = imageLoader.loadImage("/spiny-left.png");
-        this.spinyRight = imageLoader.loadImage("/spiny-right.png");
-        this.backgroundImage = imageLoader.loadImage("/background.png");
-        this.hole = imageLoader.loadImage("/hole.png");
-        this.piranhaOpen = imageLoader.loadImage("/piranha-open.png");
-        this.piranhaClose = imageLoader.loadImage("/piranha-close.png");
-        this.smallPipe = imageLoader.loadImage("/pipe-small.png");
-        this.border = imageLoader.loadImage("/ground-brick.png");
-        this.superMushroom = imageLoader.getSubImage(sprite, 2, 5, 48, 48);
-        this.oneHeartUpMushroom = imageLoader.getSubImage(sprite, 3, 5, 48, 48);
-        this.fireFlower = imageLoader.getSubImage(sprite, 4, 5, 48, 48);
-        this.superStar = imageLoader.getSubImage(sprite, 5, 5, 48, 48);
-        this.coin = imageLoader.getSubImage(sprite, 1, 5, 48, 48);
-        this.ordinaryBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
-        this.surpriseBrick = imageLoader.getSubImage(sprite, 2, 1, 48, 48);
-        this.oneCoinBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
-        this.fiveCoinBrick = imageLoader.getSubImage(sprite, 1, 1, 48, 48);
-        this.groundBrick = imageLoader.getSubImage(sprite, 2, 2, 48, 48);
-        this.pipe = imageLoader.getSubImage(sprite, 3, 1, 96, 96);
-        this.goombaLeft = imageLoader.getSubImage(sprite, 2, 4, 48, 48);
-        this.goombaRight = imageLoader.getSubImage(sprite, 5, 4, 48, 48);
-        this.koopaLeft = imageLoader.getSubImage(sprite, 1, 3, 48, 64);
-        this.koopaRight = imageLoader.getSubImage(sprite, 4, 3, 48, 64);
-        this.endFlag = imageLoader.getSubImage(sprite, 5, 1, 48, 48);
+        this.spinyLeft = imageLoader.getSpinyLeft();
+        this.spinyRight = imageLoader.getSpinyRight();
+        this.backgroundImage = imageLoader.getBackgroundImage();
+        this.hole = imageLoader.getHole();
+        this.piranhaOpen = imageLoader.getPiranhaOpen();
+        this.piranhaClose = imageLoader.getPiranhaClose();
+        this.smallPipe = imageLoader.getSmallPipe();
+        this.border = imageLoader.getBorder();
+        this.superMushroom = imageLoader.getSuperMushroom();
+        this.oneHeartUpMushroom = imageLoader.getOneHeartUpMushroom();
+        this.fireFlower = imageLoader.getFireFlower();
+        this.superStar = imageLoader.getSuperStar();
+        this.coin = imageLoader.getCoin();
+        this.ordinaryBrick = imageLoader.getOrdinaryBrick();
+        this.surpriseBrick = imageLoader.getSurpriseBrick();
+        this.oneCoinBrick = imageLoader.getOneCoinBrick();
+        this.fiveCoinBrick = imageLoader.getFiveCoinBrick();
+        this.groundBrick = imageLoader.getGroundBrick();
+        this.pipe = imageLoader.getPipe();
+        this.goombaLeft = imageLoader.getGoombaLeft();
+        this.goombaRight = imageLoader.getGoombaRight();
+        this.koopaLeft = imageLoader.getKoopaLeft();
+        this.koopaRight = imageLoader.getKoopaRight();
+        this.endFlag = imageLoader.getEndFlag();
     }
 
     public Map createMap(String mapPath) {
@@ -157,7 +157,7 @@ public class MapCreator {
                     map.addGroundBrick(brick);
                 } else if (currentPixel == hero) {
                     if (this.hero == null) {
-                        Hero heroObject = new Hero(xLocation, yLocation);
+                        Hero heroObject = new Mario(xLocation, yLocation);
                         map.setHero(heroObject);
                     } else {
                         this.hero.setX(xLocation);
@@ -182,15 +182,15 @@ public class MapCreator {
         Prize generated;
         int random = (int) (Math.random() * 12);
 
-        if (random == 0 || random == 1) { //super mushroom
+        if (random == 0 || random == 1) {
             generated = new SuperMushroom(x, y, this.superMushroom);
-        } else if (random == 2 || random == 3) { //fire flower
+        } else if (random == 2 || random == 3) {
             generated = new FireFlower(x, y, this.fireFlower);
-        } else if (random == 4) { //one heart up mushroom
+        } else if (random == 4) {
             generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
-        } else if (random == 5) { //superstar
+        } else if (random == 5) {
             generated = new SuperStar(x, y, this.superStar);
-        } else { //coin
+        } else {
             generated = new Coin(x, y, this.coin, 10);
         }
         return generated;

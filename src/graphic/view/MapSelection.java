@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 public class MapSelection {
 
-    private ArrayList<String> maps = new ArrayList<>();
-    private MapSelectionItem[] mapSelectionItems;
+    private final ArrayList<String> maps = new ArrayList<>();
+    private final MapSelectionItem[] mapSelectionItems;
 
     public MapSelection() {
         getMaps();

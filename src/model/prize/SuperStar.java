@@ -27,7 +27,7 @@ public class SuperStar extends PrizeItems {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (Math.floor(getY()) == (720 - 96 - 48) && !isJumping()) {
+                if (Math.floor(getY()) == (720 - 96 - 48 + 1) && !isJumping()) {
                     setJumping(true);
                     setVelY(7);
                 }
@@ -35,7 +35,7 @@ public class SuperStar extends PrizeItems {
             }
         };
 
-        if (!isJumpTimerActivated && Math.floor(getY()) == (720 - 96 - 48) && !isJumping() && !isFalling()) {
+        if (!isJumpTimerActivated && Math.floor(getY()) == (720 - 96 - 48 + 1) && !isJumping() && !isFalling()) {
             isJumpTimerActivated = true;
             Timer timer = new Timer();
             timer.schedule(task, 1000);

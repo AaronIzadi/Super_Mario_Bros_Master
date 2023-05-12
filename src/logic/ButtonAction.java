@@ -11,5 +11,6 @@ public enum ButtonAction {
     GO_UP,
     GO_DOWN,
     GO_TO_START_SCREEN,
-    NO_ACTION
+    NO_ACTION,
+    BUY_AXE,
 }

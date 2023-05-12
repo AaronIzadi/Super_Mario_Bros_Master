@@ -105,6 +105,6 @@ public class SoundManager {
     }
 
     public void playFireFlower() {
-
+        playOneUp();
     }
 }

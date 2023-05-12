@@ -2,7 +2,7 @@ package model.hero;
 
 import graphic.view.Animation;
 import graphic.view.ImageLoader;
-import model.prize.Fireball;
+import model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
 
@@ -26,7 +26,7 @@ public class HeroForm {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.setHeroType(heroType);
-        fireballStyle = imageLoader.getFireballImage(heroType);
+        fireballStyle = imageLoader.getFireballImage();
     }
 
     public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY) {

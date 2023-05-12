@@ -3,14 +3,15 @@ package logic;
 import graphic.manager.MapCreator;
 import model.GameObject;
 import model.Map;
-import model.brick.Brick;
-import model.brick.Hole;
-import model.brick.CoinBrick;
-import model.brick.OrdinaryBrick;
+import model.obstacle.Brick;
+import model.obstacle.Hole;
+import model.obstacle.CoinBrick;
+import model.obstacle.OrdinaryBrick;
 import model.enemy.*;
 import model.prize.*;
 import model.hero.Hero;
 import graphic.view.ImageLoader;
+import model.weapon.Fireball;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -112,8 +113,9 @@ public class MapManager {
             map.getEndPoint().setTouched(true);
             int height = (int) getHero().getY();
             return height * 2;
-        } else
+        } else {
             return -1;
+        }
     }
 
     public boolean endLevel() {
@@ -246,7 +248,7 @@ public class MapManager {
         ArrayList<Enemy> enemies = map.getEnemies();
 
         for (Enemy enemy : enemies) {
-            if (enemy instanceof Spiny && getHero().getY() + getHero().getStyle().getHeight() == map.getBottomBorder()) {
+            if (enemy instanceof Spiny && ((getHero().getY() + getHero().getStyle().getHeight()) == (enemy.getY() + enemy.getStyle().getHeight() + 1))) {
                 Spiny spiny = (Spiny) enemy;
                 if (Math.abs(spiny.getX() - getHero().getX()) <= 192) {
                     spiny.moveFaster();

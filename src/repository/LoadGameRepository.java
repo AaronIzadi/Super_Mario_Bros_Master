@@ -1,35 +1,23 @@
 package repository;
 
-import logic.MapManager;
-import graphic.view.ImageLoader;
 import logic.UserData;
-import model.Map;
-import model.hero.Hero;
-import model.hero.HeroType;
+import model.hero.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+
+import static repository.SavePaths.*;
 
 public class LoadGameRepository {
 
     private JSONObject object = new JSONObject();
-    public static final int FILE_1 = 1;
-    public static final int FILE_2 = 2;
-    public static final int FILE_3 = 3;
-    public static final String pathToFile1 = "data/data-game-1.txt";
-    public static final String pathToFile2 = "data/data-game-2.txt";
-    public static final String pathToFile3 = "data/data-game-3.txt";
-
-    public static final String[] filePaths = {pathToFile1, pathToFile2, pathToFile3};
 
     public UserData getUserData(int fileNumber) throws IOException {
 
@@ -66,7 +54,30 @@ public class LoadGameRepository {
         typesOwned[HeroType.ROSS] = (Boolean) object.get("Owns Ross");
         typesOwned[HeroType.TOAD] = (Boolean) object.get("Owns Toad");
 
-        Hero hero = new Hero(x, y, width, height, type, formType, isSuper, canShootFire);
+        Hero hero;
+
+        switch (type){
+            case HeroType.LUIGI: {
+                hero = new Luigi(x, y, width, height, type, formType, isSuper, canShootFire);
+                break;
+            }
+            case HeroType.PRINCE_PEACH: {
+                hero = new PrincePeach(x, y, width, height, type, formType, isSuper, canShootFire);
+                break;
+            }
+            case HeroType.ROSS: {
+                hero = new Ross(x, y, width, height, type, formType, isSuper, canShootFire);
+                break;
+            }
+            case HeroType.TOAD:{
+                hero = new Toad(x, y, width, height, type, formType, isSuper, canShootFire);
+                break;
+            }
+            default:{
+                hero = new Mario(x, y, width, height, type, formType, isSuper, canShootFire);
+                break;
+            }
+        }
         UserData userData = UserData.getInstance();
 
         hero.setRemainingLives(lives);
@@ -87,14 +98,10 @@ public class LoadGameRepository {
 
     private void jsonToReadFile(int fileNumber) throws IOException {
 
-        String address;
+        String address = filePaths[0];
 
-        if (fileNumber == FILE_1) {
-            address = pathToFile1;
-        } else if (fileNumber == FILE_2) {
-            address = pathToFile2;
-        } else {
-            address = pathToFile3;
+        if (isFileIdValid(fileNumber)) {
+            address = filePaths[fileNumber];
         }
 
         Charset encoding = Charset.defaultCharset();
@@ -110,26 +117,12 @@ public class LoadGameRepository {
     }
 
     public boolean isFileEmpty(int fileId) {
-        if (2 < fileId || fileId < 0) {
+        if (!isFileIdValid(fileId)) {
             return false;
         }
         File file = new File(filePaths[fileId]);
         return file.length() == 0;
     }
 
-    public boolean isFileNumberOneEmpty() {
-        File file1 = new File(pathToFile1);
-        return file1.length() == 0;
-    }
-
-    public boolean isFileNumberTwoEmpty() {
-        File file2 = new File(pathToFile2);
-        return file2.length() == 0;
-    }
-
-    public boolean isFileNumberThreeEmpty() {
-        File file3 = new File(pathToFile3);
-        return file3.length() == 0;
-    }
 
 }

@@ -1,4 +1,4 @@
-package model.prize;
+package model.weapon;
 
 
 import model.GameObject;

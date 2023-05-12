@@ -1,9 +1,6 @@
 package graphic.view;
 
-import model.hero.HeroType;
-
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class MapSelectionItem {
 
@@ -14,10 +11,6 @@ public class MapSelectionItem {
     public MapSelectionItem(String map, Point location) {
         this.location = location;
         this.name = map;
-
-        ImageLoader loader = ImageLoader.getInstance();
-        BufferedImage image = loader.loadImage("/maps/" + map);
-
         this.dimension = new Dimension();
     }
 

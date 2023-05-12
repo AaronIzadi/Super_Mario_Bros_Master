@@ -21,7 +21,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
         setDimension(48, 48);
     }
 
-    public void onTouch(Hero hero, GameEngine engine){
+    public void onTouch(Hero hero, GameEngine engine) {
         isTouched = true;
         hero.acquirePoints(getPoint());
         if (engine.getUserData().getHero() != null) {
@@ -32,6 +32,10 @@ public abstract class PrizeItems extends GameObject implements Prize {
 
         BufferedImage[] leftFrames;
         BufferedImage[] rightFrames;
+        if (!hero.isSuper()) {
+            hero.setY(hero.getBottomBounds().getY() - hero.getDimension().getHeight());
+            hero.setDimension(48, 96);
+        }
         if (!hero.getHeroForm().isSuper()) {
             leftFrames = imageLoader.getLeftFrames(HeroForm.SUPER);
             rightFrames = imageLoader.getRightFrames(HeroForm.SUPER);
@@ -39,27 +43,17 @@ public abstract class PrizeItems extends GameObject implements Prize {
             Animation animation = new Animation(leftFrames, rightFrames);
             HeroForm newForm = new HeroForm(animation, true, false, hero.getType());
             hero.setHeroForm(newForm);
-            hero.setDimension(48, 96);
-            if (engine.getUserData().getHero() != null) {
-                engine.getUserData().getHero().setHeroForm(newForm);
-                engine.getUserData().getHero().setDimension(48, 96);
-            }
-        }
-        else{
+        } else {
             leftFrames = imageLoader.getLeftFrames(HeroForm.FIRE);
             rightFrames = imageLoader.getRightFrames(HeroForm.FIRE);
 
             Animation animation = new Animation(leftFrames, rightFrames);
             HeroForm newForm = new HeroForm(animation, true, true, hero.getType());
             hero.setHeroForm(newForm);
-            hero.setDimension(48, 96);
-            if (engine.getUserData().getHero() != null) {
-                engine.getUserData().getHero().setHeroForm(newForm);
-                engine.getUserData().getHero().setDimension(48, 96);
-            }
         }
+
         engine.playSuperMushroom();
-    };
+    }
 
     @Override
     public int getPoint() {
@@ -67,7 +61,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
     }
 
     @Override
-    public void updateLocation(){
+    public void updateLocation() {
         if (revealed) {
             super.updateLocation();
         }

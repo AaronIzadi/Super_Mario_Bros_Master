@@ -1,12 +1,13 @@
 package model;
 
-import model.brick.Brick;
-import model.brick.Hole;
-import model.brick.CoinBrick;
-import model.brick.OrdinaryBrick;
+import model.obstacle.Brick;
+import model.obstacle.Hole;
+import model.obstacle.CoinBrick;
+import model.obstacle.OrdinaryBrick;
 import model.enemy.Enemy;
 import model.prize.*;
 import model.hero.Hero;
+import model.weapon.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

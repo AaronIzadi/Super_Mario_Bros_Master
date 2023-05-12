@@ -1,5 +1,6 @@
 package graphic.view;
 
+import graphic.manager.FontLoader;
 import logic.GameEngine;
 import logic.GameState;
 import model.hero.HeroType;
@@ -7,13 +8,11 @@ import model.hero.HeroType;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class UIManager extends JPanel {
 
     private final GameEngine engine;
-    private Font gameFont;
+    private final Font gameFont;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
@@ -26,30 +25,22 @@ public class UIManager extends JPanel {
         setMinimumSize(new Dimension(width, height));
 
         this.engine = engine;
-        ImageLoader loader = engine.getImageLoader();
+        ImageLoader loader = ImageLoader.getInstance();
 
         mapSelection = new MapSelection();
 
-        BufferedImage sprite = loader.loadImage("/sprite.png");
-        this.heartIcon = loader.loadImage("/heart-icon.png");
-        this.coinIcon = loader.getSubImage(sprite, 1, 5, 48, 48);
-        this.selectIcon = loader.loadImage("/select-icon.png");
-        this.startScreenImage = loader.loadImage("/start-screen.png");
-        this.helpScreenImage = loader.loadImage("/help-screen.png");
-        this.aboutScreenImage = loader.loadImage("/about-screen.png");
-        this.gameOverScreen = loader.loadImage("/game-over.png");
-        this.storeScreenImage = loader.loadImage("/store-screen.png");
-        this.loadGameScreen = loader.loadImage("/load-screen.png");
-        this.pauseScreen = loader.loadImage("/pause-screen.png");
+        this.heartIcon = loader.getHeartIcon();
+        this.coinIcon = loader.getCoinIcon();
+        this.selectIcon = loader.getSelectIcon();
+        this.startScreenImage = loader.getStartScreenImage();
+        this.helpScreenImage = loader.getHelpScreenImage();
+        this.aboutScreenImage = loader.getAboutScreenImage();
+        this.gameOverScreen = loader.getGameOverScreen();
+        this.storeScreenImage = loader.getStoreScreenImage();
+        this.loadGameScreen = loader.getLoadGameScreen();
+        this.pauseScreen = loader.getPauseScreen();
 
-        try {
-            InputStream input = getClass().getResourceAsStream("/graphic/media/font/mario-font.ttf");
-            assert input != null;
-            gameFont = Font.createFont(Font.TRUETYPE_FONT, input);
-        } catch (FontFormatException | IOException e) {
-            gameFont = new Font("Verdana", Font.PLAIN, 12);
-            e.printStackTrace();
-        }
+        this.gameFont = new FontLoader().getFont();
     }
 
     @Override
@@ -235,10 +226,6 @@ public class UIManager extends JPanel {
         int row = engine.getLoadGameScreenSelection().getLineNumber();
         g2.drawImage(loadGameScreen, 0, 0, null);
         g2.drawImage(selectIcon, 450, row * 70 + 290, null);
-    }
-
-    public String selectMapViaMouse(Point mouseLocation) {
-        return mapSelection.selectMap(mouseLocation);
     }
 
     public String selectMapViaKeyboard(int index) {

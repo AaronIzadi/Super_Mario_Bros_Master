@@ -10,44 +10,54 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import static java.awt.event.KeyEvent.*;
 
 
 public class InputManager implements KeyListener, MouseListener {
 
-    private final GameEngine engine;
+    private static final InputManager instance = new InputManager();
+    private final Set<Integer> keyPressed;
 
-    public InputManager(GameEngine engine) {
-        this.engine = engine;
+    private InputManager() {
+        keyPressed = new HashSet<>();
+    }
+
+    public static InputManager getInstance() {
+        return instance;
     }
 
     @Override
     public void keyPressed(KeyEvent event) {
         int keyCode = event.getKeyCode();
-        GameState state = engine.getGameState();
+        keyPressed.add(keyCode);
+        GameState state = GameEngine.getInstance().getGameState();
         ButtonAction currentAction = ButtonAction.NO_ACTION;
 
         boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.MAP_SELECTION || state == GameState.PAUSED;
-        if (keyCode == KeyEvent.VK_UP) {
+        if (keyCode == VK_UP) {
             if (notRunningState)
                 currentAction = ButtonAction.GO_UP;
             else
                 currentAction = ButtonAction.JUMP;
-        } else if (keyCode == KeyEvent.VK_DOWN) {
+        } else if (keyCode == VK_DOWN) {
             if (notRunningState)
                 currentAction = ButtonAction.GO_DOWN;
-        } else if (keyCode == KeyEvent.VK_RIGHT) {
+        } else if (keyCode == VK_RIGHT) {
             currentAction = ButtonAction.MOVE_RIGHT;
-        } else if (keyCode == KeyEvent.VK_LEFT) {
+        } else if (keyCode == VK_LEFT) {
             currentAction = ButtonAction.MOVE_LEFT;
-        } else if (keyCode == KeyEvent.VK_ENTER) {
+        } else if (keyCode == VK_ENTER) {
             currentAction = ButtonAction.SELECT;
-        } else if (keyCode == KeyEvent.VK_ESCAPE) {
+        } else if (keyCode == VK_ESCAPE) {
             if (state == GameState.RUNNING || state == GameState.PAUSED)
                 currentAction = ButtonAction.PAUSE_RESUME;
             else
                 currentAction = ButtonAction.GO_TO_START_SCREEN;
 
-        } else if (keyCode == KeyEvent.VK_SPACE) {
+        } else if (keyCode == VK_SPACE) {
             currentAction = ButtonAction.FIRE;
         }
 
@@ -60,28 +70,23 @@ public class InputManager implements KeyListener, MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-        if (engine.getGameState() == GameState.MAP_SELECTION) {
-            engine.selectMapViaMouse();
-        }
-    }
-
-    @Override
     public void keyReleased(KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.VK_RIGHT || event.getKeyCode() == KeyEvent.VK_LEFT) {
-            try {
-                notifyInput(ButtonAction.ACTION_COMPLETED);
-            } catch (IOException | ParseException e) {
-                throw new RuntimeException(e);
-            }
+        keyPressed.remove(event.getKeyCode());
+        try {
+            notifyInput(ButtonAction.ACTION_COMPLETED);
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private void notifyInput(ButtonAction action) throws IOException, ParseException {
         if (action != ButtonAction.NO_ACTION)
-            engine.receiveInput(action);
+            GameEngine.getInstance().receiveInput();
     }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
     @Override
     public void keyTyped(KeyEvent arg0) {
     }
@@ -101,4 +106,48 @@ public class InputManager implements KeyListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
+
+    public boolean isPressed(int keyCode) {
+        return keyPressed.contains(keyCode);
+    }
+    public boolean isEnter() {
+        return isPressed(VK_ENTER);
+    }
+
+    public boolean isRight() {
+        return isPressed(VK_RIGHT);
+    }
+
+    public boolean isLeft() {
+        return isPressed(VK_LEFT);
+    }
+
+    public boolean isUp() {
+        return isPressed(VK_UP);
+    }
+
+    public boolean isDown() {
+        return isPressed(VK_DOWN);
+    }
+
+    public boolean isSpace() {
+        return isPressed(VK_SPACE);
+    }
+
+    public boolean isEscape() {
+        return isPressed(VK_ESCAPE);
+    }
+
+    public boolean isEmpty() {
+        return keyPressed.isEmpty();
+    }
+
+    public boolean isLeftAndRightSelected() {
+        return isLeft() && isRight();
+    }
+
+    public boolean isUpAndDownSelected() {
+        return isUp() && isDown();
+    }
+
 }

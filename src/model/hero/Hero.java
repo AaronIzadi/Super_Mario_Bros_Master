@@ -5,14 +5,14 @@ import logic.GameEngine;
 import graphic.view.Animation;
 import model.GameObject;
 import graphic.view.ImageLoader;
-import model.prize.Fireball;
+import model.weapon.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Hero extends GameObject {
+public abstract class Hero extends GameObject {
     private int remainingLives;
     private int coins;
     private int points;
@@ -63,23 +63,9 @@ public class Hero extends GameObject {
         super.draw(g);
     }
 
-    public void jump(GameEngine engine) {
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(10);
-            engine.playJump();
-        }
-    }
+    public abstract void jump();
 
-    public void move(boolean toRight, Camera camera) {
-        if (toRight) {
-            setVelX(5);
-        } else if (camera.getX() < getX()) {
-            setVelX(-5);
-        }
-
-        this.toRight = toRight;
-    }
+    public abstract void move(boolean toRight, Camera camera);
 
     public void setTimer() {
         TimerTask task = new TimerTask() {
@@ -111,7 +97,9 @@ public class Hero extends GameObject {
                 return true;
             } else {
                 engine.shakeCamera();
+                heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
                 setDimension(48, 48);
+                setY(getY() + getDimension().getHeight());
                 return false;
             }
         }
@@ -198,7 +186,6 @@ public class Hero extends GameObject {
         this.coins++;
     }
 
-
     public void setCoins(int coins) {
         this.coins = coins;
     }
@@ -214,42 +201,6 @@ public class Hero extends GameObject {
         setY(100);
         setJumping(false);
         setFalling(true);
-    }
-
-    public void jumpForLuigi(GameEngine engine) {
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(13);
-            engine.playJump();
-        }
-    }
-
-    public void jumpForPrincePeach(GameEngine engine) {
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(12);
-            engine.playJump();
-        }
-    }
-
-    public void moveForPrincePeach(boolean toRight, Camera camera) {
-        if (toRight) {
-            setVelX(6);
-        } else if (camera.getX() < getX()) {
-            setVelX(-6);
-        }
-
-        this.toRight = toRight;
-    }
-
-    public void moveForRoss(boolean toRight, Camera camera) {
-        if (toRight) {
-            setVelX(7);
-        } else if (camera.getX() < getX()) {
-            setVelX(-7);
-        }
-
-        this.toRight = toRight;
     }
 
     @Override
