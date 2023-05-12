@@ -9,6 +9,7 @@ import java.util.TimerTask;
 
 public class SuperStar extends PrizeItems {
 
+    private boolean isJumpTimerActivated = false;
 
     public SuperStar(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -20,24 +21,26 @@ public class SuperStar extends PrizeItems {
     public void updateLocation() {
         super.updateLocation();
         setTimerToJump();
-        if (Math.floor(getY()) == (720 - 95 - 48)) {
-            if (!isJumping() && !isFalling()) {
-                setJumping(true);
-                setY(getY() - 48);
-            }
-        }
     }
 
     public void setTimerToJump() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                setJumping(false);
+                if (Math.floor(getY()) == (720 - 96 - 48) && !isJumping()) {
+                    setJumping(true);
+                    setVelY(7);
+                }
+                isJumpTimerActivated = false;
             }
         };
 
-        Timer timer = new Timer();
-        timer.schedule(task, 1000);
+        if (!isJumpTimerActivated && Math.floor(getY()) == (720 - 96 - 48) && !isJumping() && !isFalling()) {
+            isJumpTimerActivated = true;
+            Timer timer = new Timer();
+            timer.schedule(task, 1000);
+
+        }
     }
 
     @Override

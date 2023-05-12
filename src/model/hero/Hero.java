@@ -9,8 +9,6 @@ import model.prize.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -21,27 +19,38 @@ public class Hero extends GameObject {
     private double invincibilityTimer;
     private HeroForm heroForm;
     private int type;
-    private boolean toRight = true;
-    private String mapPath;
+    private boolean toRight;
     private boolean tookStar;
 
     public Hero(double x, double y) {
         super(x, y, null);
         setDimension(48, 48);
+        manageHero(HeroForm.SMALL, false, false); // TODO why 3 parameter when we have one for all?
+    }
 
+    public Hero(double x, double y, int width, int height, int type, int heroForm, boolean isSuper, boolean canShootFire) {
+        super(x, y, null);
+        this.type = type;
+        setDimension(width, height);
+        manageHero(heroForm, isSuper, canShootFire);
+    }
+
+    private void manageHero(int heroForm, boolean isSuper, boolean canShootFire) {
         remainingLives = 3;
         points = 0;
         coins = 0;
         invincibilityTimer = 0;
+        toRight = true;
+        tookStar = false;
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.setHeroType(type);
-        BufferedImage[] leftFrames = imageLoader.getLeftFrames(HeroForm.SMALL);
-        BufferedImage[] rightFrames = imageLoader.getRightFrames(HeroForm.SMALL);
+        BufferedImage[] leftFrames = imageLoader.getLeftFrames(heroForm);
+        BufferedImage[] rightFrames = imageLoader.getRightFrames(heroForm);
 
         Animation animation = new Animation(leftFrames, rightFrames);
-        heroForm = new HeroForm(animation, false, false, type);
-        setStyle(heroForm.getCurrentStyle(toRight, false, false));
+        this.heroForm = new HeroForm(animation, isSuper, canShootFire, type);
+        setStyle(this.heroForm.getCurrentStyle(toRight, false, false));
     }
 
     @Override
@@ -72,7 +81,7 @@ public class Hero extends GameObject {
         this.toRight = toRight;
     }
 
-    public void setTimer(){
+    public void setTimer() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -83,7 +92,7 @@ public class Hero extends GameObject {
         timer.schedule(task, 15000);
     }
 
-    public void setTimerToRun(){
+    public void setTimerToRun() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -93,25 +102,15 @@ public class Hero extends GameObject {
         Timer timer = new Timer();
         timer.schedule(task, 1000);
     }
+
     public boolean onTouchEnemy(GameEngine engine) {
 
-        if (!ifTookStar()){
+        if (!ifTookStar()) {
             if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
-                remainingLives--;
-                points = points > 20 ? points - 20 : 0;
-                if (engine.getUserData().getHero() != null) {
-                    engine.getUserData().getHero().setRemainingLives(engine.getUserData().getHero().getRemainingLives() - 1);
-                    engine.getUserData().getHero().setPoints(engine.getUserData().getHero().points > 20 ? engine.getUserData().getHero().points - 20 : 0);
-
-                }
-                engine.playHeroDies();
+                heroDies(engine, 20);
                 return true;
             } else {
                 engine.shakeCamera();
-                heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
-                if (engine.getUserData().getHero() != null) {
-                    engine.getUserData().getHero().setHeroForm(engine.getUserData().getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
-                }
                 setDimension(48, 48);
                 return false;
             }
@@ -119,16 +118,15 @@ public class Hero extends GameObject {
         return false;
     }
 
-    public void onTouchHole(GameEngine engine) {
-        remainingLives = remainingLives - 1;
-        heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
-        points = points > 30 ? points - 30 : 0;
-        if (engine.getUserData().getHero() != null) {
-            engine.getUserData().getHero().setRemainingLives(engine.getUserData().getHero().getRemainingLives() - 1);
-            engine.getUserData().getHero().setHeroForm(engine.getUserData().getHero().getHeroForm().onTouchEnemy(engine.getImageLoader()));
-            engine.getUserData().getHero().setPoints(engine.getUserData().getHero().points > 30 ? engine.getUserData().getHero().points - 30 : 0);
-        }
+    public void onTouchBorder(GameEngine engine) {
+        heroDies(engine, 30);
+    }
+
+    public void heroDies(GameEngine engine, int lostScore) {
+        remainingLives--;
+        points = points > lostScore ? points - lostScore : 0;
         engine.playHeroDies();
+        heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
         setDimension(48, 48);
     }
 
@@ -213,6 +211,7 @@ public class Hero extends GameObject {
         setVelX(0);
         setVelY(0);
         setX(50);
+        setY(100);
         setJumping(false);
         setFalling(true);
     }
@@ -260,14 +259,6 @@ public class Hero extends GameObject {
 
     public void acquireCoinForToad() {
         setExtraCoin();
-    }
-
-    public void setMapPath(String mapPath) {
-        this.mapPath = mapPath;
-    }
-
-    public String getMapPath() {
-        return mapPath;
     }
 
     public void setTookStar(boolean tookStar) {

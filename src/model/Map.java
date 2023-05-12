@@ -29,12 +29,7 @@ public class Map {
     private String path;
 
 
-    public Map() {
-    }
-
-    public Map(Hero hero) {
-        this.hero = hero;
-    }
+    public Map() {}
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
@@ -186,7 +181,7 @@ public class Map {
     }
 
     public double getBottomBorder() {
-        return 720 - 95;
+        return 720;
     }
 
     public void addRevealedPrize(Prize prize) {

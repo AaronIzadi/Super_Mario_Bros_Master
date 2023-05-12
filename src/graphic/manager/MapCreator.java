@@ -21,8 +21,8 @@ public class MapCreator {
     private ImageLoader imageLoader;
     private BufferedImage backgroundImage;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private BufferedImage ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, hole;
-    private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranha, superStar, endFlag;
+    private BufferedImage border, ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
 
 
     public MapCreator() {
@@ -43,7 +43,10 @@ public class MapCreator {
         this.spinyRight = imageLoader.loadImage("/spiny-right.png");
         this.backgroundImage = imageLoader.loadImage("/background.png");
         this.hole = imageLoader.loadImage("/hole.png");
-        this.piranha = imageLoader.loadImage("/piranha.png");
+        this.piranhaOpen = imageLoader.loadImage("/piranha-open.png");
+        this.piranhaClose = imageLoader.loadImage("/piranha-close.png");
+        this.smallPipe = imageLoader.loadImage("/pipe-small.png");
+        this.border = imageLoader.loadImage("/ground-brick.png");
         this.superMushroom = imageLoader.getSubImage(sprite, 2, 5, 48, 48);
         this.oneHeartUpMushroom = imageLoader.getSubImage(sprite, 3, 5, 48, 48);
         this.fireFlower = imageLoader.getSubImage(sprite, 4, 5, 48, 48);
@@ -93,8 +96,10 @@ public class MapCreator {
         int hole = new Color(200, 191, 231).getRGB();
         int spiny = new Color(128, 255, 128).getRGB();
         int piranha = new Color(200, 124, 124).getRGB();
-        int oneCoinBrick = new Color(255, 124, 0).getRGB();
-        int fiveCoinBrick = new Color(20, 100, 40).getRGB();
+        int coinBrick = new Color(255, 124, 0).getRGB();
+        int multiCoinBrick = new Color(20, 100, 40).getRGB();
+        int smallPipe = new Color(34, 177, 76).getRGB();
+        int border = new Color(127, 51, 0).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -110,20 +115,23 @@ public class MapCreator {
                     Hole brick = new Hole(xLocation, yLocation, this.hole);
                     map.addBrick(brick);
                     map.addHoles(brick);
+                } else if (currentPixel == border) {
+                    Brick brick = new Border(xLocation, yLocation, this.border);
+                    map.addBrick(brick);
                 } else if (currentPixel == surpriseBrick) {
                     Prize prize = generateRandomPrize(xLocation, yLocation);
                     Brick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
                     map.addBrick(brick);
-                } else if (currentPixel == oneCoinBrick) {
+                } else if (currentPixel == coinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
                     Brick brick = new CoinBrick(xLocation, yLocation, this.oneCoinBrick, prize);
                     map.addBrick(brick);
-                } else if (currentPixel == fiveCoinBrick) {
+                } else if (currentPixel == multiCoinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
                     Brick brick = new MultiCoinBrick(xLocation, yLocation, this.fiveCoinBrick, prize);
                     map.addBrick(brick);
-                } else if (currentPixel == pipe) {
-                    Brick brick = new Pipe(xLocation, yLocation, this.pipe);
+                } else if (currentPixel == smallPipe) {
+                    Brick brick = new SmallPipe(xLocation, yLocation, this.smallPipe);
                     map.addGroundBrick(brick);
                 } else if (currentPixel == groundBrick) {
                     Brick brick = new GroundBrick(xLocation, yLocation, this.groundBrick);
@@ -141,13 +149,15 @@ public class MapCreator {
                     enemy.setRightImage(spinyRight);
                     map.addEnemy(enemy);
                 } else if (currentPixel == piranha) {
-                    Piranha enemy = new Piranha(xLocation, yLocation, this.piranha);
-                    enemy.setRightImage(this.piranha);
+                    Piranha enemy = new Piranha(xLocation, yLocation, this.piranhaClose);
+                    enemy.setRightImage(this.piranhaOpen);
                     map.addEnemy(enemy);
+                } else if (currentPixel == pipe) {
+                    Brick brick = new Pipe(xLocation, yLocation, this.pipe);
+                    map.addGroundBrick(brick);
                 } else if (currentPixel == hero) {
                     if (this.hero == null) {
                         Hero heroObject = new Hero(xLocation, yLocation);
-                        //  heroObject.setType(heroType);
                         map.setHero(heroObject);
                     } else {
                         this.hero.setX(xLocation);

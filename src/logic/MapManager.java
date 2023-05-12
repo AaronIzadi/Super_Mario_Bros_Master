@@ -131,7 +131,7 @@ public class MapManager {
         checkEnemyCollisions();
         checkPrizeCollision();
         checkPrizeContact(engine);
-        checkFireballContact(engine);
+        checkFireballContact();
     }
 
 
@@ -140,9 +140,7 @@ public class MapManager {
         ArrayList<Enemy> enemies = map.getEnemies();
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
-        if (!hero.isJumping()) {
-            hero.setFalling(true);
-        }
+        boolean heroHasBottomIntersection = false;
 
         for (Brick brick : bricks) {
             Rectangle brickTopBounds = brick.getTopBounds();
@@ -151,15 +149,15 @@ public class MapManager {
                     hero.setY(brick.getY() - hero.getDimension().height + 1);
                     hero.setFalling(false);
                     hero.setVelY(0);
+                    heroHasBottomIntersection = true;
                 } else {
-                    hero.setY(720 - hero.getDimension().height - 1);
-                    hero.setVelY(0);
                     hero.setFalling(true);
-                    hero.onTouchHole(engine);
-                    resetCurrentMap(engine);
                 }
             }
         }
+
+        hero.setFalling(!heroHasBottomIntersection);
+
         for (Enemy enemy : enemies) {
             Rectangle enemyTopBounds = enemy.getTopBounds();
             if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny) && !(enemy instanceof Piranha)) {
@@ -167,7 +165,6 @@ public class MapManager {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
                         koopaTroopa.setHit(true);
-                        koopaTroopa.setXHit(koopaTroopa.getX());
                         koopaTroopa.moveAfterHit();
                         hero.setTimerToRun();
                     } else {
@@ -183,10 +180,9 @@ public class MapManager {
             }
         }
 
-        if (hero.getY() + hero.getDimension().height >= map.getBottomBorder()) {
-            hero.setY(map.getBottomBorder() - hero.getDimension().height);
-            hero.setFalling(false);
-            hero.setVelY(0);
+        if (hero.getY() >= map.getBottomBorder()) {
+            hero.onTouchBorder(engine);
+            resetCurrentMap(engine);
         }
 
         removeObjects(toBeRemoved);
@@ -198,7 +194,7 @@ public class MapManager {
         Rectangle heroTopBounds = hero.getTopBounds();
         for (Brick brick : bricks) {
             Rectangle brickBottomBounds = brick.getBottomBounds();
-            if (heroTopBounds.intersects(brickBottomBounds)) {
+            if (!(brick instanceof Hole) && heroTopBounds.intersects(brickBottomBounds)) {
                 hero.setVelY(0);
                 hero.setY(brick.getY() + brick.getDimension().height);
                 Prize prize = brick.reveal(engine);
@@ -261,40 +257,42 @@ public class MapManager {
         }
 
         for (Enemy enemy : enemies) {
-            boolean standsOnBrick = false;
+            if (!(enemy instanceof Piranha)) {
+                boolean standsOnBrick = false;
 
-            for (Brick brick : bricks) {
-                Rectangle enemyBounds = enemy.getLeftBounds();
-                Rectangle brickBounds = brick.getRightBounds();
+                for (Brick brick : bricks) {
+                    Rectangle enemyBounds = enemy.getLeftBounds();
+                    Rectangle brickBounds = brick.getRightBounds();
 
-                Rectangle enemyBottomBounds = enemy.getBottomBounds();
-                Rectangle brickTopBounds = brick.getTopBounds();
+                    Rectangle enemyBottomBounds = enemy.getBottomBounds();
+                    Rectangle brickTopBounds = brick.getTopBounds();
 
-                if (enemy.getVelX() > 0) {
-                    enemyBounds = enemy.getRightBounds();
-                    brickBounds = brick.getLeftBounds();
+                    if (enemy.getVelX() > 0) {
+                        enemyBounds = enemy.getRightBounds();
+                        brickBounds = brick.getLeftBounds();
+                    }
+
+                    if (enemyBounds.intersects(brickBounds)) {
+                        enemy.setVelX(-enemy.getVelX());
+                    }
+
+                    if (enemyBottomBounds.intersects(brickTopBounds)) {
+                        enemy.setFalling(false);
+                        enemy.setVelY(0);
+                        enemy.setY(brick.getY() - enemy.getDimension().height);
+                        standsOnBrick = true;
+                    }
                 }
 
-                if (enemyBounds.intersects(brickBounds)) {
-                    enemy.setVelX(-enemy.getVelX());
-                }
-
-                if (enemyBottomBounds.intersects(brickTopBounds)) {
+                if (enemy.getY() + enemy.getDimension().height > map.getBottomBorder()) {
                     enemy.setFalling(false);
                     enemy.setVelY(0);
-                    enemy.setY(brick.getY() - enemy.getDimension().height);
-                    standsOnBrick = true;
+                    enemy.setY(map.getBottomBorder() - enemy.getDimension().height);
                 }
-            }
 
-            if (enemy.getY() + enemy.getDimension().height > map.getBottomBorder()) {
-                enemy.setFalling(false);
-                enemy.setVelY(0);
-                enemy.setY(map.getBottomBorder() - enemy.getDimension().height);
-            }
-
-            if (!standsOnBrick && enemy.getY() < map.getBottomBorder()) {
-                enemy.setFalling(true);
+                if (!standsOnBrick && enemy.getY() < map.getBottomBorder()) {
+                    enemy.setFalling(true);
+                }
             }
         }
     }
@@ -374,7 +372,7 @@ public class MapManager {
         removeObjects(toBeRemoved);
     }
 
-    private void checkFireballContact(GameEngine engine) {
+    private void checkFireballContact() {
         ArrayList<Fireball> fireballs = map.getFireballs();
         ArrayList<Enemy> enemies = map.getEnemies();
         ArrayList<Brick> bricks = map.getAllBricks();

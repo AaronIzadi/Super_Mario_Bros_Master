@@ -46,16 +46,12 @@ public abstract class GameObject {
         if (isJumping() && getVelY() <= 0) {
             setJumping(false);
             setFalling(true);
-        } else if (isJumping()) {
+        }
+
+        if (isFalling() || isJumping()) {
             setVelY(getVelY() - getGravityAcc());
-            setY(getY() - getVelY());
         }
-
-        if (isFalling()) {
-            setY(getY() + getVelY());
-            setVelY(getVelY() + getGravityAcc());
-        }
-
+        setY(getY() - getVelY()); // this is negative because the Y-vector in drawing is not the way we supposed :)
         setX(getX() + getVelX());
     }
 

@@ -25,11 +25,11 @@ public class LoadGameRepository {
     public static final int FILE_1 = 1;
     public static final int FILE_2 = 2;
     public static final int FILE_3 = 3;
-    private Hero hero;
-
     public static final String pathToFile1 = "data/data-game-1.txt";
     public static final String pathToFile2 = "data/data-game-2.txt";
     public static final String pathToFile3 = "data/data-game-3.txt";
+
+    public static final String[] filePaths = {pathToFile1, pathToFile2, pathToFile3};
 
     public UserData getUserData(int fileNumber) throws IOException {
 
@@ -66,41 +66,24 @@ public class LoadGameRepository {
         typesOwned[HeroType.ROSS] = (Boolean) object.get("Owns Ross");
         typesOwned[HeroType.TOAD] = (Boolean) object.get("Owns Toad");
 
-        Hero hero = new Hero(x, y);
+        Hero hero = new Hero(x, y, width, height, type, formType, isSuper, canShootFire);
         UserData userData = UserData.getInstance();
 
-        hero.setType(type);
         hero.setRemainingLives(lives);
         hero.setPoints(points);
         hero.setInvincibilityTimer(timer);
         hero.setCoins(coins);
         hero.setToRight(toRight);
-        hero.setDimension(new Dimension(width, height));
         hero.setGravityAcc(gravityAcc);
         hero.setFalling(falling);
         hero.setJumping(jumping);
-        hero.getHeroForm().setType(formType);
-        hero.getHeroForm().setSuper(isSuper);
-        hero.getHeroForm().setCanShootFire(canShootFire);
-        hero.setMapPath(mapPath);
 
         userData.setTypesOwned(typesOwned);
         userData.setHero(hero);
-        this.hero = hero;
-        userData.setMap(getMap(fileNumber));
+        userData.setMapPath(mapPath);
 
         return userData;
     }
-
-    public Map getMap(int fileNumber) throws IOException {
-
-        jsonToReadFile(fileNumber);
-        String mapPath = (String) object.get("Map path");
-        MapManager.getInstance().createMap(mapPath, hero);
-
-        return MapManager.getInstance().getMap();
-    }
-
 
     private void jsonToReadFile(int fileNumber) throws IOException {
 
@@ -124,6 +107,14 @@ public class LoadGameRepository {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isFileEmpty(int fileId) {
+        if (2 < fileId || fileId < 0) {
+            return false;
+        }
+        File file = new File(filePaths[fileId]);
+        return file.length() == 0;
     }
 
     public boolean isFileNumberOneEmpty() {

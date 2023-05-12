@@ -9,7 +9,6 @@ import java.util.TimerTask;
 public class KoopaTroopa extends Enemy {
 
     private BufferedImage rightImage;
-    private Double xHit;
     private boolean isHit;
     private Double lastVelX = 0.0;
 
@@ -17,7 +16,6 @@ public class KoopaTroopa extends Enemy {
         super(x, y, style);
         setVelX(3);
         isHit = false;
-        xHit = 0.0;
     }
 
     @Override
@@ -57,14 +55,6 @@ public class KoopaTroopa extends Enemy {
         } else {
             setX(getX() - 48);
         }
-    }
-
-    public void setXHit(Double xHit) {
-        this.xHit = xHit;
-    }
-
-    public Double getXHit() {
-        return xHit;
     }
 
     public void setTimer() {

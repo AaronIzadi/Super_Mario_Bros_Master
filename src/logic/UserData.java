@@ -10,6 +10,7 @@ public class UserData {
 
     private Hero hero;
     private Map map;
+    private String mapPath;
     private boolean[] typesOwned;
     private final LoadGameRepository loadGameRepository;
     private final SaveGameRepository saveGameRepository;
@@ -64,5 +65,13 @@ public class UserData {
 
     public SaveGameRepository getSaveGameRepository() {
         return saveGameRepository;
+    }
+
+    public void setMapPath(String mapPath) {
+        this.mapPath = mapPath;
+    }
+
+    public String getMapPath() {
+        return mapPath;
     }
 }

@@ -25,7 +25,7 @@ public class SaveGameRepository {
         object.put("Hero Type", hero.getType());
         object.put("Hero form is super", hero.getHeroForm().isSuper());
         object.put("Hero form can shoot", hero.getHeroForm().ifCanShootFire());
-        object.put("Hero form type", hero.getHeroForm().getType());
+        object.put("Hero form type", hero.getHeroForm().getHeroType());
         object.put("Remaining Lives", hero.getRemainingLives());
         object.put("Points", hero.getPoints());
         object.put("Invincibility Timer", hero.getInvincibilityTimer());
@@ -44,7 +44,7 @@ public class SaveGameRepository {
         object.put("Owns Ross", userData.getTypesOwned()[HeroType.ROSS]);
         object.put("Owns Toad", userData.getTypesOwned()[HeroType.TOAD]);
 
-        object.put("Map path", userData.getHero().getMapPath());
+        object.put("Map path", userData.getMapPath());
 
         addToFile(fileNumber);
     }

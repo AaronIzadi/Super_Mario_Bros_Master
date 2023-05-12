@@ -5,6 +5,7 @@ import graphic.view.*;
 import graphic.view.UIManager;
 import model.Map;
 import model.hero.Hero;
+import model.hero.HeroForm;
 import model.hero.HeroType;
 import repository.LoadGameRepository;
 import repository.SaveGameRepository;
@@ -83,7 +84,6 @@ public class GameEngine implements Runnable {
         String path = uiManager.selectMapViaMouse(uiManager.getMousePosition());
         if (path != null) {
             createMap(path);
-            //     mapManager.getHero().setMapPath(path);
         }
     }
 
@@ -91,7 +91,6 @@ public class GameEngine implements Runnable {
         String path = uiManager.selectMapViaKeyboard(selectedMap);
         if (path != null) {
             createMap(path);
-            //        mapManager.getHero().setMapPath(path);
         }
     }
 
@@ -219,6 +218,31 @@ public class GameEngine implements Runnable {
         mapManager.checkCollisions(this);
     }
 
+    private void checkAndThenLoadFile(int fileId) throws IOException {
+        if (2 < fileId || fileId < 0) {
+            startGame();
+            return;
+        }
+        if (!userData.getLoadGameRepository().isFileNumberOneEmpty()) {
+            loadGame(fileId);
+            setGameState(GameState.STORE_SCREEN);
+        } else {
+            startGame();
+        }
+    }
+
+    private void checkIfThenBuyHero(StoreScreenSelection selection) {
+        int heroId = selection.getColumnNumber();
+        Hero hero = userData.getHero();
+
+        if (userData.getTypesOwned()[heroId]) {
+            loadNewHero(heroId);
+        } else if (hero.getCoins() >= selection.getHeroPrice()) {
+            hero.setCoins(hero.getCoins() - selection.getHeroPrice());
+            buyAndLoadNewHero(heroId);
+        }
+        setGameState(GameState.RUNNING);
+    }
     public void receiveInput(ButtonAction input) throws IOException {
 
         if (gameState == GameState.START_SCREEN) {
@@ -237,73 +261,28 @@ public class GameEngine implements Runnable {
             if (input == ButtonAction.SELECT && loadGameScreenSelection == LoadGameScreenSelection.NEW_GAME) {
                 startGame();
             } else if (input == ButtonAction.SELECT && loadGameScreenSelection == LoadGameScreenSelection.LOAD_GAME_1) {
-                if (!userData.getLoadGameRepository().isFileNumberOneEmpty()) {
-                    loadGame(LoadGameRepository.FILE_1);
-                    setGameState(GameState.STORE_SCREEN);
-                } else {
-                    startGame();
-                }
+                checkAndThenLoadFile(LoadGameRepository.FILE_1);
             } else if (input == ButtonAction.SELECT && loadGameScreenSelection == LoadGameScreenSelection.LOAD_GAME_2) {
-                if (!userData.getLoadGameRepository().isFileNumberTwoEmpty()) {
-                    loadGame(LoadGameRepository.FILE_2);
-                    setGameState(GameState.STORE_SCREEN);
-                } else {
-                    startGame();
-                }
+                checkAndThenLoadFile(LoadGameRepository.FILE_2);
             } else if (input == ButtonAction.SELECT && loadGameScreenSelection == LoadGameScreenSelection.LOAD_GAME_3) {
-                if (!userData.getLoadGameRepository().isFileNumberThreeEmpty()) {
-                    loadGame(LoadGameRepository.FILE_3);
-                    setGameState(GameState.STORE_SCREEN);
-                } else {
-                    startGame();
-                }
+                checkAndThenLoadFile(LoadGameRepository.FILE_3);
             } else if (input == ButtonAction.GO_UP) {
                 selectToStartOrLoad(true);
             } else if (input == ButtonAction.GO_DOWN) {
                 selectToStartOrLoad(false);
             }
         } else if (gameState == GameState.STORE_SCREEN) {
-            if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.MARIO) {
-                loadNewHero(HeroType.MARIO);
-                setGameState(GameState.RUNNING);
-            } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.LUIGI) {
-                if (userData.getTypesOwned()[HeroType.LUIGI]) {
-                    loadNewHero(HeroType.LUIGI);
-                } else if (userData.getHero().getCoins() >= 15) {
-                    mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 15);
-                    buyAndLoadNewHero(HeroType.LUIGI);
-                }
-                setGameState(GameState.RUNNING);
-            } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.PRINCE_PEACH) {
-                if (userData.getTypesOwned()[HeroType.PRINCE_PEACH]) {
-                    loadNewHero(HeroType.PRINCE_PEACH);
-                } else if (userData.getHero().getCoins() >= 40) {
-                    mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 40);
-                    buyAndLoadNewHero(HeroType.PRINCE_PEACH);
-                }
-                setGameState(GameState.RUNNING);
-            } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.ROSS) {
-                if (userData.getTypesOwned()[HeroType.ROSS]) {
-                    loadNewHero(HeroType.ROSS);
-                } else if (userData.getHero().getCoins() >= 30) {
-                    mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 30);
-                    buyAndLoadNewHero(HeroType.ROSS);
-                }
-                setGameState(GameState.RUNNING);
-            } else if (input == ButtonAction.SELECT && storeScreenSelection == StoreScreenSelection.TOAD) {
-                if (userData.getTypesOwned()[HeroType.TOAD]) {
-                    loadNewHero(HeroType.TOAD);
-                } else if (userData.getHero().getCoins() >= 35) {
-                    mapManager.getHero().setCoins(mapManager.getHero().getCoins() - 35);
-                    buyAndLoadNewHero(HeroType.TOAD);
-                }
-                setGameState(GameState.RUNNING);
+
+            if (input == ButtonAction.SELECT) {
+                checkIfThenBuyHero(storeScreenSelection);
             } else if (input == ButtonAction.MOVE_LEFT) {
                 selectHero(true);
             } else if (input == ButtonAction.MOVE_RIGHT) {
                 selectHero(false);
             }
+
         } else if (gameState == GameState.MAP_SELECTION) {
+
             if (input == ButtonAction.SELECT) {
                 selectMapViaKeyboard();
             } else if (input == ButtonAction.GO_UP) {
@@ -311,6 +290,7 @@ public class GameEngine implements Runnable {
             } else if (input == ButtonAction.GO_DOWN) {
                 changeSelectedMap(false);
             }
+
         } else if (gameState == GameState.RUNNING) {
             if (input == ButtonAction.JUMP) {
                 if (userData.getHero().getType() == HeroType.LUIGI) {
@@ -378,9 +358,19 @@ public class GameEngine implements Runnable {
 
     private void loadNewHero(int type) {
         mapManager.getHero().setType(type);
-        mapManager.getHero().getHeroForm().setType(type);
+        mapManager.getHero().getHeroForm().setHeroType(type);
         imageLoader.setHeroType(type);
         userData.getHero().setType(type);
+        int heroFormId = userData.getHero().isSuper()? 1 : 0; //TODO FIX FOR FIRE STATE
+        userData.getHero().setHeroForm(
+                new HeroForm(
+                        new Animation(
+                                imageLoader.getLeftFrames(heroFormId),
+                                imageLoader.getRightFrames(heroFormId)),
+                        userData.getHero().isSuper(),
+                        false,
+                        type));
+      //  userData.getHero().setStyle(userData.getHero().getHeroForm().getCurrentStyle(true, false, false));
     }
 
     private void selectToStartOrLoad(boolean selectUp) {
@@ -391,12 +381,12 @@ public class GameEngine implements Runnable {
         userData = userData.getLoadGameRepository().getUserData(fileNumber);
         userData.setHero(userData.getHero());
         userData.setTypesOwned(userData.getTypesOwned());
-        mapManager.setMap(createMap(userData.getHero().getMapPath(), userData.getHero()));
+        mapManager.setMap(createMap(userData.getMapPath(), userData.getHero()));
         mapManager.setHero(userData.getHero());
     }
 
     private void saveGame(int fileNumber) {
-        mapManager.getHero().setMapPath(mapManager.getMap().getPath());
+        userData.setMapPath(mapManager.getMap().getPath());
         userData.getSaveGameRepository().addUserData(userData, fileNumber);
     }
 

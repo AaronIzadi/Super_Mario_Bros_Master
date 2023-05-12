@@ -11,22 +11,22 @@ public class HeroForm {
     public static final int SMALL = 0;
     public static final int SUPER = 1;
     public static final int FIRE = 2;
-    private int type;
+    private int heroType;
     private Animation animation;
     private boolean isSuper;
     private boolean CanShootFire;
     private BufferedImage fireballStyle;
 
 
-    public HeroForm(Animation animation, boolean isSuper, boolean CanShootFire, int type) {
-        this.type = type;
+    public HeroForm(Animation animation, boolean isSuper, boolean CanShootFire, int heroType) {
+        this.heroType = heroType;
         this.animation = animation;
         this.isSuper = isSuper;
         this.CanShootFire = CanShootFire;
 
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.setHeroType(type);
-        fireballStyle = imageLoader.getFireballImage(type);
+        imageLoader.setHeroType(heroType);
+        fireballStyle = imageLoader.getFireballImage(heroType);
     }
 
     public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY) {
@@ -55,7 +55,7 @@ public class HeroForm {
 
         Animation newAnimation = new Animation(leftFrames, rightFrames);
 
-        return new HeroForm(newAnimation, false, false, type);
+        return new HeroForm(newAnimation, false, false, heroType);
     }
 
     public Fireball fire(boolean toRight, double x, double y) {
@@ -65,12 +65,12 @@ public class HeroForm {
         return null;
     }
 
-    public int getType() {
-        return type;
+    public int getHeroType() {
+        return heroType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setHeroType(int heroType) {
+        this.heroType = heroType;
     }
 
     public Animation getAnimation() {

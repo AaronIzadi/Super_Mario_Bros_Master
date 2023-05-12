@@ -28,6 +28,20 @@ public enum StoreScreenSelection {
             return null;
     }
 
+    public int getHeroPrice() {
+        switch (this) {
+            case LUIGI:
+                return 15;
+            case PRINCE_PEACH:
+                return 40;
+            case ROSS:
+                return 30;
+            case TOAD:
+                return 35;
+            default:
+                return 0;
+        }
+    }
     public StoreScreenSelection select(boolean toLeft) {
 
         int selection;

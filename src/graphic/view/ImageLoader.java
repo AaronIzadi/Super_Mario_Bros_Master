@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ImageLoader {
+    private int heroType;
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
-    private int heroType;
     private static final ImageLoader instance = new ImageLoader();
 
     private ImageLoader() {
@@ -47,22 +47,22 @@ public class ImageLoader {
     }
 
     public BufferedImage getSubImage(BufferedImage image, int col, int row, int w, int h) {
-        if ((col == 1 || col == 4) && row == 3) { //koopa
+        if ((col == 1 || col == 4) && row == 3) {
             return image.getSubimage((col - 1) * 48, 128, w, h);
         }
         return image.getSubimage((col - 1) * 48, (row - 1) * 48, w, h);
     }
 
-    public BufferedImage[] getLeftFrames(int marioForm) {
+    public BufferedImage[] getLeftFrames(int heroForm) {
         BufferedImage[] leftFrames = new BufferedImage[5];
         int col = 1;
         int width = 52, height = 48;
 
-        if (marioForm == 1) {
+        if (heroForm == 1) {
             col = 4;
             width = 48;
             height = 96;
-        } else if (marioForm == 2) {
+        } else if (heroForm == 2) {
             col = 7;
             width = 48;
             height = 96;
@@ -74,16 +74,16 @@ public class ImageLoader {
         return leftFrames;
     }
 
-    public BufferedImage[] getRightFrames(int marioForm) {
+    public BufferedImage[] getRightFrames(int heroForm) {
         BufferedImage[] rightFrames = new BufferedImage[5];
         int col = 2;
         int width = 52, height = 48;
 
-        if (marioForm == 1) {
+        if (heroForm == 1) {
             col = 5;
             width = 48;
             height = 96;
-        } else if (marioForm == 2) {
+        } else if (heroForm == 2) {
             col = 8;
             width = 48;
             height = 96;
@@ -104,17 +104,13 @@ public class ImageLoader {
     }
 
     public BufferedImage getFireballImage(int type) {
-        return getSubImage(loadImage("/sprite.png"), 3, 4, 24, 24);
+            return getSubImage(loadImage("/sprite.png"), 3, 4, 24, 24);
     }
 
 
     public void setHeroType(int heroType) {
         this.heroType = heroType;
         setHeroForms(heroType);
-    }
-
-    public int getHeroType(int type) {
-        return heroType;
     }
 
     private void setHeroForms(int heroType) {

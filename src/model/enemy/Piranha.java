@@ -23,4 +23,5 @@ public class Piranha extends Enemy{
     public void setRightImage(BufferedImage rightImage) {
         this.rightImage = rightImage;
     }
+
 }
