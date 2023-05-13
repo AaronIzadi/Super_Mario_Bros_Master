@@ -98,7 +98,6 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(50f));
         g2.setColor(Color.WHITE);
         String displayedStr = "YOU WON!";
-        engine.playStageClear();
         int stringLength = g2.getFontMetrics().stringWidth(displayedStr);
         g2.drawString(displayedStr, (getWidth() - stringLength) / 2, getHeight() / 2);
     }
@@ -120,7 +119,6 @@ public class UIManager extends JPanel {
         int stringLength = g2.getFontMetrics().stringWidth(acquiredPoints);
         int stringHeight = g2.getFontMetrics().getHeight();
         g2.drawString(acquiredPoints, (getWidth() - stringLength) / 2, getHeight() - stringHeight * 4);
-        engine.playGameOver();
     }
 
     private void drawStoreScreen(Graphics2D g2) {

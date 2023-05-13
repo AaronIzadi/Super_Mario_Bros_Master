@@ -72,7 +72,7 @@ public abstract class Hero extends GameObject {
             @Override
             public void run() {
                 setTookStar(false);
-                if (!GameEngine.getInstance().isMute()){
+                if (!GameEngine.getInstance().isMute()) {
                     GameEngine.getInstance().resumeBackground();
                 }
             }
@@ -117,7 +117,11 @@ public abstract class Hero extends GameObject {
     public void heroDies(GameEngine engine, int lostScore) {
         remainingLives--;
         points = points > lostScore ? points - lostScore : 0;
-        engine.playHeroDies();
+        if (remainingLives == 0) {
+            engine.playGameOver();
+        } else {
+            engine.playHeroDies();
+        }
         heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
         setDimension(48, 48);
     }

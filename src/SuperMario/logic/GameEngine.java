@@ -81,6 +81,7 @@ public class GameEngine implements Runnable {
     private void reset() {
         resetCamera();
         setGameState(GameState.START_SCREEN);
+        pauseBackGround();
     }
 
     public void resetCamera() {
@@ -190,13 +191,18 @@ public class GameEngine implements Runnable {
 
         if (isGameOver()) {
             setGameState(GameState.GAME_OVER);
+            soundManager.pauseBackground();
         }
 
         int missionPassed = passMission();
         if (missionPassed > -1) {
+            soundManager.pauseBackground();
             mapManager.acquirePoints(missionPassed);
-        } else if (mapManager.endLevel())
+        } else if (mapManager.endLevel()) {
+            soundManager.pauseBackground();
+            playStageClear();
             setGameState(GameState.MISSION_PASSED);
+        }
     }
 
     private void updateCamera() {
@@ -368,6 +374,7 @@ public class GameEngine implements Runnable {
         } else if (gameState == GameState.GAME_OVER && inputMgr.isEscape()) {
             reset();
         } else if (gameState == GameState.MISSION_PASSED && inputMgr.isEscape()) {
+            pauseBackGround();
             reset();
         } else {
             if (inputMgr.isEscape()) {
@@ -550,7 +557,6 @@ public class GameEngine implements Runnable {
     }
 
     public void playStageClear() {
-        soundManager.pauseBackground();
         soundManager.playStageClear();
     }
 

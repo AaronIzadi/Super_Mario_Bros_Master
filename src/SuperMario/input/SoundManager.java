@@ -11,7 +11,7 @@ public class SoundManager {
     private long clipTime = 0;
 
     public SoundManager() {
-        background = getClip(loadAudio("background"));
+        this.background = getClip(loadAudio("background"));
     }
 
     private AudioInputStream loadAudio(String url) {
@@ -71,6 +71,7 @@ public class SoundManager {
     }
 
     public void playGameOver() {
+        pauseBackground();
         Clip clip = getClip(loadAudio("gameOver"));
         clip.start();
     }
@@ -111,6 +112,7 @@ public class SoundManager {
     }
 
     public void playStageClear() {
+        pauseBackground();
         Clip clip = getClip(loadAudio("stageClear"));
         clip.start();
     }

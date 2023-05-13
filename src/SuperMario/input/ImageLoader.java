@@ -61,8 +61,7 @@ public class ImageLoader {
         this.koopaLeft = getSubImage(sprite, 1, 3, 48, 64);
         this.koopaRight = getSubImage(sprite, 4, 3, 48, 64);
         this.endFlag = getSubImage(sprite, 5, 1, 48, 48);
-        this.icon = Toolkit.getDefaultToolkit().getImage("/icon.jpg");
-
+        this.icon = loadImage("/icon.jpg");
     }
 
     public static ImageLoader getInstance() {
