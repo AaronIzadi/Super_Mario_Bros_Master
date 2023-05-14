@@ -14,6 +14,7 @@ import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.FireFlower;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
+import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 
@@ -92,6 +93,14 @@ public class MapManager {
         }
     }
 
+    public void axe() {
+        Axe axe = getHero().getAxe();
+        if (axe != null) {
+            getHero().setAxeActivated(true);
+            map.addAxe(axe);
+        }
+    }
+
     public boolean isGameOver() {
         return hero.getRemainingLives() == 0 || map.isTimeOver();
     }
@@ -131,7 +140,6 @@ public class MapManager {
         if (map == null) {
             return;
         }
-
         checkBottomCollisions(engine);
         checkTopCollisions(engine);
         checkHeroHorizontalCollision(engine);

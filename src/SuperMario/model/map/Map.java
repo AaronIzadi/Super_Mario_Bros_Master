@@ -11,6 +11,7 @@ import SuperMario.model.obstacle.OrdinaryBrick;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
+import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
@@ -29,12 +30,14 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
+    private Axe axe;
     private Flag endPoint;
     private BufferedImage backgroundImage;
     private String path;
 
 
-    public Map() {}
+    public Map() {
+    }
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
@@ -88,16 +91,23 @@ public class Map {
     public void drawMap(Graphics2D g2) {
         drawBackground(g2);
         drawPrizes(g2);
-        drawBricks(g2);
         drawEnemies(g2);
+        drawBricks(g2);
         drawFireballs(g2);
         drawHero(g2);
+        drawAxe(g2);
         endPoint.draw(g2);
     }
 
     private void drawFireballs(Graphics2D g2) {
         for (Fireball fireball : fireballs) {
             fireball.draw(g2);
+        }
+    }
+
+    private void drawAxe(Graphics2D g2) {
+        if (axe != null) {
+            axe.draw(g2);
         }
     }
 
@@ -195,6 +205,10 @@ public class Map {
 
     public void addFireball(Fireball fireball) {
         fireballs.add(fireball);
+    }
+
+    public void addAxe(Axe axe) {
+        this.axe = axe;
     }
 
     public void setEndPoint(Flag endPoint) {

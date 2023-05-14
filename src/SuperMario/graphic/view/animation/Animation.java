@@ -5,42 +5,40 @@ import java.awt.image.BufferedImage;
 public class Animation {
 
     private int index = 0, count = 0;
-    private final BufferedImage[] leftFrames;
-    private final BufferedImage[] rightFrames;
+    private final BufferedImage[] frames;
     private BufferedImage currentFrame;
 
-    public Animation(BufferedImage[] leftFrames, BufferedImage[] rightFrames) {
-        this.leftFrames = leftFrames;
-        this.rightFrames = rightFrames;
-        this.currentFrame = rightFrames[1];
+    private final int length;
+
+    public Animation(BufferedImage... frames) {
+        this.frames = frames;
+        this.currentFrame = frames[0];
+        this.length = frames.length;
     }
 
-    public BufferedImage animate(int speed, boolean toRight) {
-        count++;
-        BufferedImage[] frames = toRight ? rightFrames : leftFrames;
-
-        if (count > speed) {
-            nextFrame(frames);
+    public boolean animate(int speed) {
+        count += speed;
+        if (count > 60) {
+            nextFrame();
             count = 0;
+            return true;
         }
+        return false;
+    }
 
+    public BufferedImage getCurrentFrame() {
         return currentFrame;
     }
 
-    private void nextFrame(BufferedImage[] frames) {
-        if (index + 3 > frames.length)
-            index = 0;
-
-        currentFrame = frames[index + 2];
-        index++;
+    public int getLength() {
+        return length;
+    }
+    private void nextFrame() {
+        index = (index + 1) % length;
+        currentFrame = frames[index];
     }
 
-    public BufferedImage[] getLeftFrames() {
-        return leftFrames;
+    public BufferedImage[] getFrames() {
+        return frames;
     }
-
-    public BufferedImage[] getRightFrames() {
-        return rightFrames;
-    }
-
 }

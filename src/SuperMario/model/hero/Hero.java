@@ -3,8 +3,8 @@ package SuperMario.model.hero;
 import SuperMario.graphic.manager.Camera;
 import SuperMario.logic.GameEngine;
 import SuperMario.model.GameObject;
-import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
+import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
@@ -23,6 +23,7 @@ public abstract class Hero extends GameObject {
     private boolean tookStar;
     private boolean isAxeActivated;
     private boolean canActivateAxe;
+    private Axe axe;
 
     public Hero(double x, double y) {
         super(x, y, null);
@@ -47,11 +48,10 @@ public abstract class Hero extends GameObject {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.setHeroType(type);
-        BufferedImage[] leftFrames = imageLoader.getLeftFrames(heroForm);
-        BufferedImage[] rightFrames = imageLoader.getRightFrames(heroForm);
+        BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(heroForm);
+        BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(heroForm);
 
-        Animation animation = new Animation(leftFrames, rightFrames);
-        this.heroForm = new HeroForm(animation, isSuper, canShootFire, type);
+        this.heroForm = new HeroForm(leftFrames, rightFrames, isSuper, canShootFire, type);
         setStyle(this.heroForm.getCurrentStyle(toRight, false, false));
     }
 
@@ -63,6 +63,18 @@ public abstract class Hero extends GameObject {
         setStyle(heroForm.getCurrentStyle(toRight, movingInX, movingInY));
 
         super.draw(g);
+
+        if (axe != null) {
+            if (toRight) {
+                axe.setX(getX() + 24);
+            } else {
+                axe.setX(getX() - 48);
+            }
+            axe.setVelX(getVelX());
+
+            axe.setVelY(getVelY());
+            axe.setY(getY());
+        }
     }
 
     public abstract void jump();
@@ -102,7 +114,7 @@ public abstract class Hero extends GameObject {
                 return true;
             } else {
                 engine.shakeCamera();
-                heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
+                heroForm.onTouchEnemy(engine.getImageLoader());
                 setDimension(48, 48);
                 setY(getY() + getDimension().getHeight());
                 return false;
@@ -124,7 +136,7 @@ public abstract class Hero extends GameObject {
         } else {
             engine.playHeroDies();
         }
-        heroForm = heroForm.onTouchEnemy(engine.getImageLoader());
+        heroForm.onTouchEnemy(engine.getImageLoader());
         setDimension(48, 48);
     }
 
@@ -135,6 +147,15 @@ public abstract class Hero extends GameObject {
     public boolean ifCanActivateAxe() {
         canActivateAxe = coins >= 3 && isSuper();
         return canActivateAxe;
+    }
+
+    public Axe getAxe() {
+        if (toRight) {
+            axe = new Axe(getX() + 24, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
+        } else {
+            axe = new Axe(getX() - 48, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
+        }
+        return axe;
     }
 
     public void acquireCoin() {
@@ -242,4 +263,5 @@ public abstract class Hero extends GameObject {
     public void setAxeActivated(boolean axeActivated) {
         isAxeActivated = axeActivated;
     }
+
 }

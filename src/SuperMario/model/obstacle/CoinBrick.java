@@ -1,7 +1,6 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.graphic.view.animation.NewAnimation;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
 import SuperMario.logic.MapManager;
@@ -12,7 +11,7 @@ import java.awt.image.BufferedImage;
 public class CoinBrick extends SurpriseBrick{
 
     private Prize prize;
-    private NewAnimation animation;
+    private Animation animation;
     private boolean breaking;
     private int frames;
 
@@ -30,7 +29,7 @@ public class CoinBrick extends SurpriseBrick{
         ImageLoader imageLoader = ImageLoader.getInstance();
         BufferedImage[] frames = imageLoader.getBrickFrames();
 
-        animation = new NewAnimation(frames);
+        animation = new Animation(frames);
     }
 
     @Override

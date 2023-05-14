@@ -1,6 +1,5 @@
 package SuperMario.model.prize;
 
-import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
 import SuperMario.model.GameObject;
@@ -12,10 +11,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class PrizeItems extends GameObject implements Prize {
-
     private boolean revealed = false;
     private int point;
-    private boolean isTouched;
 
     public PrizeItems(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -23,37 +20,39 @@ public abstract class PrizeItems extends GameObject implements Prize {
     }
 
     public void onTouch(Hero hero, GameEngine engine) {
-        isTouched = true;
+
         hero.acquirePoints(getPoint());
         if (engine.getUserData().getHero() != null) {
             engine.getUserData().getHero().acquirePoints(getPoint());
         }
 
-        ImageLoader imageLoader = ImageLoader.getInstance();
-
-        BufferedImage[] leftFrames;
-        BufferedImage[] rightFrames;
         if (!hero.isSuper()) {
             hero.setY(hero.getBottomBounds().getY() - hero.getDimension().getHeight());
             hero.setDimension(48, 96);
         }
         if (!hero.getHeroForm().isSuper()) {
-            leftFrames = imageLoader.getLeftFrames(HeroForm.SUPER);
-            rightFrames = imageLoader.getRightFrames(HeroForm.SUPER);
-
-            Animation animation = new Animation(leftFrames, rightFrames);
-            HeroForm newForm = new HeroForm(animation, true, false, hero.getType());
-            hero.setHeroForm(newForm);
+            setHeroForm(hero, HeroForm.SUPER);
         } else {
-            leftFrames = imageLoader.getLeftFrames(HeroForm.FIRE);
-            rightFrames = imageLoader.getRightFrames(HeroForm.FIRE);
-
-            Animation animation = new Animation(leftFrames, rightFrames);
-            HeroForm newForm = new HeroForm(animation, true, true, hero.getType());
-            hero.setHeroForm(newForm);
+            setHeroForm(hero, HeroForm.FIRE);
         }
 
         engine.playPowerUp();
+    }
+
+    private void setHeroForm(Hero hero, int heroFormType) {
+
+        HeroForm newForm = null;
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(heroFormType);
+        BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(heroFormType);
+
+        if (heroFormType == HeroForm.SUPER) {
+            newForm = new HeroForm(leftFrames, rightFrames, true, false, hero.getType());
+        } else if (heroFormType == HeroForm.FIRE) {
+            newForm = new HeroForm(leftFrames, rightFrames, true, true, hero.getType());
+        }
+
+        hero.setHeroForm(newForm);
     }
 
     @Override

@@ -8,9 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class ImageLoader {
     private BufferedImage heroForms;
@@ -22,14 +19,17 @@ public class ImageLoader {
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
-    private final BufferedImage axeUpRight, axeDownRight, axeDownLeft, axeUpLeft;
+    private final BufferedImage axe0, axe1, axe2, axe3;
     private final BufferedImage selectIcon;
-    private final Image icon;
+    private final BufferedImage icon;
     private static final ImageLoader instance = new ImageLoader();
 
     private ImageLoader() {
         BufferedImage sprite = loadImage("/sprite.png");
-        BufferedImage axe = loadImage("/axe.png");
+        this.axe0 = loadImage("/axe0.png");
+        this.axe1 = loadImage("/axe1.png");
+        this.axe2 = loadImage("/axe2.png");
+        this.axe3 = loadImage("/axe3.png");
         this.brickAnimation = loadImage("/brick-animation.png");
         this.spinyLeft = loadImage("/spiny-left.png");
         this.spinyRight = loadImage("/spiny-right.png");
@@ -40,7 +40,6 @@ public class ImageLoader {
         this.smallPipe = loadImage("/pipe-small.png");
         this.border = loadImage("/border-brick.png");
         this.heartIcon = loadImage("/heart-icon.png");
-        this.coinIcon = getSubImage(sprite, 1, 5, 48, 48);
         this.selectIcon = loadImage("/select-icon.png");
         this.startScreenImage = loadImage("/start-screen.png");
         this.helpScreenImage = loadImage("/help-screen.png");
@@ -50,6 +49,7 @@ public class ImageLoader {
         this.loadGameScreen = loadImage("/load-screen.png");
         this.pauseScreen = loadImage("/pause-screen.png");
         this.icon = loadImage("/icon.jpg");
+        this.coinIcon = getSubImage(sprite, 1, 5, 48, 48);
         this.superMushroom = getSubImage(sprite, 2, 5, 48, 48);
         this.oneHeartUpMushroom = getSubImage(sprite, 3, 5, 48, 48);
         this.fireFlower = getSubImage(sprite, 4, 5, 48, 48);
@@ -66,10 +66,6 @@ public class ImageLoader {
         this.koopaLeft = getSubImage(sprite, 1, 3, 48, 64);
         this.koopaRight = getSubImage(sprite, 4, 3, 48, 64);
         this.endFlag = getSubImage(sprite, 5, 1, 48, 48);
-        this.axeUpRight = getSubImage(axe, 1, 1, 96, 96);
-        this.axeDownRight = getSubImage(axe, 2, 1, 96, 96);
-        this.axeDownLeft = getSubImage(axe, 3, 1, 96, 96);
-        this.axeUpLeft = getSubImage(axe, 4, 1, 96, 96);
     }
 
     public static ImageLoader getInstance() {
@@ -107,12 +103,16 @@ public class ImageLoader {
         return image.getSubimage((col - 1) * 48, (row - 1) * 48, w, h);
     }
 
-    public BufferedImage[] getLeftFrames(int heroForm) {
-        BufferedImage[] leftFrames = new BufferedImage[5];
-        int col = 1;
-        int width = 52, height = 48;
+    public BufferedImage[] getHeroLeftFrames(int heroForm) {
 
-        if (heroForm == 1) {
+        BufferedImage[] leftFrames = new BufferedImage[5];
+        int col = 0, width = 0, height = 0;
+
+        if (heroForm == 0) {
+            col = 1;
+            width = 52;
+            height = 48;
+        } else if (heroForm == 1) {
             col = 4;
             width = 48;
             height = 96;
@@ -128,12 +128,18 @@ public class ImageLoader {
         return leftFrames;
     }
 
-    public BufferedImage[] getRightFrames(int heroForm) {
-        BufferedImage[] rightFrames = new BufferedImage[5];
-        int col = 2;
-        int width = 52, height = 48;
+    public BufferedImage[] getHeroRightFrames(int heroForm) {
 
-        if (heroForm == 1) {
+        BufferedImage[] rightFrames = new BufferedImage[5];
+        int col = 0;
+        int width = 0;
+        int height = 0;
+
+        if (heroForm == 0) {
+            col = 2;
+            width = 52;
+            height = 48;
+        } else if (heroForm == 1) {
             col = 5;
             width = 48;
             height = 96;
@@ -186,13 +192,6 @@ public class ImageLoader {
         }
     }
 
-    public BufferedImage getHeroForms() {
-        return heroForms;
-    }
-
-    public BufferedImage getBrickAnimation() {
-        return brickAnimation;
-    }
 
     public BufferedImage getBackgroundImage() {
         return backgroundImage;
@@ -334,19 +333,20 @@ public class ImageLoader {
         return icon;
     }
 
+        public BufferedImage[] axeFrames(){
+        BufferedImage[] axeFrames = new BufferedImage[4];
+        axeFrames[0] = axe0;
+        axeFrames[1] = axe1;
+        axeFrames[2] = axe2;
+        axeFrames[3] = axe3;
+
+        return axeFrames;
+    }
     public BufferedImage getAxeUpRight() {
-        return axeUpRight;
-    }
-
-    public BufferedImage getAxeDownRight() {
-        return axeDownRight;
-    }
-
-    public BufferedImage getAxeDownLeft() {
-        return axeDownLeft;
+        return axe0;
     }
 
     public BufferedImage getAxeUpLeft() {
-        return axeUpLeft;
+        return axe3;
     }
 }

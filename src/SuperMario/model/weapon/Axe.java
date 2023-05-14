@@ -1,35 +1,39 @@
 package SuperMario.model.weapon;
 
 
+import SuperMario.graphic.view.animation.Animation;
+import SuperMario.input.ImageLoader;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Axe extends GameObject {
 
-    private boolean coolDownFinished;
+    private final Hero hero;
     private boolean isReleased;
+    private BufferedImage leftStyle;
     private BufferedImage[] axeStyle;
+    private final Animation axeAnimation;
 
-    public Axe(double x, double y, BufferedImage style, boolean toRight) {
+    public Axe(double x, double y, BufferedImage style, Hero hero) {
         super(x, y, style);
-        setDimension(96, 96);
-        setFalling(true);
+        this.hero = hero;
+        this.axeAnimation = new Animation(ImageLoader.getInstance().axeFrames());
+        setDimension(68, 68);
+        setFalling(false);
         setJumping(false);
-        setVelX(10);
+        setLeftStyle(ImageLoader.getInstance().getAxeUpLeft());
+    }
 
-        if (!toRight) {
-            setVelX(-5);
+    @Override
+    public void draw(Graphics g) {
+        if (hero.getToRight()) {
+            g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
+        } else {
+            g.drawImage(leftStyle, (int) getX(), (int) getY(), null);
         }
-    }
-
-    public boolean isCoolDownFinished() {
-        return coolDownFinished;
-    }
-
-    public void setCoolDownFinished(boolean coolDownFinished) {
-        this.coolDownFinished = coolDownFinished;
     }
 
     public BufferedImage[] getAxeStyle() {
@@ -41,10 +45,15 @@ public class Axe extends GameObject {
     }
 
     public void setReleased(boolean released) {
+        axeAnimation.animate(20);
         isReleased = released;
     }
 
     public boolean isReleased() {
         return isReleased;
+    }
+
+    public void setLeftStyle(BufferedImage leftStyle) {
+        this.leftStyle = leftStyle;
     }
 }

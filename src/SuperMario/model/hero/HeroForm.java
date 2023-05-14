@@ -13,7 +13,12 @@ public class HeroForm {
     public static final int SUPER = 1;
     public static final int FIRE = 2;
     private int heroType;
-    private Animation animation;
+    private Animation leftAnimation;
+    private Animation rightAnimation;
+    private BufferedImage leftStandingFrame;
+    private BufferedImage rightStandingFrame;
+    private BufferedImage leftJumpingFrame;
+    private BufferedImage rightJumpingFrame;
     private boolean isSuper;
     private boolean canShootFire;
     private boolean canActivateAxe;
@@ -21,11 +26,12 @@ public class HeroForm {
     private BufferedImage[] axeStyle;
 
 
-    public HeroForm(Animation animation, boolean isSuper, boolean CanShootFire, int heroType) {
+    public HeroForm(BufferedImage[] leftImages, BufferedImage[] rightImages, boolean isSuper, boolean canShootFire, int heroType) {
         this.heroType = heroType;
-        this.animation = animation;
         this.isSuper = isSuper;
-        this.canShootFire = CanShootFire;
+        this.canShootFire = canShootFire;
+
+        setFrames(leftImages, rightImages);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.setHeroType(heroType);
@@ -36,29 +42,45 @@ public class HeroForm {
 
         BufferedImage style;
 
-        if (movingInY && toRight) {
-            style = animation.getRightFrames()[0];
-        } else if (movingInY) {
-            style = animation.getLeftFrames()[0];
+        if (movingInY) {
+            style = toRight ? rightJumpingFrame : leftJumpingFrame;
         } else if (movingInX) {
-            style = animation.animate(5, toRight);
+            Animation currentAnimation = toRight ? rightAnimation : leftAnimation;
+            currentAnimation.animate(20);
+            style = currentAnimation.getCurrentFrame();
         } else {
-            if (toRight) {
-                style = animation.getRightFrames()[1];
-            } else
-                style = animation.getLeftFrames()[1];
+            style = toRight ? rightStandingFrame : leftStandingFrame;
         }
 
         return style;
     }
 
-    public HeroForm onTouchEnemy(ImageLoader imageLoader) {
-        BufferedImage[] leftFrames = imageLoader.getLeftFrames(0);
-        BufferedImage[] rightFrames = imageLoader.getRightFrames(0);
+    private void setFrames(BufferedImage[] leftImages, BufferedImage[] rightImages) {
 
-        Animation newAnimation = new Animation(leftFrames, rightFrames);
+        int size = leftImages.length;
 
-        return new HeroForm(newAnimation, false, false, heroType);
+        leftJumpingFrame = leftImages[0];
+        rightJumpingFrame = rightImages[0];
+        leftStandingFrame = leftImages[1];
+        rightStandingFrame = rightImages[1];
+
+        BufferedImage[] leftFrames = new BufferedImage[size - 2];
+        BufferedImage[] rightFrames = new BufferedImage[size - 2];
+
+        for (int i = 0; i < size - 2; i++) {
+            leftFrames[i] = leftImages[i + 2];
+            rightFrames[i] = rightImages[i + 2];
+        }
+
+        rightAnimation = new Animation(rightFrames);
+        leftAnimation = new Animation(leftFrames);
+    }
+
+    public void onTouchEnemy(ImageLoader imageLoader) {
+        BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(0);
+        BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(0);
+
+        setFrames(leftFrames, rightFrames);
     }
 
     public Fireball fire(boolean toRight, double x, double y) {
@@ -68,12 +90,6 @@ public class HeroForm {
         return null;
     }
 
-    public Axe axe(boolean toRight, Hero hero) {
-        if (canActivateAxe) {
-            return new Axe(hero.getX(), hero.getY() + 48, axeStyle[0], toRight);
-        }
-        return null;
-    }
 
     public int getHeroType() {
         return heroType;
@@ -81,14 +97,6 @@ public class HeroForm {
 
     public void setHeroType(int heroType) {
         this.heroType = heroType;
-    }
-
-    public Animation getAnimation() {
-        return animation;
-    }
-
-    public void setAnimation(Animation animation) {
-        this.animation = animation;
     }
 
     public void setCanShootFire(boolean canShootFire) {

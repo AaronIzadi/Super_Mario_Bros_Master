@@ -17,10 +17,6 @@ public class OneHeartUpMushroom extends PrizeItems {
     public void onTouch(Hero hero, GameEngine engine) {
         hero.acquirePoints(getPoint());
         hero.setRemainingLives(hero.getRemainingLives() + 1);
-        if (engine.getUserData().getHero() != null) {
-            engine.getUserData().getHero().acquirePoints(getPoint());
-            engine.getUserData().getHero().setRemainingLives(engine.getUserData().getHero().getRemainingLives() + 1);
-        }
         engine.playOneUp();
     }
 }

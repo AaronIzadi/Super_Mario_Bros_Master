@@ -2,7 +2,6 @@ package SuperMario.logic;
 
 import SuperMario.graphic.manager.Camera;
 import SuperMario.graphic.manager.InputManager;
-import SuperMario.graphic.view.animation.Animation;
 import SuperMario.graphic.view.states.*;
 import SuperMario.input.ImageLoader;
 import SuperMario.input.SoundManager;
@@ -331,7 +330,9 @@ public class GameEngine implements Runnable {
             } else if (inputMgr.isSpace()) {
                 mapManager.fire(this);
             } else if (inputMgr.isUpAndDownSelected()) {
-                //TODO
+                if (userData.getHero().ifCanActivateAxe()) {
+                    mapManager.axe();
+                }
             } else if (inputMgr.isEscape()) {
                 pauseGame();
             }
@@ -396,9 +397,8 @@ public class GameEngine implements Runnable {
         int heroFormId = userData.getHero().isSuper() ? 1 : 0;
         userData.getHero().setHeroForm(
                 new HeroForm(
-                        new Animation(
-                                imageLoader.getLeftFrames(heroFormId),
-                                imageLoader.getRightFrames(heroFormId)),
+                        imageLoader.getHeroLeftFrames(heroFormId),
+                        imageLoader.getHeroRightFrames(heroFormId),
                         userData.getHero().isSuper(),
                         userData.getHero().getHeroForm().ifCanShootFire(),
                         type));
