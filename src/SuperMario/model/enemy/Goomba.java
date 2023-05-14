@@ -1,11 +1,13 @@
 package SuperMario.model.enemy;
 
+import SuperMario.graphic.view.animation.Animation;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Goomba extends Enemy {
 
-    private BufferedImage rightImage;
+    private Animation animation;
 
     public Goomba(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -14,13 +16,23 @@ public class Goomba extends Enemy {
 
     @Override
     public void draw(Graphics g) {
-        if (getVelX() > 0) {
-            g.drawImage(rightImage, (int) getX(), (int) getY(), null);
-        } else
-            super.draw(g);
+        super.draw(g);
+        animate();
     }
 
-    public void setRightImage(BufferedImage rightImage) {
-        this.rightImage = rightImage;
+    public void animate() {
+        boolean isAnimationTicked = animation.animate(5);
+        if (isAnimationTicked) {
+            setStyle(animation.getCurrentFrame());
+        }
     }
+
+    public void setFrames(BufferedImage[] frames) {
+        setAnimation(new Animation(frames));
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
 }

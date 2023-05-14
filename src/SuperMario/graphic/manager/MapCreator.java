@@ -140,7 +140,10 @@ public class MapCreator {
                     map.addGroundBrick(brick);
                 } else if (currentPixel == goomba) {
                     Goomba enemy = new Goomba(xLocation, yLocation, this.goombaLeft);
-                    enemy.setRightImage(goombaRight);
+                    BufferedImage[] frames = new BufferedImage[2];
+                    frames[0] = this.goombaLeft;
+                    frames[1] = this.goombaRight;
+                    enemy.setFrames(frames);
                     map.addEnemy(enemy);
                 } else if (currentPixel == koopa) {
                     KoopaTroopa enemy = new KoopaTroopa(xLocation, yLocation, this.koopaLeft);
@@ -152,11 +155,17 @@ public class MapCreator {
                     map.addEnemy(enemy);
                 } else if (currentPixel == piranha) {
                     Piranha enemy = new Piranha(xLocation, yLocation, this.piranhaClose);
-                    enemy.setRightImage(this.piranhaOpen);
+                    BufferedImage[] frames = new BufferedImage[2];
+                    frames[0] = this.piranhaClose;
+                    frames[1] = this.piranhaOpen;
+                    enemy.setFrames(frames);
                     map.addEnemy(enemy);
                 } else if (currentPixel == pipe) {
                     Brick brick = new Pipe(xLocation, yLocation, this.pipe);
                     map.addGroundBrick(brick);
+                } else if (currentPixel == end) {
+                    Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
+                    map.setEndPoint(endPoint);
                 } else if (currentPixel == hero) {
                     if (this.hero == null) {
                         Hero heroObject = new Mario(xLocation, yLocation);
@@ -169,9 +178,6 @@ public class MapCreator {
                         updateImageLoader(heroType);
                         map.setHero(this.hero);
                     }
-                } else if (currentPixel == end) {
-                    Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
-                    map.setEndPoint(endPoint);
                 }
             }
         }
