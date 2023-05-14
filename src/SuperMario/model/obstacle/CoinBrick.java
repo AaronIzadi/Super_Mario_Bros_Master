@@ -1,6 +1,7 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
+import SuperMario.graphic.view.animation.NewAnimation;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
 import SuperMario.logic.MapManager;
@@ -11,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class CoinBrick extends SurpriseBrick{
 
     private Prize prize;
-    private Animation animation;
+    private NewAnimation animation;
     private boolean breaking;
     private int frames;
 
@@ -22,14 +23,14 @@ public class CoinBrick extends SurpriseBrick{
         this.prize = prize;
         setAnimation();
         breaking = false;
-        frames = animation.getLeftFrames().length;
+        frames = animation.getLength();
     }
 
     private void setAnimation() {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        BufferedImage[] leftFrames = imageLoader.getBrickFrames();
+        BufferedImage[] frames = imageLoader.getBrickFrames();
 
-        animation = new Animation(leftFrames, leftFrames);
+        animation = new NewAnimation(frames);
     }
 
     @Override
@@ -63,8 +64,9 @@ public class CoinBrick extends SurpriseBrick{
     }
 
     public void animate() {
-        if (breaking) {
-            setStyle(animation.animate(3, true));
+        boolean isAnimationTicked = animation.animate(30);
+        if (isAnimationTicked) {
+            setStyle(animation.getCurrentFrame());
             frames--;
         }
     }

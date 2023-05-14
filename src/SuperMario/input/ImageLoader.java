@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ImageLoader {
@@ -20,13 +22,15 @@ public class ImageLoader {
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
+    private final BufferedImage axeUpRight, axeDownRight, axeDownLeft, axeUpLeft;
     private final BufferedImage selectIcon;
     private final Image icon;
     private static final ImageLoader instance = new ImageLoader();
 
     private ImageLoader() {
-        this.brickAnimation = loadImage("/brick-animation.png");
         BufferedImage sprite = loadImage("/sprite.png");
+        BufferedImage axe = loadImage("/axe.png");
+        this.brickAnimation = loadImage("/brick-animation.png");
         this.spinyLeft = loadImage("/spiny-left.png");
         this.spinyRight = loadImage("/spiny-right.png");
         this.backgroundImage = loadImage("/background.png");
@@ -45,6 +49,7 @@ public class ImageLoader {
         this.storeScreenImage = loadImage("/store-screen.png");
         this.loadGameScreen = loadImage("/load-screen.png");
         this.pauseScreen = loadImage("/pause-screen.png");
+        this.icon = loadImage("/icon.jpg");
         this.superMushroom = getSubImage(sprite, 2, 5, 48, 48);
         this.oneHeartUpMushroom = getSubImage(sprite, 3, 5, 48, 48);
         this.fireFlower = getSubImage(sprite, 4, 5, 48, 48);
@@ -61,7 +66,10 @@ public class ImageLoader {
         this.koopaLeft = getSubImage(sprite, 1, 3, 48, 64);
         this.koopaRight = getSubImage(sprite, 4, 3, 48, 64);
         this.endFlag = getSubImage(sprite, 5, 1, 48, 48);
-        this.icon = loadImage("/icon.jpg");
+        this.axeUpRight = getSubImage(axe, 1, 1, 96, 96);
+        this.axeDownRight = getSubImage(axe, 2, 1, 96, 96);
+        this.axeDownLeft = getSubImage(axe, 3, 1, 96, 96);
+        this.axeUpLeft = getSubImage(axe, 4, 1, 96, 96);
     }
 
     public static ImageLoader getInstance() {
@@ -324,5 +332,21 @@ public class ImageLoader {
 
     public Image getIcon() {
         return icon;
+    }
+
+    public BufferedImage getAxeUpRight() {
+        return axeUpRight;
+    }
+
+    public BufferedImage getAxeDownRight() {
+        return axeDownRight;
+    }
+
+    public BufferedImage getAxeDownLeft() {
+        return axeDownLeft;
+    }
+
+    public BufferedImage getAxeUpLeft() {
+        return axeUpLeft;
     }
 }

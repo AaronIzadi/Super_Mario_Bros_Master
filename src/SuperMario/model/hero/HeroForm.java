@@ -2,6 +2,7 @@ package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
+import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
@@ -14,15 +15,17 @@ public class HeroForm {
     private int heroType;
     private Animation animation;
     private boolean isSuper;
-    private boolean CanShootFire;
+    private boolean canShootFire;
+    private boolean canActivateAxe;
     private BufferedImage fireballStyle;
+    private BufferedImage[] axeStyle;
 
 
     public HeroForm(Animation animation, boolean isSuper, boolean CanShootFire, int heroType) {
         this.heroType = heroType;
         this.animation = animation;
         this.isSuper = isSuper;
-        this.CanShootFire = CanShootFire;
+        this.canShootFire = CanShootFire;
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.setHeroType(heroType);
@@ -59,8 +62,15 @@ public class HeroForm {
     }
 
     public Fireball fire(boolean toRight, double x, double y) {
-        if (CanShootFire) {
+        if (canShootFire) {
             return new Fireball(x, y + 48, fireballStyle, toRight);
+        }
+        return null;
+    }
+
+    public Axe axe(boolean toRight, Hero hero) {
+        if (canActivateAxe) {
+            return new Axe(hero.getX(), hero.getY() + 48, axeStyle[0], toRight);
         }
         return null;
     }
@@ -82,7 +92,7 @@ public class HeroForm {
     }
 
     public void setCanShootFire(boolean canShootFire) {
-        CanShootFire = canShootFire;
+        this.canShootFire = canShootFire;
     }
 
     public void setFireballStyle(BufferedImage fireballStyle) {
@@ -91,6 +101,14 @@ public class HeroForm {
 
     public BufferedImage getFireballStyle() {
         return fireballStyle;
+    }
+
+    public void setAxeStyle(BufferedImage[] axeStyle) {
+        this.axeStyle = axeStyle;
+    }
+
+    public BufferedImage[] getAxeStyle() {
+        return axeStyle;
     }
 
     public boolean isSuper() {
@@ -102,7 +120,14 @@ public class HeroForm {
     }
 
     public boolean ifCanShootFire() {
-        return CanShootFire;
+        return canShootFire;
     }
 
+    public boolean ifCanActivateAxe() {
+        return canActivateAxe;
+    }
+
+    public void setCanActivateAxe(boolean canActivateAxe) {
+        this.canActivateAxe = canActivateAxe;
+    }
 }

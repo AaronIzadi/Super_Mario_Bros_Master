@@ -21,6 +21,8 @@ public abstract class Hero extends GameObject {
     private int type;
     private boolean toRight;
     private boolean tookStar;
+    private boolean isAxeActivated;
+    private boolean canActivateAxe;
 
     public Hero(double x, double y) {
         super(x, y, null);
@@ -130,6 +132,11 @@ public abstract class Hero extends GameObject {
         return heroForm.fire(toRight, getX(), getY());
     }
 
+    public boolean ifCanActivateAxe() {
+        canActivateAxe = coins >= 3 && isSuper();
+        return canActivateAxe;
+    }
+
     public void acquireCoin() {
         coins++;
     }
@@ -226,5 +233,13 @@ public abstract class Hero extends GameObject {
 
     public boolean ifTookStar() {
         return tookStar;
+    }
+
+    public boolean isAxeActivated() {
+        return isAxeActivated;
+    }
+
+    public void setAxeActivated(boolean axeActivated) {
+        isAxeActivated = axeActivated;
     }
 }

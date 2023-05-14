@@ -184,6 +184,8 @@ public class MapManager {
                     toBeRemoved.add(enemy);
                     engine.playStomp();
                 }
+                hero.setFalling(false);
+                hero.jump();
             }
         }
 
