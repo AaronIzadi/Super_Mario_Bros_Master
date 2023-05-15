@@ -6,13 +6,13 @@ import SuperMario.logic.GameEngine;
 import SuperMario.logic.MapManager;
 import SuperMario.model.prize.Prize;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CoinBrick extends SurpriseBrick{
 
     private Prize prize;
     private Animation animation;
-    private boolean breaking;
     private int frames;
 
     public CoinBrick(double x, double y, BufferedImage style, Prize prize) {
@@ -21,7 +21,6 @@ public class CoinBrick extends SurpriseBrick{
         setEmpty(false);
         this.prize = prize;
         setAnimation();
-        breaking = false;
         frames = animation.getLength();
     }
 
@@ -47,7 +46,6 @@ public class CoinBrick extends SurpriseBrick{
             if (!manager.getHero().isSuper())
                 return null;
 
-            breaking = true;
             manager.addRevealedBrick(this);
             engine.playBreakBrick();
 
@@ -58,10 +56,20 @@ public class CoinBrick extends SurpriseBrick{
         }
     }
 
+    @Override
+    public void draw(Graphics g) {
+        BufferedImage style = getStyle();
+
+        if (style != null) {
+            g.drawImage(style, (int) getX(), (int) getY(), null);
+        }
+    }
+
     public int getFrames() {
         return frames;
     }
 
+    @Override
     public void animate() {
         boolean isAnimationTicked = animation.animate(30);
         if (isAnimationTicked) {

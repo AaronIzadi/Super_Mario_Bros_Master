@@ -45,4 +45,8 @@ public class MultiCoinBrick extends SurpriseBrick {
 
         return toReturn;
     }
+
+    @Override
+    public void animate() {
+    }
 }

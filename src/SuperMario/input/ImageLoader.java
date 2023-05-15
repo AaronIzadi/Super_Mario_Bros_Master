@@ -14,7 +14,7 @@ public class ImageLoader {
     private final BufferedImage brickAnimation;
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private final BufferedImage border, ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick,oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
     private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
@@ -48,6 +48,7 @@ public class ImageLoader {
         this.storeScreenImage = loadImage("/store-screen.png");
         this.loadGameScreen = loadImage("/load-screen.png");
         this.pauseScreen = loadImage("/pause-screen.png");
+        this.prizeBrick = loadImage("/prize.png");
         this.icon = loadImage("/icon.jpg");
         this.coinIcon = getSubImage(sprite, 1, 5, 48, 48);
         this.superMushroom = getSubImage(sprite, 2, 5, 48, 48);
@@ -327,6 +328,10 @@ public class ImageLoader {
 
     public BufferedImage getSelectIcon() {
         return selectIcon;
+    }
+
+    public BufferedImage getPrizeBrick() {
+        return prizeBrick;
     }
 
     public Image getIcon() {

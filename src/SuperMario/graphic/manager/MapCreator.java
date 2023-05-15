@@ -24,7 +24,7 @@ public class MapCreator {
     private ImageLoader imageLoader;
     private BufferedImage backgroundImage;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private BufferedImage border, ordinaryBrick, surpriseBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
     private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
 
 
@@ -56,6 +56,7 @@ public class MapCreator {
         this.coin = imageLoader.getCoin();
         this.ordinaryBrick = imageLoader.getOrdinaryBrick();
         this.surpriseBrick = imageLoader.getSurpriseBrick();
+        this.prizeBrick = imageLoader.getPrizeBrick();
         this.oneCoinBrick = imageLoader.getOneCoinBrick();
         this.fiveCoinBrick = imageLoader.getFiveCoinBrick();
         this.groundBrick = imageLoader.getGroundBrick();
@@ -122,7 +123,11 @@ public class MapCreator {
                     map.addBrick(brick);
                 } else if (currentPixel == surpriseBrick) {
                     Prize prize = generateRandomPrize(xLocation, yLocation);
-                    Brick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
+                    SurpriseBrick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
+                    BufferedImage[] frames = new BufferedImage[2];
+                    frames[0] = this.surpriseBrick;
+                    frames[1] = this.prizeBrick;
+                    brick.setFrames(frames);
                     map.addBrick(brick);
                 } else if (currentPixel == coinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
