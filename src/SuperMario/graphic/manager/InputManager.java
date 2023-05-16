@@ -147,7 +147,6 @@ public class InputManager implements KeyListener, MouseListener {
         return isLeft() && isRight();
     }
     public boolean isUpAndDownSelected() {
-        return isUp() && isDown();
+        return keyPressed.contains(VK_DOWN) && keyPressed.contains(VK_UP);
     }
-
 }

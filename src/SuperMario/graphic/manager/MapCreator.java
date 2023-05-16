@@ -25,7 +25,7 @@ public class MapCreator {
     private BufferedImage backgroundImage;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
-    private BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
+    private BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
 
 
     public MapCreator() {
@@ -65,6 +65,7 @@ public class MapCreator {
         this.goombaRight = imageLoader.getGoombaRight();
         this.koopaLeft = imageLoader.getKoopaLeft();
         this.koopaRight = imageLoader.getKoopaRight();
+        this.shell = imageLoader.getShell();
         this.endFlag = imageLoader.getEndFlag();
     }
 
@@ -153,6 +154,7 @@ public class MapCreator {
                 } else if (currentPixel == koopa) {
                     KoopaTroopa enemy = new KoopaTroopa(xLocation, yLocation, this.koopaLeft);
                     enemy.setRightImage(koopaRight);
+                    enemy.setShell(this.shell);
                     map.addEnemy(enemy);
                 } else if (currentPixel == spiny) {
                     Spiny enemy = new Spiny(xLocation, yLocation, this.spinyLeft);

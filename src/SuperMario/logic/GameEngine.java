@@ -325,6 +325,8 @@ public class GameEngine implements Runnable {
                 userData.getHero().move(true, camera);
             } else if (inputMgr.isLeft()) {
                 userData.getHero().move(false, camera);
+            } else if (inputMgr.isDown()) {
+             //   userData.getHero().sit();
             } else if (inputMgr.isEmpty()) {
                 userData.getHero().setVelX(0);
             } else if (inputMgr.isSpace()) {

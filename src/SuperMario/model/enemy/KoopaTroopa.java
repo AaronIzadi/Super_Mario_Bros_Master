@@ -8,6 +8,7 @@ import java.util.TimerTask;
 public class KoopaTroopa extends Enemy {
 
     private BufferedImage rightImage;
+    private BufferedImage shell;
     private boolean isHit;
     private Double lastVelX = 0.0;
 
@@ -19,10 +20,14 @@ public class KoopaTroopa extends Enemy {
 
     @Override
     public void draw(Graphics g) {
-        if (getVelX() > 0) {
-            g.drawImage(rightImage, (int) getX(), (int) getY(), null);
+        if (isHit()) {
+            g.drawImage(shell, (int) getX(), (int) getY() + 26, null);
         } else {
-            super.draw(g);
+            if (getVelX() > 0) {
+                g.drawImage(rightImage, (int) getX(), (int) getY(), null);
+            } else {
+                g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
+            }
         }
     }
 
@@ -50,9 +55,9 @@ public class KoopaTroopa extends Enemy {
 
     public void moveAfterHit() {
         if (lastVelX > 0) {
-            setX(getX() + 48);
+            setX(getX() + 24);
         } else {
-            setX(getX() - 48);
+            setX(getX() - 24);
         }
     }
 
@@ -65,5 +70,9 @@ public class KoopaTroopa extends Enemy {
         };
         Timer timer = new Timer();
         timer.schedule(task, 3000);
+    }
+
+    public void setShell(BufferedImage shell) {
+        this.shell = shell;
     }
 }

@@ -14,8 +14,8 @@ public class ImageLoader {
     private final BufferedImage brickAnimation;
     private final BufferedImage backgroundImage;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick,oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
-    private final BufferedImage goombaLeft, goombaRight, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
+    private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
@@ -49,6 +49,7 @@ public class ImageLoader {
         this.loadGameScreen = loadImage("/load-screen.png");
         this.pauseScreen = loadImage("/pause-screen.png");
         this.prizeBrick = loadImage("/prize.png");
+        this.shell = loadImage("/shell.png");
         this.icon = loadImage("/icon.jpg");
         this.coinIcon = getSubImage(sprite, 1, 5, 48, 48);
         this.superMushroom = getSubImage(sprite, 2, 5, 48, 48);
@@ -106,7 +107,15 @@ public class ImageLoader {
 
     public BufferedImage[] getHeroLeftFrames(int heroForm) {
 
-        BufferedImage[] leftFrames = new BufferedImage[5];
+        BufferedImage[] leftFrames;
+
+//        if (heroForm == 0) {
+//            leftFrames = new BufferedImage[5];
+//        } else {
+//        }
+        leftFrames = new BufferedImage[6];
+
+
         int col = 0, width = 0, height = 0;
 
         if (heroForm == 0) {
@@ -123,18 +132,19 @@ public class ImageLoader {
             height = 96;
         }
 
-        for (int i = 0; i < 5; i++) {
-            leftFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, height);
-        }
-        return leftFrames;
+        return getHeroForms(leftFrames, col, width, height);
     }
 
     public BufferedImage[] getHeroRightFrames(int heroForm) {
 
-        BufferedImage[] rightFrames = new BufferedImage[5];
-        int col = 0;
-        int width = 0;
-        int height = 0;
+        BufferedImage[] rightFrames;
+//        if (heroForm == 0) {
+//            rightFrames = new BufferedImage[5];
+//        } else {
+//        }
+        rightFrames = new BufferedImage[6];
+
+        int col = 0, width = 0, height = 0;
 
         if (heroForm == 0) {
             col = 2;
@@ -150,8 +160,17 @@ public class ImageLoader {
             height = 96;
         }
 
-        for (int i = 0; i < 5; i++) {
-            rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, height);
+        return getHeroForms(rightFrames, col, width, height);
+    }
+
+    private BufferedImage[] getHeroForms(BufferedImage[] rightFrames, int col, int width, int height) {
+        for (int i = 0; i < 6; i++) {
+            if (i < 5) {
+                rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, height);
+            }
+            if (i == 5) {
+                rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, 48);
+            }
         }
         return rightFrames;
     }
@@ -338,7 +357,7 @@ public class ImageLoader {
         return icon;
     }
 
-        public BufferedImage[] axeFrames(){
+    public BufferedImage[] axeFrames() {
         BufferedImage[] axeFrames = new BufferedImage[4];
         axeFrames[0] = axe0;
         axeFrames[1] = axe1;
@@ -347,11 +366,16 @@ public class ImageLoader {
 
         return axeFrames;
     }
+
     public BufferedImage getAxeUpRight() {
         return axe0;
     }
 
     public BufferedImage getAxeUpLeft() {
         return axe3;
+    }
+
+    public BufferedImage getShell() {
+        return shell;
     }
 }

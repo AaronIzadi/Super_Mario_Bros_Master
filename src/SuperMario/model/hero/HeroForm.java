@@ -2,7 +2,6 @@ package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
-import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
@@ -19,6 +18,8 @@ public class HeroForm {
     private BufferedImage rightStandingFrame;
     private BufferedImage leftJumpingFrame;
     private BufferedImage rightJumpingFrame;
+    private BufferedImage leftSittingFrame;
+    private BufferedImage rightSittingFrame;
     private boolean isSuper;
     private boolean canShootFire;
     private boolean canActivateAxe;
@@ -63,11 +64,13 @@ public class HeroForm {
         rightJumpingFrame = rightImages[0];
         leftStandingFrame = leftImages[1];
         rightStandingFrame = rightImages[1];
+        leftSittingFrame = leftImages[5];
+        rightSittingFrame = rightImages[5];
 
-        BufferedImage[] leftFrames = new BufferedImage[size - 2];
-        BufferedImage[] rightFrames = new BufferedImage[size - 2];
+        BufferedImage[] leftFrames = new BufferedImage[size - 3];
+        BufferedImage[] rightFrames = new BufferedImage[size - 3];
 
-        for (int i = 0; i < size - 2; i++) {
+        for (int i = 0; i < size - 3; i++) {
             leftFrames[i] = leftImages[i + 2];
             rightFrames[i] = rightImages[i + 2];
         }

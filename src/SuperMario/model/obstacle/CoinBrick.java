@@ -9,7 +9,7 @@ import SuperMario.model.prize.Prize;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class CoinBrick extends SurpriseBrick{
+public class CoinBrick extends SurpriseBrick {
 
     private Prize prize;
     private Animation animation;
@@ -41,7 +41,7 @@ public class CoinBrick extends SurpriseBrick{
             Prize toReturn = this.prize;
             this.prize = null;
             return toReturn;
-        }else{
+        } else {
             MapManager manager = engine.getMapManager();
             if (!manager.getHero().isSuper())
                 return null;
