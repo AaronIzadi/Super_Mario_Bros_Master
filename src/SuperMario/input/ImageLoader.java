@@ -25,6 +25,13 @@ public class ImageLoader {
     private static final ImageLoader instance = new ImageLoader();
 
     private ImageLoader() {
+        this.startScreenImage = loadImage("/states/start-screen.png");
+        this.helpScreenImage = loadImage("/states/help-screen.png");
+        this.aboutScreenImage = loadImage("/states/about-screen.png");
+        this.gameOverScreen = loadImage("/states/game-over.png");
+        this.storeScreenImage = loadImage("/states/store-screen.png");
+        this.loadGameScreen = loadImage("/states/load-screen.png");
+        this.pauseScreen = loadImage("/states/pause-screen.png");
         BufferedImage sprite = loadImage("/sprite.png");
         this.axe0 = loadImage("/axe0.png");
         this.axe1 = loadImage("/axe1.png");
@@ -41,13 +48,6 @@ public class ImageLoader {
         this.border = loadImage("/border-brick.png");
         this.heartIcon = loadImage("/heart-icon.png");
         this.selectIcon = loadImage("/select-icon.png");
-        this.startScreenImage = loadImage("/start-screen.png");
-        this.helpScreenImage = loadImage("/help-screen.png");
-        this.aboutScreenImage = loadImage("/about-screen.png");
-        this.gameOverScreen = loadImage("/game-over.png");
-        this.storeScreenImage = loadImage("/store-screen.png");
-        this.loadGameScreen = loadImage("/load-screen.png");
-        this.pauseScreen = loadImage("/pause-screen.png");
         this.prizeBrick = loadImage("/prize.png");
         this.shell = loadImage("/shell.png");
         this.slime = loadImage("/slime.png");
@@ -188,19 +188,19 @@ public class ImageLoader {
     private void setHeroForms(int heroType) {
         switch (heroType) {
             case HeroType.LUIGI:
-                heroForms = loadImage("/luigi-forms.png");
+                heroForms = loadImage("/hero/luigi-forms.png");
                 break;
             case HeroType.ROSS:
-                heroForms = loadImage("/ross-forms.png");
+                heroForms = loadImage("/hero/ross-forms.png");
                 break;
             case HeroType.TOAD:
-                heroForms = loadImage("/toad-forms.png");
+                heroForms = loadImage("/hero/toad-forms.png");
                 break;
             case HeroType.PRINCE_PEACH:
-                heroForms = loadImage("/prince peach-forms.png");
+                heroForms = loadImage("/hero/prince peach-forms.png");
                 break;
             default:
-                heroForms = loadImage("/mario-forms.png");
+                heroForms = loadImage("/hero/mario-forms.png");
                 break;
         }
     }
