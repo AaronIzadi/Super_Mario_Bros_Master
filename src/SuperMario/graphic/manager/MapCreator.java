@@ -24,7 +24,7 @@ public class MapCreator {
     private ImageLoader imageLoader;
     private BufferedImage backgroundImage;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, slime, slimeOnTouch, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
     private BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
 
 
@@ -66,6 +66,8 @@ public class MapCreator {
         this.koopaLeft = imageLoader.getKoopaLeft();
         this.koopaRight = imageLoader.getKoopaRight();
         this.shell = imageLoader.getShell();
+        this.slime = imageLoader.getSlime();
+        this.slimeOnTouch = imageLoader.getSlimeOnTouch();
         this.endFlag = imageLoader.getEndFlag();
     }
 
@@ -104,6 +106,7 @@ public class MapCreator {
         int multiCoinBrick = new Color(20, 100, 40).getRGB();
         int smallPipe = new Color(34, 177, 76).getRGB();
         int border = new Color(127, 51, 0).getRGB();
+        int slime = new Color(100,255,100).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -121,6 +124,10 @@ public class MapCreator {
                     map.addHoles(brick);
                 } else if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
+                    map.addBrick(brick);
+                } else if (currentPixel == slime) {
+                    Slime brick = new Slime(xLocation, yLocation, this.slime);
+                    brick.slimeOnTouch(slimeOnTouch);
                     map.addBrick(brick);
                 } else if (currentPixel == surpriseBrick) {
                     Prize prize = generateRandomPrize(xLocation, yLocation);

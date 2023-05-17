@@ -6,10 +6,7 @@ import SuperMario.model.GameObject;
 import SuperMario.model.map.Map;
 import SuperMario.model.enemy.*;
 import SuperMario.model.hero.Hero;
-import SuperMario.model.obstacle.Brick;
-import SuperMario.model.obstacle.CoinBrick;
-import SuperMario.model.obstacle.Hole;
-import SuperMario.model.obstacle.OrdinaryBrick;
+import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.FireFlower;
 import SuperMario.model.prize.Prize;
@@ -165,6 +162,10 @@ public class MapManager {
                     hero.setFalling(false);
                     hero.setVelY(0);
                     heroHasBottomIntersection = true;
+                    if (brick instanceof Slime){
+                        ((Slime) brick).setOnTouch(true);
+                        hero.jumpOnSlime();
+                    }
                 } else {
                     hero.setFalling(true);
                 }
@@ -193,7 +194,7 @@ public class MapManager {
                     engine.playStomp();
                 }
                 hero.setFalling(false);
-                hero.jump();
+                hero.jumpOnEnemy();
             }
         }
 
