@@ -1,7 +1,6 @@
 package SuperMario.graphic.view.states;
 
 import java.awt.*;
-
 public class MapSelectionItem {
 
     private final String name;
@@ -34,4 +33,5 @@ public class MapSelectionItem {
     public void setLocation(Point location) {
         this.location = location;
     }
+
 }

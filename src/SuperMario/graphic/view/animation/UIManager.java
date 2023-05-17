@@ -1,6 +1,5 @@
 package SuperMario.graphic.view.animation;
 
-import SuperMario.graphic.view.states.MapSelection;
 import SuperMario.input.FontLoader;
 
 import SuperMario.graphic.view.states.GameState;
@@ -20,7 +19,6 @@ public class UIManager extends JPanel {
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
     private final BufferedImage selectIcon;
-    private final MapSelection mapSelection;
 
     public UIManager(GameEngine engine, int width, int height) {
         setPreferredSize(new Dimension(width, height));
@@ -29,8 +27,6 @@ public class UIManager extends JPanel {
 
         this.engine = engine;
         ImageLoader loader = ImageLoader.getInstance();
-
-        mapSelection = new MapSelection();
 
         this.heartIcon = loader.getHeartIcon();
         this.coinIcon = loader.getCoinIcon();
@@ -59,8 +55,6 @@ public class UIManager extends JPanel {
             drawLoadGameScreen(g2);
         } else if (gameState == GameState.STORE_SCREEN) {
             drawStoreScreen(g2);
-        } else if (gameState == GameState.MAP_SELECTION) {
-            drawMapSelectionScreen(g2);
         } else if (gameState == GameState.ABOUT_SCREEN) {
             drawAboutScreen(g2);
         } else if (gameState == GameState.HELP_SCREEN) {
@@ -77,6 +71,7 @@ public class UIManager extends JPanel {
             drawRemainingLives(g2);
             drawAcquiredCoins(g2);
             drawRemainingTime(g2);
+            drawWorldNumber(g2);
 
             if (gameState == GameState.PAUSED) {
                 drawPauseScreen(g2);
@@ -87,19 +82,15 @@ public class UIManager extends JPanel {
         g2.dispose();
     }
 
-    private void drawRemainingTime(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(25f));
-        g2.setColor(Color.WHITE);
-        String displayedStr = "TIME: " + engine.getRemainingTime();
-        g2.drawString(displayedStr, 750, 50);
-    }
-
     private void drawVictoryScreen(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(50f));
+        g2.setFont(gameFont.deriveFont(40f));
         g2.setColor(Color.WHITE);
         String displayedStr = "YOU WON!";
+        String nextLine = "Press enter to continue.";
         int stringLength = g2.getFontMetrics().stringWidth(displayedStr);
-        g2.drawString(displayedStr, (getWidth() - stringLength) / 2, getHeight() / 2);
+        int nextLineLength = g2.getFontMetrics().stringWidth(nextLine);
+        g2.drawString(displayedStr, (getWidth() - stringLength) / 2, 300);
+        g2.drawString(nextLine, (getWidth() - nextLineLength) / 2, 400);
     }
 
     private void drawHelpScreen(Graphics2D g2) {
@@ -180,6 +171,13 @@ public class UIManager extends JPanel {
         g2.drawImage(selectIcon, 285, row * 95 + 195, null);
     }
 
+    private void drawRemainingTime(Graphics2D g2) {
+        g2.setFont(gameFont.deriveFont(25f));
+        g2.setColor(Color.WHITE);
+        String displayedStr = "TIME:" + engine.getRemainingTime();
+        g2.drawString(displayedStr, 850, 50);
+    }
+
     private void drawAcquiredCoins(Graphics2D g2) {
         g2.setFont(gameFont.deriveFont(30f));
         g2.setColor(Color.WHITE);
@@ -197,16 +195,24 @@ public class UIManager extends JPanel {
         String displayedStr;
 
         displayedStr = "" + engine.getRemainingLives();
-        g2.drawImage(heartIcon, 50, 10, null);
-        g2.drawString(displayedStr, 100, 50);
+        g2.drawImage(heartIcon, 30, 10, null);
+        g2.drawString(displayedStr, 80, 50);
+    }
+
+    private void drawWorldNumber(Graphics2D g2) {
+        g2.setFont(gameFont.deriveFont(25f));
+        g2.setColor(Color.WHITE);
+        String displayedStr;
+        displayedStr = "World:" + (engine.getUserData().getWorldNumber()+1);
+        g2.drawString(displayedStr, 550, 50);
     }
 
     private void drawPoints(Graphics2D g2) {
         g2.setFont(gameFont.deriveFont(25f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        displayedStr = "Points: " + engine.getScore();
-        g2.drawString(displayedStr, 300, 50);
+        displayedStr = "Points:" + engine.getScore();
+        g2.drawString(displayedStr, 200, 50);
     }
 
     private void drawStartScreen(Graphics2D g2) {
@@ -215,14 +221,6 @@ public class UIManager extends JPanel {
         g2.drawImage(selectIcon, 375, row * 70 + 415, null);
     }
 
-    private void drawMapSelectionScreen(Graphics2D g2) {
-        g2.setFont(gameFont.deriveFont(50f));
-        g2.setColor(Color.WHITE);
-        mapSelection.draw(g2);
-        int row = engine.getSelectedMap();
-        int y_location = row * 100 + 300 - selectIcon.getHeight();
-        g2.drawImage(selectIcon, 375, y_location, null);
-    }
 
     private void drawLoadGameScreen(Graphics2D g2) {
         int row = engine.getLoadGameScreenSelection().getLineNumber();
@@ -230,13 +228,6 @@ public class UIManager extends JPanel {
         g2.drawImage(selectIcon, 450, row * 70 + 290, null);
     }
 
-    public String selectMapViaKeyboard(int index) {
-        return mapSelection.selectMap(index);
-    }
-
-    public int changeSelectedMap(int index, boolean up) {
-        return mapSelection.changeSelectedMap(index, up);
-    }
 
     public GameEngine getEngine() {
         return engine;

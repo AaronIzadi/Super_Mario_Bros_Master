@@ -35,7 +35,7 @@ public class GameEngine implements Runnable {
     private LoadGameScreenSelection loadGameScreenSelection = LoadGameScreenSelection.NEW_GAME;
     private PauseScreenSelection pauseScreenSelection = PauseScreenSelection.GO_TO_MAIN_MENU;
     private StoreScreenSelection storeScreenSelection = StoreScreenSelection.MARIO;
-    private int selectedMap = 0;
+    private MapSelection mapSelection = MapSelection.WORLD_1;
 
     private GameEngine() {
         initial();
@@ -69,9 +69,9 @@ public class GameEngine implements Runnable {
     }
 
     private synchronized void start() {
-        if (isRunning)
+        if (isRunning) {
             return;
-
+        }
         isRunning = true;
         thread = new Thread(this);
         thread.start();
@@ -88,15 +88,15 @@ public class GameEngine implements Runnable {
         soundManager.restartBackground();
     }
 
-    public void selectMapViaKeyboard() {
-        String path = uiManager.selectMapViaKeyboard(selectedMap);
+    public void selectMap(int worldNumber) {
+        String path = mapSelection.selectMap(worldNumber);
         if (path != null) {
-            createMap(path);
+            if (userData.getHero() != null) {
+                createMap(path, userData.getHero());
+            } else {
+                createMap(path);
+            }
         }
-    }
-
-    public void changeSelectedMap(boolean up) {
-        selectedMap = uiManager.changeSelectedMap(selectedMap, up);
     }
 
     private void createMap(String path) {
@@ -226,14 +226,14 @@ public class GameEngine implements Runnable {
 
     private void checkAndThenLoadFile(int fileId) throws IOException {
         if (2 < fileId || fileId < 0) {
-            startGame();
+            startGame(fileId);
             return;
         }
         if (!userData.getLoadGameRepository().isFileEmpty(fileId)) {
             loadGame(fileId);
             setGameState(GameState.STORE_SCREEN);
         } else {
-            startGame();
+            startGame(MapSelection.WORLD_1.getWorldNumber());
         }
     }
 
@@ -279,7 +279,7 @@ public class GameEngine implements Runnable {
             if (inputMgr.isEnter()) {
                 switch (loadGameScreenSelection) {
                     case NEW_GAME:
-                        startGame();
+                        startGame(MapSelection.WORLD_1.getWorldNumber());
                         break;
                     case LOAD_GAME_1:
                         checkAndThenLoadFile(0);
@@ -305,16 +305,6 @@ public class GameEngine implements Runnable {
                 selectHero(true);
             } else if (inputMgr.isRight()) {
                 selectHero(false);
-            }
-
-        } else if (gameState == GameState.MAP_SELECTION) {
-
-            if (inputMgr.isEnter()) {
-                selectMapViaKeyboard();
-            } else if (inputMgr.isUp()) {
-                changeSelectedMap(true);
-            } else if (inputMgr.isDown()) {
-                changeSelectedMap(false);
             }
 
         } else if (gameState == GameState.RUNNING) {
@@ -380,14 +370,36 @@ public class GameEngine implements Runnable {
 
         } else if (gameState == GameState.GAME_OVER && inputMgr.isEscape()) {
             reset();
-        } else if (gameState == GameState.MISSION_PASSED && inputMgr.isEscape()) {
+        } else if (gameState == GameState.MISSION_PASSED) {
+
+            if (inputMgr.isEnter()) {
+                int nextWorld;
+                if (userData.getWorldNumber() == 0) {
+                    nextWorld = MapSelection.WORLD_2.getWorldNumber();
+                    loadNextLevel(nextWorld);
+                } else if (userData.getWorldNumber() == 1) {
+                    nextWorld = MapSelection.WORLD_3.getWorldNumber();
+                    loadNextLevel(nextWorld);
+                }
+            } else if (inputMgr.isEscape()) {
+                reset();
+            }
             pauseBackGround();
-            reset();
+
         } else {
             if (inputMgr.isEscape()) {
                 setGameState(GameState.START_SCREEN);
             }
         }
+    }
+
+    private void loadNextLevel(int worldNumber){
+        userData.setWorldNumber(worldNumber);
+        mapManager.setMap(createMap(mapSelection.getMapPath(worldNumber), userData.getHero()));
+        mapManager.resetCurrentMap(this);
+        updateLocations();
+        updateCamera();
+        gameState = GameState.RUNNING;
     }
 
     private void buyAndLoadNewHero(int type) {
@@ -439,9 +451,10 @@ public class GameEngine implements Runnable {
         storeScreenSelection = storeScreenSelection.select(selectLeft);
     }
 
-    private void startGame() {
+    private void startGame(int worldNumber) {
         if (gameState != GameState.GAME_OVER) {
-            setGameState(GameState.MAP_SELECTION);
+            selectMap(worldNumber);
+            //setGameState(GameState.MAP_SELECTION);
         }
     }
 
@@ -504,10 +517,6 @@ public class GameEngine implements Runnable {
 
     public int getCoins() {
         return mapManager.getCoins();
-    }
-
-    public int getSelectedMap() {
-        return selectedMap;
     }
 
     public void drawMap(Graphics2D g2) {

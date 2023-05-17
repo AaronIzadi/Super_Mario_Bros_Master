@@ -146,6 +146,8 @@ public abstract class Hero extends GameObject {
         } else {
             engine.playHeroDies();
         }
+        heroForm.setSuper(false);
+        heroForm.setCanShootFire(false);
         heroForm.onTouchEnemy(engine.getImageLoader());
         setDimension(48, 48);
     }

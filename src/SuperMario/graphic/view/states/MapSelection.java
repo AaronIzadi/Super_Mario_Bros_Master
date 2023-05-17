@@ -3,38 +3,38 @@ package SuperMario.graphic.view.states;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MapSelection {
+public enum MapSelection {
 
+    WORLD_1(0),
+    WORLD_2(1),
+    WORLD_3(2);
+  //  BOSS_FIGHT(3);
+
+    private final int worldNumber;
     private final ArrayList<String> maps = new ArrayList<>();
     private final MapSelectionItem[] mapSelectionItems;
 
-    public MapSelection() {
+    MapSelection(int lineNumber) {
         getMaps();
+        this.worldNumber = lineNumber;
         this.mapSelectionItems = createItems(this.maps);
     }
 
-    public void draw(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 1280, 720);
+    public MapSelection getSelection(int number) {
+        if (number == 0)
+            return WORLD_1;
+        else if (number == 1)
+            return WORLD_2;
+        else if (number == 2)
+            return WORLD_3;
+//        else if (number == 3)
+//            return BOSS_FIGHT;
+        else
+            return null;
+    }
 
-        if (mapSelectionItems == null) {
-            System.out.println(1);
-            return;
-        }
-
-        String title = "Select a Map";
-        int x_location = (1280 - g.getFontMetrics().stringWidth(title)) / 2;
-        g.setColor(Color.YELLOW);
-        g.drawString(title, x_location, 150);
-
-        for (MapSelectionItem item : mapSelectionItems) {
-            g.setColor(Color.WHITE);
-            int width = g.getFontMetrics().stringWidth(item.getName().split("[.]")[0]);
-            int height = g.getFontMetrics().getHeight();
-            item.setDimension(new Dimension(width, height));
-            item.setLocation(new Point((1280 - width) / 2, item.getLocation().y));
-            g.drawString(item.getName().split("[.]")[0], item.getLocation().x, item.getLocation().y);
-        }
+    public int getWorldNumber() {
+        return worldNumber;
     }
 
     private void getMaps() {
@@ -43,6 +43,9 @@ public class MapSelection {
         maps.add("Map 3.png");
     }
 
+    public String getMapPath(int worldNumber){
+        return maps.get(worldNumber);
+    }
     private MapSelectionItem[] createItems(ArrayList<String> maps) {
         if (maps == null)
             return null;
@@ -56,38 +59,10 @@ public class MapSelection {
 
         return items;
     }
-
-    public String selectMap(Point mouseLocation) {
-        for (MapSelectionItem item : mapSelectionItems) {
-            Dimension dimension = item.getDimension();
-            Point location = item.getLocation();
-            boolean inX = location.x <= mouseLocation.x && location.x + dimension.width >= mouseLocation.x;
-            boolean inY = location.y >= mouseLocation.y && location.y - dimension.height <= mouseLocation.y;
-            if (inX && inY) {
-                return item.getName();
-            }
-        }
-        return null;
-    }
-
     public String selectMap(int index) {
         if (index < mapSelectionItems.length && index > -1) {
             return mapSelectionItems[index].getName();
         }
         return null;
-    }
-
-    public int changeSelectedMap(int index, boolean up) {
-        if (up) {
-            if (index <= 0)
-                return mapSelectionItems.length - 1;
-            else
-                return index - 1;
-        } else {
-            if (index >= mapSelectionItems.length - 1)
-                return 0;
-            else
-                return index + 1;
-        }
     }
 }

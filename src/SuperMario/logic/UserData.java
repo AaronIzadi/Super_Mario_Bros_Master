@@ -12,6 +12,7 @@ public class UserData {
     private Hero hero;
     private Map map;
     private String mapPath;
+    private int worldNumber;
     private boolean[] typesOwned;
     private final LoadGameRepository loadGameRepository;
     private final SaveGameRepository saveGameRepository;
@@ -74,5 +75,13 @@ public class UserData {
 
     public String getMapPath() {
         return mapPath;
+    }
+
+    public int getWorldNumber() {
+        return worldNumber;
+    }
+
+    public void setWorldNumber(int worldNumber) {
+        this.worldNumber = worldNumber;
     }
 }
