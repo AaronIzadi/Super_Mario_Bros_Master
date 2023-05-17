@@ -83,7 +83,7 @@ public abstract class Hero extends GameObject {
     public void sit() {
         if (isSuper() && !isJumping()) {
             isSitting = true;
-            getDimension().height = 72;
+            getDimension().height = 50;
         }
     }
 

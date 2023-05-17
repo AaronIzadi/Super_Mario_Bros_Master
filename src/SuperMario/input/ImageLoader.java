@@ -127,7 +127,7 @@ public class ImageLoader {
             height = 96;
         }
 
-        return getHeroForms(leftFrames, col, width, height);
+        return getHeroForms(leftFrames, heroForm, col, width, height);
     }
 
     public BufferedImage[] getHeroRightFrames(int heroForm) {
@@ -151,16 +151,16 @@ public class ImageLoader {
             height = 96;
         }
 
-        return getHeroForms(rightFrames, col, width, height);
+        return getHeroForms(rightFrames, heroForm, col, width, height);
     }
 
-    private BufferedImage[] getHeroForms(BufferedImage[] rightFrames, int col, int width, int height) {
+    private BufferedImage[] getHeroForms(BufferedImage[] rightFrames, int heroForm, int col, int width, int height) {
         for (int i = 0; i < 6; i++) {
             if (i < 5) {
                 rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, height);
             }
             if (i == 5) {
-                rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, 72);
+                rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, 50);
             }
         }
         return rightFrames;
