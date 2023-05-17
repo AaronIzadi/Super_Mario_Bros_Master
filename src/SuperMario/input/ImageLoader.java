@@ -108,11 +108,6 @@ public class ImageLoader {
     public BufferedImage[] getHeroLeftFrames(int heroForm) {
 
         BufferedImage[] leftFrames;
-
-//        if (heroForm == 0) {
-//            leftFrames = new BufferedImage[5];
-//        } else {
-//        }
         leftFrames = new BufferedImage[6];
 
 
@@ -138,10 +133,6 @@ public class ImageLoader {
     public BufferedImage[] getHeroRightFrames(int heroForm) {
 
         BufferedImage[] rightFrames;
-//        if (heroForm == 0) {
-//            rightFrames = new BufferedImage[5];
-//        } else {
-//        }
         rightFrames = new BufferedImage[6];
 
         int col = 0, width = 0, height = 0;
@@ -169,7 +160,7 @@ public class ImageLoader {
                 rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, height);
             }
             if (i == 5) {
-                rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, 48);
+                rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, 72);
             }
         }
         return rightFrames;

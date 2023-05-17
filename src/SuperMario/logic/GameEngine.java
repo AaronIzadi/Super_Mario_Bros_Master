@@ -326,9 +326,13 @@ public class GameEngine implements Runnable {
             } else if (inputMgr.isLeft()) {
                 userData.getHero().move(false, camera);
             } else if (inputMgr.isDown()) {
-             //   userData.getHero().sit();
+                userData.getHero().sit();
             } else if (inputMgr.isEmpty()) {
                 userData.getHero().setVelX(0);
+                userData.getHero().setSitting(false);
+                if (userData.getHero().isSuper()) {
+                    userData.getHero().getDimension().height = 96;
+                }
             } else if (inputMgr.isSpace()) {
                 mapManager.fire(this);
             } else if (inputMgr.isUpAndDownSelected()) {

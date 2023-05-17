@@ -20,6 +20,7 @@ public abstract class Hero extends GameObject {
     private HeroForm heroForm;
     private int type;
     private boolean toRight;
+    private boolean isSitting;
     private boolean tookStar;
     private boolean isAxeActivated;
     private boolean canActivateAxe;
@@ -52,7 +53,7 @@ public abstract class Hero extends GameObject {
         BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(heroForm);
 
         this.heroForm = new HeroForm(leftFrames, rightFrames, isSuper, canShootFire, type);
-        setStyle(this.heroForm.getCurrentStyle(toRight, false, false));
+        setStyle(this.heroForm.getCurrentStyle(toRight, false, false, false));
     }
 
     @Override
@@ -60,7 +61,7 @@ public abstract class Hero extends GameObject {
         boolean movingInX = (getVelX() != 0);
         boolean movingInY = (getVelY() != 0);
 
-        setStyle(heroForm.getCurrentStyle(toRight, movingInX, movingInY));
+        setStyle(heroForm.getCurrentStyle(toRight, movingInX, movingInY, isSitting));
 
         super.draw(g);
 
@@ -78,6 +79,13 @@ public abstract class Hero extends GameObject {
     }
 
     public abstract void jump();
+
+    public void sit() {
+        if (isSuper() && !isJumping()) {
+            isSitting = true;
+            getDimension().height = 72;
+        }
+    }
 
     public abstract void move(boolean toRight, Camera camera);
 
@@ -256,6 +264,14 @@ public abstract class Hero extends GameObject {
 
     public boolean ifTookStar() {
         return tookStar;
+    }
+
+    public boolean isSitting() {
+        return isSitting;
+    }
+
+    public void setSitting(boolean sitting) {
+        isSitting = sitting;
     }
 
     public boolean isAxeActivated() {

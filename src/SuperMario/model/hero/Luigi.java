@@ -16,10 +16,6 @@ public class Luigi extends Hero{
 
     @Override
     public void jump() {
-//        if (isSitting()){
-//            setY(getLastY());
-//            setSitting(false);
-//        }
         if (!isJumping() && !isFalling()) {
             setJumping(true);
             setVelY(13);
@@ -29,10 +25,6 @@ public class Luigi extends Hero{
 
     @Override
     public void move(boolean toRight, Camera camera) {
-//        if (isSitting()){
-//            setY(getLastY());
-//            setSitting(false);
-//        }
         if (toRight) {
             setVelX(5);
         } else if (camera.getX() < getX()) {

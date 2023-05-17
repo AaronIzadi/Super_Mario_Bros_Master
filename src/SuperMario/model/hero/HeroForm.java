@@ -39,7 +39,7 @@ public class HeroForm {
         fireballStyle = imageLoader.getFireballImage();
     }
 
-    public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY) {
+    public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY, boolean isSitting) {
 
         BufferedImage style;
 
@@ -49,7 +49,10 @@ public class HeroForm {
             Animation currentAnimation = toRight ? rightAnimation : leftAnimation;
             currentAnimation.animate(20);
             style = currentAnimation.getCurrentFrame();
-        } else {
+        } else if (isSitting) {
+            style = toRight ? rightSittingFrame : leftSittingFrame;
+        }
+        else {
             style = toRight ? rightStandingFrame : leftStandingFrame;
         }
 
