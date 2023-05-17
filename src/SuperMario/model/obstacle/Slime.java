@@ -10,7 +10,7 @@ public class Slime extends Brick {
     private boolean onTouch;
 
     public Slime(double x, double y, BufferedImage style) {
-        super(x + 2, y, style);
+        super(x + 4, y, style);
         setBreakable(true);
         setEmpty(true);
     }
@@ -18,7 +18,7 @@ public class Slime extends Brick {
     @Override
     public void draw(Graphics g) {
         if (onTouch) {
-            g.drawImage(slimeOnTouch, (int) getX(), (int) getY(), null);
+            g.drawImage(slimeOnTouch, (int) getX() - 4, (int) getY(), null);
         } else {
             g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
         }
