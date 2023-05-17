@@ -61,6 +61,8 @@ public class UIManager extends JPanel {
             drawHelpScreen(g2);
         } else if (gameState == GameState.GAME_OVER) {
             drawGameOverScreen(g2);
+        } else if (gameState == GameState.CROSSOVER) {
+            engine.drawCrossover(g2);
         } else {
             Point camLocation = engine.getCameraLocation();
             g2.translate(-camLocation.x, -camLocation.y);
@@ -203,7 +205,7 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(25f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        displayedStr = "World:" + (engine.getUserData().getWorldNumber()+1);
+        displayedStr = "World:" + (engine.getUserData().getWorldNumber() + 1);
         g2.drawString(displayedStr, 550, 50);
     }
 

@@ -35,7 +35,7 @@ public class GameEngine implements Runnable {
     private LoadGameScreenSelection loadGameScreenSelection = LoadGameScreenSelection.NEW_GAME;
     private PauseScreenSelection pauseScreenSelection = PauseScreenSelection.GO_TO_MAIN_MENU;
     private StoreScreenSelection storeScreenSelection = StoreScreenSelection.MARIO;
-    private MapSelection mapSelection = MapSelection.WORLD_1;
+    private final MapSelection mapSelection = MapSelection.WORLD_1;
 
     private GameEngine() {
         initial();
@@ -139,7 +139,7 @@ public class GameEngine implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while (delta >= 1) {
-                if (gameState == GameState.RUNNING) {
+                if (gameState == GameState.RUNNING || gameState == GameState.CROSSOVER) {
                     gameLoop();
                 }
                 delta--;
@@ -185,22 +185,31 @@ public class GameEngine implements Runnable {
     }
 
     private void gameLoop() {
-        updateLocations();
-        checkCollisions();
+        if (gameState != GameState.CROSSOVER) {
+            updateLocations();
+            checkCollisions();
+        }
 
         if (isGameOver()) {
             setGameState(GameState.GAME_OVER);
             soundManager.pauseBackground();
         }
 
-        int missionPassed = passMission();
-        if (missionPassed > -1) {
-            soundManager.pauseBackground();
-            mapManager.acquirePoints(missionPassed);
-        } else if (mapManager.endLevel()) {
-            soundManager.pauseBackground();
-            playStageClear();
-            setGameState(GameState.MISSION_PASSED);
+        if (gameState == GameState.CROSSOVER) {
+            updateLocationsForCrossover();
+            checkCollisions();
+        }
+
+        if (gameState == GameState.RUNNING) {
+            int missionPassed = passMission();
+            if (missionPassed > -1) {
+                soundManager.pauseBackground();
+                mapManager.acquirePoints(missionPassed);
+            } else if (mapManager.endLevel()) {
+                soundManager.pauseBackground();
+                playStageClear();
+                setGameState(GameState.MISSION_PASSED);
+            }
         }
     }
 
@@ -218,6 +227,10 @@ public class GameEngine implements Runnable {
 
     private void updateLocations() {
         mapManager.updateLocations();
+    }
+
+    private void updateLocationsForCrossover() {
+        mapManager.updateLocationsForCrossover();
     }
 
     private void checkCollisions() {
@@ -307,7 +320,7 @@ public class GameEngine implements Runnable {
                 selectHero(false);
             }
 
-        } else if (gameState == GameState.RUNNING) {
+        } else if (gameState == GameState.RUNNING || gameState == GameState.CROSSOVER) {
 
             if (inputMgr.isUp()) {
                 userData.getHero().jump();
@@ -393,7 +406,7 @@ public class GameEngine implements Runnable {
         }
     }
 
-    private void loadNextLevel(int worldNumber){
+    private void loadNextLevel(int worldNumber) {
         userData.setWorldNumber(worldNumber);
         mapManager.setMap(createMap(mapSelection.getMapPath(worldNumber), userData.getHero()));
         mapManager.resetCurrentMap(this);
@@ -454,7 +467,6 @@ public class GameEngine implements Runnable {
     private void startGame(int worldNumber) {
         if (gameState != GameState.GAME_OVER) {
             selectMap(worldNumber);
-            //setGameState(GameState.MAP_SELECTION);
         }
     }
 
@@ -521,6 +533,10 @@ public class GameEngine implements Runnable {
 
     public void drawMap(Graphics2D g2) {
         mapManager.drawMap(g2);
+    }
+
+    public void drawCrossover(Graphics2D g2) {
+        mapManager.drawCrossover(g2);
     }
 
     public Point getCameraLocation() {

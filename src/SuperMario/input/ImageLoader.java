@@ -12,9 +12,9 @@ import java.io.IOException;
 public class ImageLoader {
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
-    private final BufferedImage backgroundImage;
+    private final BufferedImage backgroundImage , crossoverBackground;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, hole;
+    private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
@@ -37,6 +37,8 @@ public class ImageLoader {
         this.axe1 = loadImage("/axe1.png");
         this.axe2 = loadImage("/axe2.png");
         this.axe3 = loadImage("/axe3.png");
+        this.upSidePipe = loadImage("/upside-pipe.png");
+        this.crossoverBackground = loadImage("/crossover-background.png");
         this.brickAnimation = loadImage("/brick-animation.png");
         this.spinyLeft = loadImage("/spiny-left.png");
         this.spinyRight = loadImage("/spiny-right.png");
@@ -378,5 +380,13 @@ public class ImageLoader {
 
     public BufferedImage getSlimeOnTouch() {
         return slimeOnTouch;
+    }
+
+    public BufferedImage getUpSidePipe() {
+        return upSidePipe;
+    }
+
+    public BufferedImage getCrossoverBackground() {
+        return crossoverBackground;
     }
 }

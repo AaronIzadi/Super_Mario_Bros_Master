@@ -1,6 +1,9 @@
 package SuperMario.logic;
 
+import SuperMario.graphic.manager.InputManager;
 import SuperMario.graphic.manager.MapCreator;
+import SuperMario.graphic.view.states.GameState;
+import SuperMario.graphic.view.states.MapSelection;
 import SuperMario.input.ImageLoader;
 import SuperMario.model.GameObject;
 import SuperMario.model.map.Map;
@@ -8,7 +11,6 @@ import SuperMario.model.enemy.*;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
-import SuperMario.model.prize.FireFlower;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
 import SuperMario.model.weapon.Axe;
@@ -41,10 +43,24 @@ public class MapManager {
         map.updateLocations();
     }
 
+    public void updateLocationsForCrossover() {
+        if (map == null) {
+            return;
+        }
+        map.updateLocationsForCrossover();
+    }
+
     public void resetCurrentMap(GameEngine engine) {
         Hero hero = getHero();
         hero.resetLocation();
         engine.resetCamera();
+    }
+
+    public void creatCrossover(String path, Hero hero) {
+        ImageLoader.getInstance().setHeroType(hero.getType());
+        MapCreator mapCreator = new MapCreator(hero);
+        map = mapCreator.createCrossOver("/maps/" + path);
+        setHero(hero);
     }
 
     public boolean createMap(String path) {
@@ -118,6 +134,10 @@ public class MapManager {
         map.drawMap(g2);
     }
 
+    public void drawCrossover(Graphics2D g2) {
+        map.drawCrossover(g2);
+    }
+
     public int passMission() {
         if (hero.getX() >= map.getEndPoint().getX() && !map.getEndPoint().isTouched()) {
             map.getEndPoint().setTouched(true);
@@ -162,9 +182,13 @@ public class MapManager {
                     hero.setFalling(false);
                     hero.setVelY(0);
                     heroHasBottomIntersection = true;
-                    if (brick instanceof Slime){
+                    if (brick instanceof Slime) {
                         ((Slime) brick).setOnTouch(true);
                         hero.jumpOnSlime();
+                    }
+                    if (brick instanceof CrossoverTunnel && InputManager.getInstance().isDown()) {
+                        engine.setGameState(GameState.CROSSOVER);
+                        creatCrossover(MapSelection.CROSSOVER.getMapPath(MapSelection.CROSSOVER.getWorldNumber()), hero);
                     }
                 } else {
                     hero.setFalling(true);

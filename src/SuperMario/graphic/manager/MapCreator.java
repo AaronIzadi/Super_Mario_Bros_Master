@@ -22,9 +22,9 @@ public class MapCreator {
     private int heroType;
     private Hero hero;
     private ImageLoader imageLoader;
-    private BufferedImage backgroundImage;
+    private BufferedImage backgroundImage , crossoverBackground;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, slime, slimeOnTouch, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, hole;
+    private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, slime, slimeOnTouch, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
 
 
@@ -61,6 +61,7 @@ public class MapCreator {
         this.fiveCoinBrick = imageLoader.getFiveCoinBrick();
         this.groundBrick = imageLoader.getGroundBrick();
         this.pipe = imageLoader.getPipe();
+        this.upSidePipe = imageLoader.getUpSidePipe();
         this.goombaLeft = imageLoader.getGoombaLeft();
         this.goombaRight = imageLoader.getGoombaRight();
         this.koopaLeft = imageLoader.getKoopaLeft();
@@ -69,6 +70,78 @@ public class MapCreator {
         this.slime = imageLoader.getSlime();
         this.slimeOnTouch = imageLoader.getSlimeOnTouch();
         this.endFlag = imageLoader.getEndFlag();
+    }
+
+    public Map createCrossOver(String path) {
+
+        BufferedImage crossoverImage = imageLoader.loadImage(path);
+        this.crossoverBackground = imageLoader.getCrossoverBackground();
+
+        if (this.hero != null) {
+            updateImageLoader(heroType);
+        }
+
+        Map map = new Map();
+        map.setBackgroundImage(crossoverBackground);
+        map.setRemainingTime(100);
+        int pixelMultiplier = 48;
+
+        int hero = new Color(160, 160, 160).getRGB();
+        int border = new Color(127, 51, 0).getRGB();
+        int slime = new Color(100, 255, 100).getRGB();
+        int upSidePipe = new Color(180, 255, 180).getRGB();
+        int coin = new Color(255, 200, 0).getRGB();
+        int crossover = new Color(112,146,190).getRGB();
+
+
+        for (int x = 0; x < crossoverImage.getWidth(); x++) {
+            for (int y = 0; y < crossoverImage.getHeight(); y++) {
+
+                int currentPixel = crossoverImage.getRGB(x, y);
+                int xLocation = x * pixelMultiplier;
+                int yLocation = y * pixelMultiplier;
+
+                if (currentPixel == border) {
+                    Brick brick = new Border(xLocation, yLocation, this.border);
+                    map.addBrick(brick);
+                } else if (currentPixel == crossover) {
+                    Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
+                    map.addGroundBrick(brick);
+                } else if (currentPixel == slime) {
+                    Slime brick = new Slime(xLocation, yLocation, this.slime);
+                    brick.slimeOnTouch(slimeOnTouch);
+                    map.addBrick(brick);
+                } else if (currentPixel == upSidePipe) {
+                    Brick brick = new Pipe(xLocation, yLocation, this.upSidePipe);
+                    map.addBrick(brick);
+                } else if (currentPixel == coin) {
+                    Coin coins = new Coin(xLocation, yLocation, this.coin, 10);
+                    map.addCoin(coins);
+                } else {
+                    setHero(map, hero, currentPixel, xLocation, yLocation);
+                }
+            }
+        }
+
+        System.out.println("Loading crossover.");
+        return map;
+
+    }
+
+    private void setHero(Map map, int hero, int currentPixel, int xLocation, int yLocation) {
+        if (currentPixel == hero) {
+            if (this.hero == null) {
+                Hero heroObject = new Mario(xLocation, yLocation);
+                map.setHero(heroObject);
+            } else {
+                this.hero.setX(xLocation);
+                this.hero.setY(yLocation);
+                setHeroType();
+                imageLoader.setHeroType(heroType);
+                updateImageLoader(heroType);
+                map.setHero(this.hero);
+            }
+        }
     }
 
     public Map createMap(String mapPath) {
@@ -106,7 +179,8 @@ public class MapCreator {
         int multiCoinBrick = new Color(20, 100, 40).getRGB();
         int smallPipe = new Color(34, 177, 76).getRGB();
         int border = new Color(127, 51, 0).getRGB();
-        int slime = new Color(100,255,100).getRGB();
+        int slime = new Color(100, 255, 100).getRGB();
+        int crossover = new Color(112,146,190).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -177,22 +251,13 @@ public class MapCreator {
                 } else if (currentPixel == pipe) {
                     Brick brick = new Pipe(xLocation, yLocation, this.pipe);
                     map.addGroundBrick(brick);
+                } else if (currentPixel == crossover) {
+                    Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
+                    map.addGroundBrick(brick);
                 } else if (currentPixel == end) {
                     Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
                     map.setEndPoint(endPoint);
-                } else if (currentPixel == hero) {
-                    if (this.hero == null) {
-                        Hero heroObject = new Mario(xLocation, yLocation);
-                        map.setHero(heroObject);
-                    } else {
-                        this.hero.setX(xLocation);
-                        this.hero.setY(yLocation);
-                        setHeroType();
-                        imageLoader.setHeroType(heroType);
-                        updateImageLoader(heroType);
-                        map.setHero(this.hero);
-                    }
-                }
+                } else setHero(map, hero, currentPixel, xLocation, yLocation);
             }
         }
 

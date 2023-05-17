@@ -10,5 +10,6 @@ public enum GameState {
     MAP_SELECTION,
     HELP_SCREEN,
     MISSION_PASSED,
-    ABOUT_SCREEN
+    ABOUT_SCREEN,
+    CROSSOVER
 }

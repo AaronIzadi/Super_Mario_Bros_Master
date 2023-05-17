@@ -7,7 +7,8 @@ public enum MapSelection {
 
     WORLD_1(0),
     WORLD_2(1),
-    WORLD_3(2);
+    WORLD_3(2),
+    CROSSOVER(3);
   //  BOSS_FIGHT(3);
 
     private final int worldNumber;
@@ -27,6 +28,9 @@ public enum MapSelection {
             return WORLD_2;
         else if (number == 2)
             return WORLD_3;
+        else if (number==3) {
+            return CROSSOVER;
+        }
 //        else if (number == 3)
 //            return BOSS_FIGHT;
         else
@@ -41,6 +45,7 @@ public enum MapSelection {
         maps.add("Map 1.png");
         maps.add("Map 2.png");
         maps.add("Map 3.png");
+        maps.add("crossover.png");
     }
 
     public String getMapPath(int worldNumber){
