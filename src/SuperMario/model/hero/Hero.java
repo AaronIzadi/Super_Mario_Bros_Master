@@ -80,22 +80,16 @@ public abstract class Hero extends GameObject {
 
     public abstract void jump();
 
-    public void jumpOnEnemy(){
+    public abstract void jumpOnEnemy();
+
+    public abstract void jumpOnSlime();
+    protected void setVelYToJump(int velY){
         if (!isJumping() && !isFalling()) {
             setJumping(true);
-            setVelY(10);
+            setVelY(velY);
             GameEngine.getInstance().playJump();
         }
     }
-
-    public void jumpOnSlime(){
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(15);
-            GameEngine.getInstance().playJump();
-        }
-    }
-
     public void sit() {
         if (isSuper() && !isJumping()) {
             isSitting = true;

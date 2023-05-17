@@ -18,11 +18,18 @@ public class Mario extends Hero{
 
     @Override
     public void jump() {
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(10);
-            GameEngine.getInstance().playJump();
-        }
+        super.setVelYToJump(10);
+    }
+
+    @Override
+    public void jumpOnEnemy() {
+        super.setVelYToJump(5);
+
+    }
+
+    @Override
+    public void jumpOnSlime() {
+        super.setVelYToJump(15);
     }
 
     @Override

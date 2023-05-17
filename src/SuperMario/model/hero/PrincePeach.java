@@ -18,11 +18,17 @@ public class PrincePeach extends Hero{
 
     @Override
     public void jump() {
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(12);
-            GameEngine.getInstance().playJump();
-        }
+        super.setVelYToJump(12);
+    }
+
+    @Override
+    public void jumpOnEnemy() {
+        super.setVelYToJump(6);
+    }
+
+    @Override
+    public void jumpOnSlime() {
+        super.setVelYToJump(18);
     }
 
     @Override

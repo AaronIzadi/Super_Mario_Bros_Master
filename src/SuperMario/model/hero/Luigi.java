@@ -16,11 +16,17 @@ public class Luigi extends Hero{
 
     @Override
     public void jump() {
-        if (!isJumping() && !isFalling()) {
-            setJumping(true);
-            setVelY(13);
-            GameEngine.getInstance().playJump();
-        }
+        super.setVelYToJump(14);
+    }
+
+    @Override
+    public void jumpOnEnemy() {
+        super.setVelYToJump(7);
+    }
+
+    @Override
+    public void jumpOnSlime() {
+        super.setVelYToJump(21);
     }
 
     @Override
