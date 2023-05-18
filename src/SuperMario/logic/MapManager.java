@@ -25,9 +25,6 @@ public class MapManager {
     private Map map = new Map();
     private Map crossover;
     private Hero hero;
-    private int xBeforeCrossover;
-    private int yBeforeCrossover;
-
     private static final MapManager instance = new MapManager();
 
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
@@ -200,7 +197,6 @@ public class MapManager {
                     if (brick instanceof CrossoverTunnel && InputManager.getInstance().isDown()) {
                         if (engine.getGameState() == GameState.CROSSOVER) {
                             engine.setGameState(GameState.RUNNING);
-                            map.updateLocations();
                         } else {
                             engine.setGameState(GameState.CROSSOVER);
                             creatCrossover(MapSelection.CROSSOVER.getMapPath(MapSelection.CROSSOVER.getWorldNumber()), hero);

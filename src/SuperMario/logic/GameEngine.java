@@ -31,6 +31,7 @@ public class GameEngine implements Runnable {
     private Camera camera;
     private ImageLoader imageLoader;
     private Thread thread;
+    private final Camera crossoverCam = new Camera();
     private StartScreenSelection startScreenSelection = StartScreenSelection.LOAD_SCREEN;
     private LoadGameScreenSelection loadGameScreenSelection = LoadGameScreenSelection.NEW_GAME;
     private PauseScreenSelection pauseScreenSelection = PauseScreenSelection.GO_TO_MAIN_MENU;
@@ -165,12 +166,13 @@ public class GameEngine implements Runnable {
                     throw new RuntimeException(e);
                 }
                 try {
-                    updateCamera();
-                    if (userData.getHero().getX() <= this.getCameraLocation().getX() && userData.getHero().getVelX() < 0) {
-                        userData.getHero().setVelX(0);
-                        userData.getHero().setX(this.getCameraLocation().getX());
+                    if (gameState != GameState.CROSSOVER) {
+                        updateCamera();
+                        if (userData.getHero().getX() <= this.getCameraLocation().getX() && userData.getHero().getVelX() < 0) {
+                            userData.getHero().setVelX(0);
+                            userData.getHero().setX(this.getCameraLocation().getX());
+                        }
                     }
-
                 } catch (Exception ignored) {
 
                 }
@@ -224,6 +226,7 @@ public class GameEngine implements Runnable {
 
         camera.moveCam(shiftAmount, 0);
     }
+
 
     private void updateLocations() {
         mapManager.updateLocations();
@@ -628,6 +631,10 @@ public class GameEngine implements Runnable {
 
     public MapManager getMapManager() {
         return mapManager;
+    }
+
+    public Point getCrossoverCameraLocation() {
+        return new Point((int) crossoverCam.getX(), (int) crossoverCam.getY());
     }
 
     public static void main(String... args) {

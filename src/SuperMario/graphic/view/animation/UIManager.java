@@ -62,7 +62,7 @@ public class UIManager extends JPanel {
         } else if (gameState == GameState.GAME_OVER) {
             drawGameOverScreen(g2);
         } else if (gameState == GameState.CROSSOVER) {
-            Point camLocation = engine.getCameraLocation();
+            Point camLocation = engine.getCrossoverCameraLocation();
             engine.drawCrossover(g2);
             g2.translate(camLocation.x, camLocation.y);
             drawPoints(g2);
