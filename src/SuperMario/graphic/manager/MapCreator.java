@@ -22,7 +22,7 @@ public class MapCreator {
     private int heroType;
     private Hero hero;
     private ImageLoader imageLoader;
-    private BufferedImage backgroundImage , crossoverBackground;
+    private BufferedImage backgroundImage, crossoverBackground;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, slime, slimeOnTouch, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
@@ -72,26 +72,27 @@ public class MapCreator {
         this.endFlag = imageLoader.getEndFlag();
     }
 
-    public Map createCrossOver(String path) {
+    public Map createCrossOver(String path, Hero hero) {
 
         BufferedImage crossoverImage = imageLoader.loadImage(path);
         this.crossoverBackground = imageLoader.getCrossoverBackground();
+        this.hero = hero;
 
         if (this.hero != null) {
             updateImageLoader(heroType);
         }
 
-        Map map = new Map();
-        map.setBackgroundImage(crossoverBackground);
-        map.setRemainingTime(100);
+        Map crossover = new Map(hero);
+        crossover.setBackgroundImage(crossoverBackground);
+        crossover.setRemainingTime(100);
         int pixelMultiplier = 48;
 
-        int hero = new Color(160, 160, 160).getRGB();
+        int heroColor = new Color(160, 160, 160).getRGB();
         int border = new Color(127, 51, 0).getRGB();
         int slime = new Color(100, 255, 100).getRGB();
         int upSidePipe = new Color(180, 255, 180).getRGB();
         int coin = new Color(255, 200, 0).getRGB();
-        int crossover = new Color(112,146,190).getRGB();
+        int tunnel = new Color(112, 146, 190).getRGB();
 
 
         for (int x = 0; x < crossoverImage.getWidth(); x++) {
@@ -103,28 +104,28 @@ public class MapCreator {
 
                 if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
-                    map.addBrick(brick);
-                } else if (currentPixel == crossover) {
+                    crossover.addBrick(brick);
+                } else if (currentPixel == tunnel) {
                     Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
-                    map.addGroundBrick(brick);
+                    crossover.addGroundBrick(brick);
                 } else if (currentPixel == slime) {
                     Slime brick = new Slime(xLocation, yLocation, this.slime);
                     brick.slimeOnTouch(slimeOnTouch);
-                    map.addBrick(brick);
+                    crossover.addBrick(brick);
                 } else if (currentPixel == upSidePipe) {
                     Brick brick = new Pipe(xLocation, yLocation, this.upSidePipe);
-                    map.addBrick(brick);
+                    crossover.addBrick(brick);
                 } else if (currentPixel == coin) {
                     Coin coins = new Coin(xLocation, yLocation, this.coin, 10);
-                    map.addCoin(coins);
+                    crossover.addCoin(coins);
                 } else {
-                    setHero(map, hero, currentPixel, xLocation, yLocation);
+                    setHero(crossover, heroColor, currentPixel, xLocation, yLocation);
                 }
             }
         }
 
         System.out.println("Loading crossover.");
-        return map;
+        return crossover;
 
     }
 
@@ -180,7 +181,7 @@ public class MapCreator {
         int smallPipe = new Color(34, 177, 76).getRGB();
         int border = new Color(127, 51, 0).getRGB();
         int slime = new Color(100, 255, 100).getRGB();
-        int crossover = new Color(112,146,190).getRGB();
+        int crossover = new Color(112, 146, 190).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {

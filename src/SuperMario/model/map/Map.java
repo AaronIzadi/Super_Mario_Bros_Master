@@ -40,6 +40,10 @@ public class Map {
     public Map() {
     }
 
+    public Map(Hero hero) {
+        this.hero = hero;
+    }
+
     public void setBackgroundImage(BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
     }
