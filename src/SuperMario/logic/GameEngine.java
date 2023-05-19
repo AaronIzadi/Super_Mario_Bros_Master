@@ -166,7 +166,12 @@ public class GameEngine implements Runnable {
                     throw new RuntimeException(e);
                 }
                 try {
-                    if (gameState != GameState.CROSSOVER) {
+                    if (gameState == GameState.CROSSOVER) {
+                        if (userData.getHero().getX() <= this.getCrossoverCameraLocation().getX() && userData.getHero().getVelX() < 0) {
+                            userData.getHero().setVelX(0);
+                            userData.getHero().setX(this.getCrossoverCameraLocation().getX());
+                        }
+                    } else {
                         updateCamera();
                         if (userData.getHero().getX() <= this.getCameraLocation().getX() && userData.getHero().getVelX() < 0) {
                             userData.getHero().setVelX(0);
@@ -225,6 +230,18 @@ public class GameEngine implements Runnable {
         }
 
         camera.moveCam(shiftAmount, 0);
+    }
+
+    private void updateCrossOverCam() {
+        Hero hero = mapManager.getHero();
+        double heroVelocityX = hero.getVelX();
+        double shiftAmount = 0;
+
+        if (heroVelocityX > 0 && hero.getX() - 600 > crossoverCam.getX()) {
+            shiftAmount = heroVelocityX;
+        }
+
+        crossoverCam.moveCam(shiftAmount, 0);
     }
 
 

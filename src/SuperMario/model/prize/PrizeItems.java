@@ -22,9 +22,6 @@ public abstract class PrizeItems extends GameObject implements Prize {
     public void onTouch(Hero hero, GameEngine engine) {
 
         hero.acquirePoints(getPoint());
-        if (engine.getUserData().getHero() != null) {
-            engine.getUserData().getHero().acquirePoints(getPoint());
-        }
 
         if (!hero.isSuper()) {
             hero.setY(hero.getBottomBounds().getY() - hero.getDimension().getHeight());

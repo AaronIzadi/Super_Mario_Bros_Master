@@ -44,6 +44,7 @@ public class MapCreator {
         this.spinyLeft = imageLoader.getSpinyLeft();
         this.spinyRight = imageLoader.getSpinyRight();
         this.backgroundImage = imageLoader.getBackgroundImage();
+        this.crossoverBackground = imageLoader.getCrossoverBackground();
         this.hole = imageLoader.getHole();
         this.piranhaOpen = imageLoader.getPiranhaOpen();
         this.piranhaClose = imageLoader.getPiranhaClose();
@@ -75,7 +76,6 @@ public class MapCreator {
     public Map createCrossOver(String path, Hero hero) {
 
         BufferedImage crossoverImage = imageLoader.loadImage(path);
-        this.crossoverBackground = imageLoader.getCrossoverBackground();
         this.hero = hero;
 
         if (this.hero != null) {
@@ -83,15 +83,16 @@ public class MapCreator {
         }
 
         Map crossover = new Map(hero);
-        crossover.setBackgroundImage(crossoverBackground);
         crossover.setRemainingTime(100);
+        crossover.setBackgroundImage(crossoverBackground);
         int pixelMultiplier = 48;
 
         int heroColor = new Color(160, 160, 160).getRGB();
         int border = new Color(127, 51, 0).getRGB();
-        int slime = new Color(100, 255, 100).getRGB();
+        int ordinaryBrick = new Color(0, 0, 255).getRGB();
         int upSidePipe = new Color(180, 255, 180).getRGB();
-        int coin = new Color(255, 200, 0).getRGB();
+        int surpriseBrick = new Color(255, 255, 0).getRGB();
+        int slime = new Color(100, 255, 100).getRGB();
         int tunnel = new Color(112, 146, 190).getRGB();
 
 
@@ -105,6 +106,14 @@ public class MapCreator {
                 if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
                     crossover.addBrick(brick);
+                } else if (currentPixel == surpriseBrick) {
+                    Prize prize = generateRandomPrizeForCrossover(xLocation, yLocation);
+                    SurpriseBrick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
+                    BufferedImage[] frames = new BufferedImage[2];
+                    frames[0] = this.surpriseBrick;
+                    frames[1] = this.prizeBrick;
+                    brick.setFrames(frames);
+                    crossover.addBrick(brick);
                 } else if (currentPixel == tunnel) {
                     Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
                     crossover.addGroundBrick(brick);
@@ -112,12 +121,12 @@ public class MapCreator {
                     Slime brick = new Slime(xLocation, yLocation, this.slime);
                     brick.slimeOnTouch(slimeOnTouch);
                     crossover.addBrick(brick);
+                } else if (currentPixel == ordinaryBrick) {
+                    Brick brick = new OrdinaryBrick(xLocation, yLocation, this.ordinaryBrick);
+                    crossover.addBrick(brick);
                 } else if (currentPixel == upSidePipe) {
                     Brick brick = new Pipe(xLocation, yLocation, this.upSidePipe);
                     crossover.addBrick(brick);
-                } else if (currentPixel == coin) {
-                    Coin coins = new Coin(xLocation, yLocation, this.coin, 10);
-                    crossover.addCoin(coins);
                 } else {
                     setHero(crossover, heroColor, currentPixel, xLocation, yLocation);
                 }
@@ -278,6 +287,22 @@ public class MapCreator {
             generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
         } else if (random == 5) {
             generated = new SuperStar(x, y, this.superStar);
+        } else {
+            generated = new Coin(x, y, this.coin, 10);
+        }
+        return generated;
+    }
+
+    private Prize generateRandomPrizeForCrossover(double x, double y) {
+        Prize generated;
+        int random = (int) (Math.random() * 12);
+
+        if (random == 0) {
+            generated = new SuperMushroom(x, y, this.superMushroom);
+        } else if (random == 1) {
+            generated = new FireFlower(x, y, this.fireFlower);
+        } else if (random == 2) {
+            generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
         } else {
             generated = new Coin(x, y, this.coin, 10);
         }

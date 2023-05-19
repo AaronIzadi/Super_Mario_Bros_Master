@@ -25,6 +25,8 @@ public class MapManager {
     private Map map = new Map();
     private Map crossover;
     private Hero hero;
+    private double xBeforeCrossover;
+    private double yBeforeCrossover;
     private static final MapManager instance = new MapManager();
 
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
@@ -103,17 +105,29 @@ public class MapManager {
 
     public void fire(GameEngine engine) {
         Fireball fireball = getHero().fire();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
         if (fireball != null) {
-            map.addFireball(fireball);
+            currentMap.addFireball(fireball);
             engine.playFireball();
         }
     }
 
     public void axe() {
         Axe axe = getHero().getAxe();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
         if (axe != null) {
             getHero().setAxeActivated(true);
-            map.addAxe(axe);
+            currentMap.addAxe(axe);
         }
     }
 
@@ -171,8 +185,14 @@ public class MapManager {
 
 
     private void checkBottomCollisions(GameEngine engine) {
-        ArrayList<Brick> bricks = map.getAllBricks();
-        ArrayList<Enemy> enemies = map.getEnemies();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Enemy> enemies = currentMap.getEnemies();
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
         if (engine.getGameState() == GameState.CROSSOVER) {
@@ -194,12 +214,17 @@ public class MapManager {
                         ((Slime) brick).setOnTouch(true);
                         hero.jumpOnSlime();
                     }
-                    if (brick instanceof CrossoverTunnel && InputManager.getInstance().isDown()) {
-                        if (engine.getGameState() == GameState.CROSSOVER) {
-                            engine.setGameState(GameState.RUNNING);
-                        } else {
+                    if (brick instanceof CrossoverTunnel && !((CrossoverTunnel) brick).isRevealed() && InputManager.getInstance().isDown()) {
+                        if (engine.getGameState() == GameState.RUNNING) {
+                            xBeforeCrossover = hero.getX();
+                            yBeforeCrossover = hero.getY();
+                            ((CrossoverTunnel) brick).setRevealed(true);
                             engine.setGameState(GameState.CROSSOVER);
                             creatCrossover(MapSelection.CROSSOVER.getMapPath(MapSelection.CROSSOVER.getWorldNumber()), hero);
+                        } else {
+                            engine.setGameState(GameState.RUNNING);
+                            hero.setSitting(false);
+                            hero.setLocation(xBeforeCrossover, yBeforeCrossover);
                         }
                     }
                 } else {
@@ -244,7 +269,13 @@ public class MapManager {
 
 
     private void checkTopCollisions(GameEngine engine) {
-        ArrayList<Brick> bricks = map.getAllBricks();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
         Rectangle heroTopBounds = hero.getTopBounds();
 
         if (engine.getGameState() == GameState.CROSSOVER) {
@@ -258,19 +289,21 @@ public class MapManager {
                 hero.setY(brick.getY() + brick.getDimension().height);
                 Prize prize = brick.reveal(engine);
                 if (prize != null)
-                    map.addRevealedPrize(prize);
+                    crossover.addRevealedPrize(prize);
             }
         }
     }
 
     private void checkHeroHorizontalCollision(GameEngine engine) {
-        ArrayList<Brick> bricks = map.getAllBricks();
-        ArrayList<Enemy> enemies = map.getEnemies();
-
-        if (engine.getGameState() == GameState.CROSSOVER) {
-            bricks = crossover.getAllBricks();
-            enemies = crossover.getEnemies();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
         }
+
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Enemy> enemies = currentMap.getEnemies();
 
         boolean heroDies = false;
         boolean toRight = hero.getToRight();
@@ -306,13 +339,15 @@ public class MapManager {
     }
 
     private void checkEnemyCollisions() {
-        ArrayList<Brick> bricks = map.getAllBricks();
-        ArrayList<Enemy> enemies = map.getEnemies();
-
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
-            bricks = crossover.getAllBricks();
-            enemies = crossover.getEnemies();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
         }
+
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Enemy> enemies = currentMap.getEnemies();
 
         for (Enemy enemy : enemies) {
             if (enemy instanceof Spiny && ((getHero().getY() + getHero().getStyle().getHeight()) == (enemy.getY() + enemy.getStyle().getHeight() + 1))) {
@@ -367,13 +402,15 @@ public class MapManager {
     }
 
     private void checkPrizeCollision() {
-        ArrayList<Prize> prizes = map.getRevealedPrizes();
-        ArrayList<Brick> bricks = map.getAllBricks();
-
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
-            bricks = crossover.getAllBricks();
-            prizes = crossover.getRevealedPrizes();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
         }
+
+        ArrayList<Prize> prizes = currentMap.getRevealedPrizes();
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
 
         for (Prize prize : prizes) {
             if (prize instanceof PrizeItems) {
@@ -426,11 +463,13 @@ public class MapManager {
     }
 
     private void checkPrizeContact(GameEngine engine) {
-        ArrayList<Prize> prizes = map.getRevealedPrizes();
-
-        if (engine.getGameState() == GameState.CROSSOVER) {
-            prizes = crossover.getRevealedPrizes();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
         }
+        ArrayList<Prize> prizes = currentMap.getRevealedPrizes();
 
         Rectangle heroBounds = hero.getBounds();
         for (Prize prize : prizes) {
@@ -447,15 +486,16 @@ public class MapManager {
     }
 
     private void checkFireballContact() {
-        ArrayList<Fireball> fireballs = map.getFireballs();
-        ArrayList<Enemy> enemies = map.getEnemies();
-        ArrayList<Brick> bricks = map.getAllBricks();
-
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
-            bricks = crossover.getAllBricks();
-            enemies = crossover.getEnemies();
-            fireballs = crossover.getFireballs();
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
         }
+
+        ArrayList<Fireball> fireballs = currentMap.getFireballs();
+        ArrayList<Enemy> enemies = currentMap.getEnemies();
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
 
         for (Fireball fireball : fireballs) {
             Rectangle fireballBounds = fireball.getBounds();
@@ -493,23 +533,44 @@ public class MapManager {
         if (list == null) {
             return;
         }
+
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
+
         for (GameObject object : list) {
             if (object instanceof Fireball) {
-                map.removeFireball((Fireball) object);
+                currentMap.removeFireball((Fireball) object);
             } else if (object instanceof Enemy) {
-                map.removeEnemy((Enemy) object);
+                currentMap.removeEnemy((Enemy) object);
             } else if (object instanceof Coin || object instanceof PrizeItems) {
-                map.removePrize((Prize) object);
+                currentMap.removePrize((Prize) object);
+
             }
         }
     }
 
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {
-        map.addRevealedBrick(ordinaryBrick);
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
+        currentMap.addRevealedBrick(ordinaryBrick);
     }
 
     public void addRevealedBrick(CoinBrick coinBrick) {
-        map.addRevealedBrick(coinBrick);
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
+        currentMap.addRevealedBrick(coinBrick);
     }
 
     public void updateTime() {

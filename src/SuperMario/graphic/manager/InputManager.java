@@ -35,7 +35,7 @@ public class InputManager implements KeyListener, MouseListener {
         GameState state = GameEngine.getInstance().getGameState();
         ButtonAction currentAction = ButtonAction.NO_ACTION;
 
-        boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.MAP_SELECTION || state == GameState.PAUSED;
+        boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.PAUSED;
         if (keyCode == VK_UP) {
             if (notRunningState)
                 currentAction = ButtonAction.GO_UP;

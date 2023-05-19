@@ -240,10 +240,6 @@ public abstract class Hero extends GameObject {
         this.invincibilityTimer = invincibilityTimer;
     }
 
-    public void setExtraCoin() {
-        this.coins++;
-    }
-
     public void setCoins(int coins) {
         this.coins = coins;
     }
@@ -264,10 +260,6 @@ public abstract class Hero extends GameObject {
     @Override
     public BufferedImage getStyle() {
         return super.getStyle();
-    }
-
-    public void acquireCoinForToad() {
-        setExtraCoin();
     }
 
     public void setTookStar(boolean tookStar) {

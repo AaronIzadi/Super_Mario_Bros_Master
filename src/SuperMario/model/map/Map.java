@@ -3,7 +3,6 @@ package SuperMario.model.map;
 
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
-import SuperMario.model.map.Flag;
 import SuperMario.model.obstacle.Brick;
 import SuperMario.model.obstacle.CoinBrick;
 import SuperMario.model.obstacle.Hole;
@@ -30,7 +29,6 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
-    private ArrayList<Coin> coins = new ArrayList<>();
     private Axe axe;
     private Flag endPoint;
     private BufferedImage backgroundImage;
@@ -85,10 +83,6 @@ public class Map {
         this.bricks.add(brick);
     }
 
-    public void addCoin(Coin coin) {
-        this.coins.add(coin);
-    }
-
     public void addGroundBrick(Brick brick) {
         this.groundBricks.add(brick);
     }
@@ -110,19 +104,13 @@ public class Map {
 
     public void drawCrossover(Graphics2D g2) {
         drawBricks(g2);
-        drawCoins(g2);
+        drawPrizes(g2);
         drawHero(g2);
     }
 
     private void drawFireballs(Graphics2D g2) {
         for (Fireball fireball : fireballs) {
             fireball.draw(g2);
-        }
-    }
-
-    private void drawCoins(Graphics2D g2) {
-        for (Coin coin : coins) {
-            coin.draw(g2);
         }
     }
 
@@ -174,17 +162,7 @@ public class Map {
             enemy.updateLocation();
         }
 
-        for (Iterator<Prize> prizeIterator = revealedPrizes.iterator(); prizeIterator.hasNext(); ) {
-            Prize prize = prizeIterator.next();
-            if (prize instanceof Coin) {
-                ((Coin) prize).updateLocation();
-                if (((Coin) prize).getRevealBoundary() > ((Coin) prize).getY()) {
-                    prizeIterator.remove();
-                }
-            } else if (prize instanceof PrizeItems) {
-                ((PrizeItems) prize).updateLocation();
-            }
-        }
+        updatePrizeLocation();
 
         for (Fireball fireball : fireballs) {
             fireball.updateLocation();
@@ -220,12 +198,20 @@ public class Map {
 
         hero.updateLocation();
 
-        for (Iterator<Coin> coinIterator = coins.iterator(); coinIterator.hasNext(); ) {
-            Coin coin = coinIterator.next();
-                coin.updateLocation();
-                if (coin.getRevealBoundary() > coin.getY()) {
-                    coinIterator.remove();
+        updatePrizeLocation();
+    }
+
+    private void updatePrizeLocation() {
+        for (Iterator<Prize> prizeIterator = revealedPrizes.iterator(); prizeIterator.hasNext(); ) {
+            Prize prize = prizeIterator.next();
+            if (prize instanceof Coin) {
+                ((Coin) prize).updateLocation();
+                if (((Coin) prize).getRevealBoundary() > ((Coin) prize).getY()) {
+                    prizeIterator.remove();
                 }
+            } else if (prize instanceof PrizeItems) {
+                ((PrizeItems) prize).updateLocation();
+            }
         }
     }
 
@@ -249,10 +235,6 @@ public class Map {
         this.endPoint = endPoint;
     }
 
-    public void setCoins(ArrayList<Coin> coins) {
-        this.coins = coins;
-    }
-
     public Flag getEndPoint() {
         return endPoint;
     }
@@ -271,10 +253,6 @@ public class Map {
 
     public void removeEnemy(Enemy object) {
         enemies.remove(object);
-    }
-
-    public void removeCoin(Coin coin) {
-        coins.remove(coin);
     }
 
     public void removePrize(Prize object) {

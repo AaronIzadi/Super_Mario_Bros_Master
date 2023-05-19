@@ -4,7 +4,7 @@ import SuperMario.graphic.manager.Camera;
 import SuperMario.logic.GameEngine;
 
 
-public class Toad extends Hero{
+public class Toad extends Hero {
     public Toad(double x, double y) {
         super(x, y);
         setType(HeroType.TOAD);
@@ -39,5 +39,15 @@ public class Toad extends Hero{
             setVelX(-5);
         }
         setToRight(toRight);
+    }
+
+    @Override
+    public void acquireCoin() {
+        super.acquireCoin();
+        setExtraCoin();
+    }
+
+    public void setExtraCoin() {
+        setCoins(getCoins() + 1);
     }
 }
