@@ -23,6 +23,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
 
         hero.acquirePoints(getPoint());
 
+
         if (!hero.isSuper()) {
             hero.setY(hero.getBottomBounds().getY() - hero.getDimension().getHeight());
             hero.setDimension(48, 96);

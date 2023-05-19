@@ -195,9 +195,7 @@ public class Map {
     }
 
     public void updateLocationsForCrossover() {
-
         hero.updateLocation();
-
         updatePrizeLocation();
     }
 

@@ -61,7 +61,7 @@ public class MapManager {
     public void creatCrossover(String path, Hero hero) {
         ImageLoader.getInstance().setHeroType(hero.getType());
         MapCreator mapCreator = new MapCreator();
-        crossover = mapCreator.createCrossOver("/maps/" + path, this.hero);
+        crossover = mapCreator.createCrossOver("/maps/" + path, hero);
         crossover.setHero(hero);
     }
 
@@ -195,11 +195,6 @@ public class MapManager {
         ArrayList<Enemy> enemies = currentMap.getEnemies();
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
-        if (engine.getGameState() == GameState.CROSSOVER) {
-            bricks = crossover.getAllBricks();
-            enemies = crossover.getEnemies();
-        }
-
         boolean heroHasBottomIntersection = false;
 
         for (Brick brick : bricks) {
@@ -220,7 +215,13 @@ public class MapManager {
                             yBeforeCrossover = hero.getY();
                             ((CrossoverTunnel) brick).setRevealed(true);
                             engine.setGameState(GameState.CROSSOVER);
-                            creatCrossover(MapSelection.CROSSOVER.getMapPath(MapSelection.CROSSOVER.getWorldNumber()), hero);
+                            if (engine.getUserData().getWorldNumber() == 0) {
+                                creatCrossover(MapSelection.CROSSOVER_1.getMapPath(MapSelection.CROSSOVER_1.getWorldNumber()), hero);
+                            } else if (engine.getUserData().getWorldNumber() == 1) {
+                                creatCrossover(MapSelection.CROSSOVER_2.getMapPath(MapSelection.CROSSOVER_2.getWorldNumber()), hero);
+                            } else {
+                                creatCrossover(MapSelection.CROSSOVER_3.getMapPath(MapSelection.CROSSOVER_3.getWorldNumber()), hero);
+                            }
                         } else {
                             engine.setGameState(GameState.RUNNING);
                             hero.setSitting(false);
@@ -278,10 +279,6 @@ public class MapManager {
         ArrayList<Brick> bricks = currentMap.getAllBricks();
         Rectangle heroTopBounds = hero.getTopBounds();
 
-        if (engine.getGameState() == GameState.CROSSOVER) {
-            bricks = crossover.getAllBricks();
-        }
-
         for (Brick brick : bricks) {
             Rectangle brickBottomBounds = brick.getBottomBounds();
             if (!(brick instanceof Hole) && heroTopBounds.intersects(brickBottomBounds)) {
@@ -289,7 +286,7 @@ public class MapManager {
                 hero.setY(brick.getY() + brick.getDimension().height);
                 Prize prize = brick.reveal(engine);
                 if (prize != null)
-                    crossover.addRevealedPrize(prize);
+                    currentMap.addRevealedPrize(prize);
             }
         }
     }
@@ -469,6 +466,7 @@ public class MapManager {
         } else {
             currentMap = crossover;
         }
+
         ArrayList<Prize> prizes = currentMap.getRevealedPrizes();
 
         Rectangle heroBounds = hero.getBounds();
@@ -548,7 +546,6 @@ public class MapManager {
                 currentMap.removeEnemy((Enemy) object);
             } else if (object instanceof Coin || object instanceof PrizeItems) {
                 currentMap.removePrize((Prize) object);
-
             }
         }
     }
