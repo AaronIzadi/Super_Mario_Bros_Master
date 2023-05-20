@@ -103,7 +103,7 @@ public class MapManager {
         this.map = map;
     }
 
-    public void fire(GameEngine engine) {
+    public void fire() {
         Fireball fireball = getHero().fire();
         Map currentMap;
         if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
@@ -113,7 +113,7 @@ public class MapManager {
         }
         if (fireball != null) {
             currentMap.addFireball(fireball);
-            engine.playFireball();
+            GameEngine.getInstance().playFireball();
         }
     }
 

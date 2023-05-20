@@ -357,7 +357,7 @@ public class GameEngine implements Runnable {
                     userData.getHero().getDimension().height = 96;
                 }
             } else if (inputMgr.isSpace()) {
-                mapManager.fire(this);
+                mapManager.fire();
             } else if (inputMgr.isUpAndDownSelected()) {
                 mapManager.axe();
             } else if (inputMgr.isEscape()) {

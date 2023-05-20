@@ -55,9 +55,9 @@ public class Axe extends GameObject {
         this.isReleased = released;
         this.xReleasePoint = xReleasePoint;
         if (isReleased) {
-            setVelX(10);
+            setVelX(8);
             if (!hero.getToRight()) {
-                setVelX(-10);
+                setVelX(-8);
             }
         }
     }
@@ -75,7 +75,7 @@ public class Axe extends GameObject {
         if (gotThere) {
             double dx = hero.getX() - getX();
             double dy = (-1) * ((hero.getY() + 48) - getY());
-            double time = 2; //it moves 2 bricks per second (the distance is equal to 4 bricks)
+            double time = 4;
 
             setVelX(dx / time);
             setVelY(dy / time);
