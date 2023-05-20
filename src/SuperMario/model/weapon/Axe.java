@@ -12,10 +12,13 @@ import java.awt.image.BufferedImage;
 public class Axe extends GameObject {
 
     private final Hero hero;
-    private boolean isReleased;
+    private boolean isReleased = false;
     private BufferedImage leftStyle;
-    private BufferedImage[] axeStyle;
     private final Animation axeAnimation;
+    private double xReleasePoint;
+    private boolean gotThere = false;
+    private boolean gotBack = false;
+
 
     public Axe(double x, double y, BufferedImage style, Hero hero) {
         super(x, y, style);
@@ -29,24 +32,34 @@ public class Axe extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        if (hero.getToRight()) {
-            g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
+        if (!isReleased) {
+            if (hero.getToRight()) {
+                g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
+            } else {
+                g.drawImage(leftStyle, (int) getX(), (int) getY(), null);
+            }
         } else {
-            g.drawImage(leftStyle, (int) getX(), (int) getY(), null);
+            super.draw(g);
+            animate();
         }
     }
 
-    public BufferedImage[] getAxeStyle() {
-        return axeStyle;
+    public void animate() {
+        boolean isAnimationTicked = axeAnimation.animate(25);
+        if (isAnimationTicked) {
+            setStyle(axeAnimation.getCurrentFrame());
+        }
     }
 
-    public void setAxeStyle(BufferedImage[] axeStyle) {
-        this.axeStyle = axeStyle;
-    }
-
-    public void setReleased(boolean released) {
-        axeAnimation.animate(20);
-        isReleased = released;
+    public void setReleased(boolean released, double xReleasePoint) {
+        this.isReleased = released;
+        this.xReleasePoint = xReleasePoint;
+        if (isReleased) {
+            setVelX(10);
+            if (!hero.getToRight()) {
+                setVelX(-10);
+            }
+        }
     }
 
     public boolean isReleased() {
@@ -55,5 +68,32 @@ public class Axe extends GameObject {
 
     public void setLeftStyle(BufferedImage leftStyle) {
         this.leftStyle = leftStyle;
+    }
+
+    @Override
+    public void updateLocation() {
+        if (gotThere) {
+            double dx = hero.getX() - getX();
+            double dy = (-1) * ((hero.getY() + 48) - getY());
+            double time = 2; //it moves 2 bricks per second (the distance is equal to 4 bricks)
+
+            setVelX(dx / time);
+            setVelY(dy / time);
+        }
+
+        setY(getY() - getVelY());
+        setX(getX() + getVelX());
+
+        if (Math.abs(xReleasePoint - getX()) >= (4 * 48)) {
+            gotThere = true;
+        }
+
+        if (Math.floor(hero.getX()) == Math.floor(getX()) || Math.ceil(hero.getX()) == Math.ceil(getX())) {
+            gotBack = true;
+        }
+
+        if (gotThere && gotBack) {
+            hero.deactivateAxe();
+        }
     }
 }

@@ -359,9 +359,7 @@ public class GameEngine implements Runnable {
             } else if (inputMgr.isSpace()) {
                 mapManager.fire(this);
             } else if (inputMgr.isUpAndDownSelected()) {
-                if (userData.getHero().ifCanActivateAxe()) {
-                    mapManager.axe();
-                }
+                mapManager.axe();
             } else if (inputMgr.isEscape()) {
                 pauseGame();
             }

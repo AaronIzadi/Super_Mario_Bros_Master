@@ -24,6 +24,7 @@ public abstract class Hero extends GameObject {
     private boolean tookStar;
     private boolean isAxeActivated;
     private boolean canActivateAxe;
+    private boolean isAxeCoolDownFinished = true;
     private Axe axe;
 
     public Hero(double x, double y) {
@@ -66,15 +67,17 @@ public abstract class Hero extends GameObject {
         super.draw(g);
 
         if (axe != null) {
-            if (toRight) {
-                axe.setX(getX() + 24);
-            } else {
-                axe.setX(getX() - 48);
+            if (!axe.isReleased()) {
+                if (toRight) {
+                    axe.setX(getX() + 24);
+                } else {
+                    axe.setX(getX() - 48);
+                }
+                axe.setVelX(getVelX());
+                axe.setVelY(getVelY());
+                axe.setY(getY());
             }
-            axe.setVelX(getVelX());
-
-            axe.setVelY(getVelY());
-            axe.setY(getY());
+            axe.draw(g);
         }
     }
 
@@ -83,13 +86,15 @@ public abstract class Hero extends GameObject {
     public abstract void jumpOnEnemy();
 
     public abstract void jumpOnSlime();
-    protected void setVelYToJump(int velY){
+
+    protected void setVelYToJump(int velY) {
         if (!isJumping() && !isFalling()) {
             setJumping(true);
             setVelY(velY);
             GameEngine.getInstance().playJump();
         }
     }
+
     public void sit() {
         if (isSuper() && !isJumping()) {
             isSitting = true;
@@ -166,19 +171,44 @@ public abstract class Hero extends GameObject {
         return heroForm.fire(toRight, getX(), getY());
     }
 
-    public boolean ifCanActivateAxe() {
-        canActivateAxe = coins >= 3 && isSuper();
+    public boolean canActivateAxe() {
+        canActivateAxe = coins >= 3 && isSuper() && isAxeCoolDownFinished;
         return canActivateAxe;
     }
 
     public Axe getAxe() {
-        if (toRight) {
-            axe = new Axe(getX() + 24, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
-        } else {
-            axe = new Axe(getX() - 48, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
-        }
         return axe;
     }
+
+    public void activateAxe() {
+        if (canActivateAxe()) {
+            coins -= 3;
+            if (toRight) {
+                axe = new Axe(getX() + 24, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
+            } else {
+                axe = new Axe(getX() - 48, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
+            }
+        }
+    }
+
+    public void deactivateAxe() {
+        axe = null;
+        setAxeActivated(false);
+        isAxeCoolDownFinished = false;
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                isAxeCoolDownFinished = true;
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 3000);
+    }
+
+    public void throwAxe() {
+        axe.setReleased(true, getX());
+    }
+
 
     public void acquireCoin() {
         coins++;

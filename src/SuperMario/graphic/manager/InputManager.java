@@ -58,6 +58,9 @@ public class InputManager implements KeyListener, MouseListener {
 
         } else if (keyCode == VK_SPACE) {
             currentAction = ButtonAction.FIRE;
+            if (GameEngine.getInstance().getUserData().getHero().getAxe()!=null){
+                currentAction = ButtonAction.THROW_AXE;
+            }
         }
 
 

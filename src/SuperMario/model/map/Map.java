@@ -115,8 +115,8 @@ public class Map {
     }
 
     private void drawAxe(Graphics2D g2) {
-        if (axe != null) {
-            axe.draw(g2);
+        if (hero.getAxe() != null) {
+            hero.getAxe().draw(g2);
         }
     }
 
@@ -163,6 +163,10 @@ public class Map {
         }
 
         updatePrizeLocation();
+
+        if (axe !=null && axe.isReleased()){
+            axe.updateLocation();
+        }
 
         for (Fireball fireball : fireballs) {
             fireball.updateLocation();
@@ -227,6 +231,14 @@ public class Map {
 
     public void addAxe(Axe axe) {
         this.axe = axe;
+    }
+
+    public void removeAxe() {
+        this.axe = null;
+    }
+
+    public Axe getAxe() {
+        return axe;
     }
 
     public void setEndPoint(Flag endPoint) {

@@ -118,16 +118,26 @@ public class MapManager {
     }
 
     public void axe() {
-        Axe axe = getHero().getAxe();
-        Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
-            currentMap = map;
-        } else {
-            currentMap = crossover;
+
+        if (getHero().getAxe() == null) {
+            map.removeAxe();
         }
-        if (axe != null) {
-            getHero().setAxeActivated(true);
-            currentMap.addAxe(axe);
+
+        if (map.getAxe() == null) {
+            getHero().activateAxe();
+            Map currentMap;
+            if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+                currentMap = map;
+            } else {
+                currentMap = crossover;
+            }
+
+            if (getHero().getAxe() != null) {
+                getHero().setAxeActivated(true);
+                currentMap.addAxe(getHero().getAxe());
+            }
+        } else {
+            getHero().throwAxe();
         }
     }
 
@@ -180,7 +190,7 @@ public class MapManager {
         checkEnemyCollisions();
         checkPrizeCollision();
         checkPrizeContact(engine);
-        checkFireballContact();
+        checkWeaponContact();
     }
 
 
@@ -483,7 +493,7 @@ public class MapManager {
         removeObjects(toBeRemoved);
     }
 
-    private void checkFireballContact() {
+    private void checkWeaponContact() {
         Map currentMap;
         if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
             currentMap = map;
@@ -492,35 +502,52 @@ public class MapManager {
         }
 
         ArrayList<Fireball> fireballs = currentMap.getFireballs();
+        Axe axe = currentMap.getAxe();
+
+        if (axe != null) {
+            checkWeaponCollision(axe);
+        }
+
+        for (Fireball fireball : fireballs) {
+            checkWeaponCollision(fireball);
+        }
+
+    }
+
+    private void checkWeaponCollision(GameObject object) {
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            currentMap = map;
+        } else {
+            currentMap = crossover;
+        }
         ArrayList<Enemy> enemies = currentMap.getEnemies();
         ArrayList<Brick> bricks = currentMap.getAllBricks();
 
-        for (Fireball fireball : fireballs) {
-            Rectangle fireballBounds = fireball.getBounds();
+        Rectangle objectBounds = object.getBounds();
 
-            for (Enemy enemy : enemies) {
-                Rectangle enemyBounds = enemy.getBounds();
-                if (fireballBounds.intersects(enemyBounds)) {
-                    if (enemy instanceof Goomba) {
-                        acquirePoints(1);
-                    } else if (enemy instanceof KoopaTroopa) {
-                        acquirePoints(2);
-                    } else if (enemy instanceof Spiny) {
-                        acquirePoints(3);
-                    } else {
-                        acquirePoints(1);
-                    }
-                    GameEngine.getInstance().playKickEnemy();
-                    toBeRemoved.add(enemy);
-                    toBeRemoved.add(fireball);
+        for (Enemy enemy : enemies) {
+            Rectangle enemyBounds = enemy.getBounds();
+            if (objectBounds.intersects(enemyBounds)) {
+                if (enemy instanceof Goomba) {
+                    acquirePoints(1);
+                } else if (enemy instanceof KoopaTroopa) {
+                    acquirePoints(2);
+                } else if (enemy instanceof Spiny) {
+                    acquirePoints(3);
+                } else {
+                    acquirePoints(1);
                 }
+                GameEngine.getInstance().playKickEnemy();
+                toBeRemoved.add(enemy);
+                toBeRemoved.add(object);
             }
+        }
 
-            for (Brick brick : bricks) {
-                Rectangle brickBounds = brick.getBounds();
-                if (fireballBounds.intersects(brickBounds)) {
-                    toBeRemoved.add(fireball);
-                }
+        for (Brick brick : bricks) {
+            Rectangle brickBounds = brick.getBounds();
+            if (objectBounds.intersects(brickBounds)) {
+                toBeRemoved.add(object);
             }
         }
 

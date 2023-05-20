@@ -2,6 +2,7 @@ package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
+import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
@@ -95,7 +96,6 @@ public class HeroForm {
         }
         return null;
     }
-
 
     public int getHeroType() {
         return heroType;
