@@ -27,6 +27,9 @@ public class MapManager {
     private Hero hero;
     private double xBeforeCrossover;
     private double yBeforeCrossover;
+    private double xHero;
+    private double yHero;
+    private boolean gotToTheCheckPoint = false;
     private static final MapManager instance = new MapManager();
 
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
@@ -56,6 +59,11 @@ public class MapManager {
         Hero hero = getHero();
         hero.resetLocation();
         engine.resetCamera();
+    }
+
+    private void reLoadCheckPoint(double x, double y) {
+        getHero().reLoadCheckPoint(x, y);
+        GameEngine.getInstance().reLoadCheckPoint(x);
     }
 
     public void creatCrossover(String path, Hero hero) {
@@ -272,7 +280,11 @@ public class MapManager {
 
         if (hero.getY() >= map.getBottomBorder()) {
             hero.onTouchBorder(engine);
-            resetCurrentMap(engine);
+            if (gotToTheCheckPoint) {
+                reLoadCheckPoint(xHero, yHero);
+            } else {
+                resetCurrentMap(engine);
+            }
         }
 
         removeObjects(toBeRemoved);
@@ -291,12 +303,17 @@ public class MapManager {
 
         for (Brick brick : bricks) {
             Rectangle brickBottomBounds = brick.getBottomBounds();
-            if (!(brick instanceof Hole) && heroTopBounds.intersects(brickBottomBounds)) {
+            if (!(brick instanceof Hole) && !(brick instanceof CheckPoint) && heroTopBounds.intersects(brickBottomBounds)) {
                 hero.setVelY(0);
                 hero.setY(brick.getY() + brick.getDimension().height);
                 Prize prize = brick.reveal(engine);
                 if (prize != null)
                     currentMap.addRevealedPrize(prize);
+            } else if (brick instanceof CheckPoint && heroTopBounds.intersects(brickBottomBounds)) {
+                Point point = ((CheckPoint) brick).checked();
+                xHero = point.getX();
+                yHero = point.getY() - 48 + 1;
+                gotToTheCheckPoint = true;
             }
         }
     }
@@ -341,7 +358,11 @@ public class MapManager {
         removeObjects(toBeRemoved);
 
         if (heroDies) {
-            resetCurrentMap(engine);
+            if (gotToTheCheckPoint) {
+                reLoadCheckPoint(xHero, yHero);
+            } else {
+                resetCurrentMap(engine);
+            }
         }
     }
 
@@ -504,6 +525,7 @@ public class MapManager {
         ArrayList<Fireball> fireballs = currentMap.getFireballs();
         Axe axe = currentMap.getAxe();
 
+
         if (axe != null) {
             checkWeaponCollision(axe);
         }
@@ -512,15 +534,19 @@ public class MapManager {
             checkWeaponCollision(fireball);
         }
 
+        removeObjects(toBeRemoved);
+
     }
 
-    private void checkWeaponCollision(GameObject object) {
+    private void checkWeaponCollision(GameObject object){
+
         Map currentMap;
         if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
             currentMap = map;
         } else {
             currentMap = crossover;
         }
+
         ArrayList<Enemy> enemies = currentMap.getEnemies();
         ArrayList<Brick> bricks = currentMap.getAllBricks();
 
@@ -543,7 +569,6 @@ public class MapManager {
                 toBeRemoved.add(object);
             }
         }
-
         for (Brick brick : bricks) {
             Rectangle brickBounds = brick.getBounds();
             if (objectBounds.intersects(brickBounds)) {
@@ -551,8 +576,8 @@ public class MapManager {
             }
         }
 
-        removeObjects(toBeRemoved);
     }
+
 
     private void removeObjects(ArrayList<GameObject> list) {
         if (list == null) {

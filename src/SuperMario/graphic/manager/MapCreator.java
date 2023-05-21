@@ -178,6 +178,7 @@ public class MapCreator {
         int ordinaryBrick = new Color(0, 0, 255).getRGB();
         int surpriseBrick = new Color(255, 255, 0).getRGB();
         int groundBrick = new Color(255, 0, 0).getRGB();
+        int checkPoint = new Color(160, 80, 160).getRGB();
         int pipe = new Color(0, 255, 0).getRGB();
         int goomba = new Color(0, 255, 255).getRGB();
         int koopa = new Color(255, 0, 255).getRGB();
@@ -206,6 +207,13 @@ public class MapCreator {
                     Hole brick = new Hole(xLocation, yLocation, this.hole);
                     map.addBrick(brick);
                     map.addHoles(brick);
+                } else if (currentPixel == checkPoint) {
+                    CheckPoint brick = new CheckPoint(xLocation, yLocation, this.surpriseBrick);
+                    BufferedImage[] frames = new BufferedImage[2];
+                    frames[0] = this.surpriseBrick;
+                    frames[1] = this.prizeBrick;
+                    brick.setFrames(frames);
+                    map.addBrick(brick);
                 } else if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
                     map.addBrick(brick);

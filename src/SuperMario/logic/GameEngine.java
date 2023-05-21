@@ -19,7 +19,6 @@ import java.io.IOException;
 public class GameEngine implements Runnable {
 
     private static final GameEngine instance = new GameEngine();
-
     private final static int WIDTH = 1268, HEIGHT = 708;
     private boolean isMute = false;
     private UserData userData;
@@ -86,6 +85,11 @@ public class GameEngine implements Runnable {
 
     public void resetCamera() {
         camera = new Camera();
+        soundManager.restartBackground();
+    }
+
+    public void reLoadCheckPoint(double x) {
+        camera.setX(x - 300);
         soundManager.restartBackground();
     }
 

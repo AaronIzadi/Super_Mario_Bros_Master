@@ -287,6 +287,15 @@ public abstract class Hero extends GameObject {
         setFalling(true);
     }
 
+    public void reLoadCheckPoint(double x, double y) {
+        setVelX(0);
+        setVelY(0);
+        setX(x);
+        setY(y);
+        setJumping(false);
+        setFalling(false);
+    }
+
     @Override
     public BufferedImage getStyle() {
         return super.getStyle();
