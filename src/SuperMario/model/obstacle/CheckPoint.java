@@ -10,22 +10,24 @@ public class CheckPoint extends Brick {
     private Animation animation;
     private boolean checked;
     private boolean isRevealed;
+
     public CheckPoint(double x, double y, BufferedImage style) {
         super(x, y, style);
         setBreakable(false);
         setEmpty(false);
         isRevealed = false;
     }
+
     public Point check(boolean checked) {
         this.checked = checked;
         isRevealed = true;
         BufferedImage newStyle;
 
         if (checked) {
-            newStyle = ImageLoader.getInstance().loadImage("/check-point.png");
-        }else{
-            newStyle = ImageLoader.getInstance().getSubImage
-                    (ImageLoader.getInstance().loadImage("/sprite.png"), 1, 2, 48, 48);
+            newStyle = ImageLoader.getInstance().getRevealedCheckPoint();
+        } else {
+            newStyle = ImageLoader.getInstance().getRevealedPrizeBrick();
+
         }
 
         setStyle(newStyle);
@@ -36,7 +38,7 @@ public class CheckPoint extends Brick {
 
     public void draw(Graphics g) {
         super.draw(g);
-        if (!checked && !isEmpty()){
+        if (!checked && !isEmpty()) {
             animate();
         }
     }

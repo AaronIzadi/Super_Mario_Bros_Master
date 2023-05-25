@@ -1,4 +1,4 @@
-package SuperMario.graphic.view.animation;
+package SuperMario.graphic.view.UI;
 
 import SuperMario.input.FontLoader;
 

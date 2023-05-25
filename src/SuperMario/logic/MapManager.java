@@ -654,4 +654,8 @@ public class MapManager {
     public int getRemainingTime() {
         return (int) map.getRemainingTime();
     }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 }

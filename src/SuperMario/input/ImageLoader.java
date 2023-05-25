@@ -14,7 +14,7 @@ public class ImageLoader {
     private final BufferedImage brickAnimation;
     private final BufferedImage backgroundImage , crossoverBackground;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
-    private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
+    private final BufferedImage border, ordinaryBrick, surpriseBrick, revealedPrizeBrick, revealedCheckPoint, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPoint, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
@@ -33,6 +33,7 @@ public class ImageLoader {
         this.loadGameScreen = loadImage("/states/load-screen.png");
         this.pauseScreen = loadImage("/states/pause-screen.png");
         this.checkPoint = loadImage("/states/check point.png");
+        this.revealedCheckPoint = loadImage("/check-point.png");
         BufferedImage sprite = loadImage("/sprite.png");
         this.axe0 = loadImage("/axe0.png");
         this.axe1 = loadImage("/axe1.png");
@@ -72,6 +73,7 @@ public class ImageLoader {
         this.goombaRight = getSubImage(sprite, 5, 4, 48, 48);
         this.koopaLeft = getSubImage(sprite, 1, 3, 48, 64);
         this.koopaRight = getSubImage(sprite, 4, 3, 48, 64);
+        this.revealedPrizeBrick = getSubImage(sprite, 1, 2, 48, 48);
         this.endFlag = getSubImage(sprite, 5, 1, 48, 48);
     }
 
@@ -393,5 +395,13 @@ public class ImageLoader {
 
     public BufferedImage getCheckPoint() {
         return checkPoint;
+    }
+
+    public BufferedImage getRevealedPrizeBrick() {
+        return revealedPrizeBrick;
+    }
+
+    public BufferedImage getRevealedCheckPoint() {
+        return revealedCheckPoint;
     }
 }

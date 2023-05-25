@@ -6,7 +6,7 @@ import SuperMario.graphic.view.states.*;
 import SuperMario.input.ImageLoader;
 import SuperMario.input.SoundManager;
 
-import SuperMario.graphic.view.animation.UIManager;
+import SuperMario.graphic.view.UI.UIManager;
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.HeroForm;
@@ -449,6 +449,7 @@ public class GameEngine implements Runnable {
         mapManager.resetCurrentMap(this);
         updateLocations();
         updateCamera();
+        mapManager.setChecked(false);
         gameState = GameState.RUNNING;
     }
 
