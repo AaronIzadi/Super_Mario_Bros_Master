@@ -20,6 +20,7 @@ public class InputManager implements KeyListener, MouseListener {
 
     private static final InputManager instance = new InputManager();
     private final Set<Integer> keyPressed;
+
     private InputManager() {
         keyPressed = new HashSet<>();
     }
@@ -34,16 +35,27 @@ public class InputManager implements KeyListener, MouseListener {
         keyPressed.add(keyCode);
         GameState state = GameEngine.getInstance().getGameState();
         ButtonAction currentAction = ButtonAction.NO_ACTION;
-
         boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.PAUSED;
         if (keyCode == VK_UP) {
-            if (notRunningState)
+            if (notRunningState) {
                 currentAction = ButtonAction.GO_UP;
-            else
-                currentAction = ButtonAction.JUMP;
+            } else {
+                if (keyPressed.contains(VK_DOWN)) {
+                    currentAction = ButtonAction.AXE;
+                } else {
+                    currentAction = ButtonAction.JUMP;
+                }
+            }
         } else if (keyCode == VK_DOWN) {
-            if (notRunningState)
+            if (notRunningState) {
                 currentAction = ButtonAction.GO_DOWN;
+            } else {
+                if (keyPressed.contains(VK_UP)) {
+                    currentAction = ButtonAction.AXE;
+                } else {
+                    currentAction = ButtonAction.SIT;
+                }
+            }
         } else if (keyCode == VK_RIGHT) {
             currentAction = ButtonAction.MOVE_RIGHT;
         } else if (keyCode == VK_LEFT) {
@@ -51,14 +63,14 @@ public class InputManager implements KeyListener, MouseListener {
         } else if (keyCode == VK_ENTER) {
             currentAction = ButtonAction.SELECT;
         } else if (keyCode == VK_ESCAPE) {
-            if (state == GameState.RUNNING || state == GameState.PAUSED)
+            if (state == GameState.RUNNING || state == GameState.PAUSED) {
                 currentAction = ButtonAction.PAUSE_RESUME;
-            else
+            } else {
                 currentAction = ButtonAction.GO_TO_START_SCREEN;
-
+            }
         } else if (keyCode == VK_SPACE) {
             currentAction = ButtonAction.FIRE;
-            if (GameEngine.getInstance().getUserData().getHero().getAxe()!=null){
+            if (GameEngine.getInstance().getUserData().getHero().getAxe() != null) {
                 currentAction = ButtonAction.THROW_AXE;
             }
         }
@@ -149,6 +161,7 @@ public class InputManager implements KeyListener, MouseListener {
     public boolean isLeftAndRightSelected() {
         return isLeft() && isRight();
     }
+
     public boolean isUpAndDownSelected() {
         return keyPressed.contains(VK_DOWN) && keyPressed.contains(VK_UP);
     }

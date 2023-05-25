@@ -214,6 +214,7 @@ public class MapCreator {
                     frames[1] = this.prizeBrick;
                     brick.setFrames(frames);
                     map.addBrick(brick);
+                    map.setCheckPoint(brick);
                 } else if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
                     map.addBrick(brick);

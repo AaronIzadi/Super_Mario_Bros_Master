@@ -15,7 +15,7 @@ public class UIManager extends JPanel {
 
     private final GameEngine engine;
     private final Font gameFont;
-    private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
+    private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPointScreen, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
     private final BufferedImage selectIcon;
@@ -38,6 +38,7 @@ public class UIManager extends JPanel {
         this.storeScreenImage = loader.getStoreScreenImage();
         this.loadGameScreen = loader.getLoadGameScreen();
         this.pauseScreen = loader.getPauseScreen();
+        this.checkPointScreen = loader.getCheckPoint();
 
         this.gameFont = new FontLoader().getFont();
     }
@@ -59,6 +60,8 @@ public class UIManager extends JPanel {
             drawAboutScreen(g2);
         } else if (gameState == GameState.HELP_SCREEN) {
             drawHelpScreen(g2);
+        } else if (gameState == GameState.CHECKPOINT) {
+            drawCheckPointScreen(g2);
         } else if (gameState == GameState.GAME_OVER) {
             drawGameOverScreen(g2);
         } else if (gameState == GameState.CROSSOVER) {
@@ -99,6 +102,12 @@ public class UIManager extends JPanel {
         int nextLineLength = g2.getFontMetrics().stringWidth(nextLine);
         g2.drawString(displayedStr, (getWidth() - stringLength) / 2, 300);
         g2.drawString(nextLine, (getWidth() - nextLineLength) / 2, 400);
+    }
+
+    private void drawCheckPointScreen(Graphics2D g2) {
+        int col = engine.getCheckPointSelection().getColumnNumber();
+        g2.drawImage(checkPointScreen, 0, 0, null);
+        g2.drawImage(selectIcon, col * 350 + 320, 360, null);
     }
 
     private void drawHelpScreen(Graphics2D g2) {

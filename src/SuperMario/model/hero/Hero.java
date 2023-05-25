@@ -129,11 +129,11 @@ public abstract class Hero extends GameObject {
         timer.schedule(task, 1000);
     }
 
-    public boolean onTouchEnemy(GameEngine engine) {
+    public boolean onTouchEnemy(GameEngine engine, int losingCoins) {
 
         if (!ifTookStar()) {
             if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
-                heroDies(engine, 20);
+                heroDies(engine, 20, losingCoins);
                 return true;
             } else {
                 engine.shakeCamera();
@@ -148,14 +148,15 @@ public abstract class Hero extends GameObject {
         return false;
     }
 
-    public void onTouchBorder(GameEngine engine) {
-        heroDies(engine, 30);
+    public void onTouchBorder(GameEngine engine, int losingCoins) {
+        heroDies(engine, 30, losingCoins);
         engine.playHeroFalls();
     }
 
-    public void heroDies(GameEngine engine, int lostScore) {
+    public void heroDies(GameEngine engine, int lostScore, int losingCoins) {
         remainingLives--;
         points = points > lostScore ? points - lostScore : 0;
+        coins = coins > losingCoins ? coins - losingCoins : 0;
         if (remainingLives == 0) {
             engine.playGameOver();
         } else {

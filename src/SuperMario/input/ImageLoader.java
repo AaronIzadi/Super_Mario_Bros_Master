@@ -16,7 +16,7 @@ public class ImageLoader {
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private final BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
-    private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
+    private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPoint, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
     private final BufferedImage axe0, axe1, axe2, axe3;
@@ -32,6 +32,7 @@ public class ImageLoader {
         this.storeScreenImage = loadImage("/states/store-screen.png");
         this.loadGameScreen = loadImage("/states/load-screen.png");
         this.pauseScreen = loadImage("/states/pause-screen.png");
+        this.checkPoint = loadImage("/states/check point.png");
         BufferedImage sprite = loadImage("/sprite.png");
         this.axe0 = loadImage("/axe0.png");
         this.axe1 = loadImage("/axe1.png");
@@ -388,5 +389,9 @@ public class ImageLoader {
 
     public BufferedImage getCrossoverBackground() {
         return crossoverBackground;
+    }
+
+    public BufferedImage getCheckPoint() {
+        return checkPoint;
     }
 }

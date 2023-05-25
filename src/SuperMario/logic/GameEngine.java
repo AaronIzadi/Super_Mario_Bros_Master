@@ -35,6 +35,7 @@ public class GameEngine implements Runnable {
     private LoadGameScreenSelection loadGameScreenSelection = LoadGameScreenSelection.NEW_GAME;
     private PauseScreenSelection pauseScreenSelection = PauseScreenSelection.GO_TO_MAIN_MENU;
     private StoreScreenSelection storeScreenSelection = StoreScreenSelection.MARIO;
+    private CheckPointSelection checkPointSelection = CheckPointSelection.YES;
     private final MapSelection mapSelection = MapSelection.WORLD_1;
 
     private GameEngine() {
@@ -306,9 +307,9 @@ public class GameEngine implements Runnable {
                         break;
                 }
             } else if (inputMgr.isUp()) {
-                selectOption(true);
+                selectOptionsOnStart(true);
             } else if (inputMgr.isDown()) {
-                selectOption(false);
+                selectOptionsOnStart(false);
             }
 
         } else if (gameState == GameState.LOAD_GAME) {
@@ -348,12 +349,12 @@ public class GameEngine implements Runnable {
 
             if (inputMgr.isUp()) {
                 userData.getHero().jump();
+            } else if (inputMgr.isDown()) {
+                userData.getHero().sit();
             } else if (inputMgr.isRight()) {
                 userData.getHero().move(true, camera);
             } else if (inputMgr.isLeft()) {
                 userData.getHero().move(false, camera);
-            } else if (inputMgr.isDown()) {
-                userData.getHero().sit();
             } else if (inputMgr.isEmpty()) {
                 userData.getHero().setVelX(0);
                 userData.getHero().setSitting(false);
@@ -361,11 +362,25 @@ public class GameEngine implements Runnable {
                     userData.getHero().getDimension().height = 96;
                 }
             } else if (inputMgr.isSpace()) {
+                if (userData.getHero().isAxeActivated()) {
+                    mapManager.axe();
+                }
                 mapManager.fire();
             } else if (inputMgr.isUpAndDownSelected()) {
                 mapManager.axe();
             } else if (inputMgr.isEscape()) {
                 pauseGame();
+            }
+
+        } else if (gameState == GameState.CHECKPOINT) {
+
+            if (inputMgr.isEnter()) {
+                mapManager.handleCheckPoint(checkPointSelection == CheckPointSelection.YES);
+                gameState = GameState.RUNNING;
+            } else if (inputMgr.isLeft()) {
+                selectToSaveOnCheckPoint(true);
+            } else if (inputMgr.isRight()) {
+                selectToSaveOnCheckPoint(false);
             }
 
         } else if (gameState == GameState.PAUSED) {
@@ -474,8 +489,12 @@ public class GameEngine implements Runnable {
         userData.getSaveGameRepository().addUserData(userData, fileNumber);
     }
 
-    private void selectOption(boolean selectUp) {
+    private void selectOptionsOnStart(boolean selectUp) {
         startScreenSelection = startScreenSelection.select(selectUp);
+    }
+
+    private void selectToSaveOnCheckPoint(boolean selectLeft) {
+        checkPointSelection = checkPointSelection.select(selectLeft);
     }
 
     private void selectToResume(boolean selectUp) {
@@ -654,6 +673,10 @@ public class GameEngine implements Runnable {
 
     public Point getCrossoverCameraLocation() {
         return new Point((int) crossoverCam.getX(), (int) crossoverCam.getY());
+    }
+
+    public CheckPointSelection getCheckPointSelection() {
+        return checkPointSelection;
     }
 
     public static void main(String... args) {

@@ -8,22 +8,35 @@ import java.awt.image.BufferedImage;
 
 public class CheckPoint extends Brick {
     private Animation animation;
-    private boolean checked = false;
+    private boolean checked;
+    private boolean isRevealed;
     public CheckPoint(double x, double y, BufferedImage style) {
         super(x, y, style);
         setBreakable(false);
         setEmpty(false);
+        isRevealed = false;
     }
-    public Point checked() {
-        BufferedImage newStyle = ImageLoader.getInstance().loadImage("/check-point.png");
+    public Point check(boolean checked) {
+        this.checked = checked;
+        isRevealed = true;
+        BufferedImage newStyle;
+
+        if (checked) {
+            newStyle = ImageLoader.getInstance().loadImage("/check-point.png");
+        }else{
+            newStyle = ImageLoader.getInstance().getSubImage
+                    (ImageLoader.getInstance().loadImage("/sprite.png"), 1, 2, 48, 48);
+        }
+
         setStyle(newStyle);
-        checked = true;
+        setEmpty(true);
+
         return new Point((int) getX(), (int) getY());
     }
 
     public void draw(Graphics g) {
         super.draw(g);
-        if (!checked){
+        if (!checked && !isEmpty()){
             animate();
         }
     }
@@ -43,4 +56,7 @@ public class CheckPoint extends Brick {
         this.animation = animation;
     }
 
+    public boolean isRevealed() {
+        return isRevealed;
+    }
 }

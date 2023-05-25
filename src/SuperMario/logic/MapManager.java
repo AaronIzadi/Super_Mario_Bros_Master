@@ -29,9 +29,9 @@ public class MapManager {
     private double yBeforeCrossover;
     private double xHero;
     private double yHero;
-    private boolean gotToTheCheckPoint = false;
+    private double progressRate;
+    private boolean isChecked = false;
     private static final MapManager instance = new MapManager();
-
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
     private MapManager() {
@@ -46,6 +46,7 @@ public class MapManager {
             return;
         }
         map.updateLocations();
+        progressRate = getHero().getX() / getMap().getEndPoint().getX();
     }
 
     public void updateLocationsForCrossover() {
@@ -279,8 +280,8 @@ public class MapManager {
         }
 
         if (hero.getY() >= map.getBottomBorder()) {
-            hero.onTouchBorder(engine);
-            if (gotToTheCheckPoint) {
+            hero.onTouchBorder(engine, calculateLosingCoins());
+            if (isChecked) {
                 reLoadCheckPoint(xHero, yHero);
             } else {
                 resetCurrentMap(engine);
@@ -310,10 +311,12 @@ public class MapManager {
                 if (prize != null)
                     currentMap.addRevealedPrize(prize);
             } else if (brick instanceof CheckPoint && heroTopBounds.intersects(brickBottomBounds)) {
-                Point point = ((CheckPoint) brick).checked();
-                xHero = point.getX();
-                yHero = point.getY() - 48 + 1;
-                gotToTheCheckPoint = true;
+                if (!((CheckPoint) brick).isRevealed()) {
+                    engine.setGameState(GameState.CHECKPOINT);
+                }else{
+                    hero.setVelY(0);
+                    hero.setY(brick.getY() + brick.getDimension().height);
+                }
             }
         }
     }
@@ -350,7 +353,7 @@ public class MapManager {
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
             if (heroBounds.intersects(enemyBounds) && !hero.isFalling()) {
-                heroDies = hero.onTouchEnemy(engine);
+                heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
 
                 toBeRemoved.add(enemy);
             }
@@ -358,7 +361,7 @@ public class MapManager {
         removeObjects(toBeRemoved);
 
         if (heroDies) {
-            if (gotToTheCheckPoint) {
+            if (isChecked) {
                 reLoadCheckPoint(xHero, yHero);
             } else {
                 resetCurrentMap(engine);
@@ -538,7 +541,7 @@ public class MapManager {
 
     }
 
-    private void checkWeaponCollision(GameObject object){
+    private void checkWeaponCollision(GameObject object) {
 
         Map currentMap;
         if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
@@ -600,6 +603,26 @@ public class MapManager {
                 currentMap.removePrize((Prize) object);
             }
         }
+    }
+
+    public void handleCheckPoint(boolean isChecked) {
+        this.isChecked = isChecked;
+        if (isChecked) {
+            Point point = map.getCheckPoint().check(true);
+            xHero = point.getX();
+            yHero = point.getY() - 48 + 1;
+            int price = (int) (progressRate * getCoins());
+            getHero().setCoins(getCoins() - price);
+        } else {
+            map.getCheckPoint().check(false);
+            int reward = (int) (progressRate * getCoins() * 0.25);
+            getHero().setCoins(getCoins() + reward);
+        }
+    }
+
+    private int calculateLosingCoins() {
+        int n = isChecked ? 1 : 0;
+        return (int) Math.floor((((n + 1) * getCoins()) + progressRate) / (n + 4));
     }
 
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {

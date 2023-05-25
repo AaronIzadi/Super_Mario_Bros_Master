@@ -3,10 +3,7 @@ package SuperMario.model.map;
 
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
-import SuperMario.model.obstacle.Brick;
-import SuperMario.model.obstacle.CoinBrick;
-import SuperMario.model.obstacle.Hole;
-import SuperMario.model.obstacle.OrdinaryBrick;
+import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
@@ -29,6 +26,7 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
+    private CheckPoint checkPoint;
     private Axe axe;
     private Flag endPoint;
     private BufferedImage backgroundImage;
@@ -293,4 +291,10 @@ public class Map {
         this.holes.add(hole);
     }
 
+    public void setCheckPoint(CheckPoint checkPoint) {
+        this.checkPoint = checkPoint;
+    }
+    public CheckPoint getCheckPoint() {
+        return checkPoint;
+    }
 }

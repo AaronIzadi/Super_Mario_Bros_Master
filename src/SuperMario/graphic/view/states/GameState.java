@@ -11,4 +11,5 @@ public enum GameState {
     MISSION_PASSED,
     ABOUT_SCREEN,
     CROSSOVER,
+    CHECKPOINT,
 }
