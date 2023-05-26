@@ -9,7 +9,7 @@ public class Camera {
     public Camera() {
         this.x = 0;
         this.y = 0;
-        this.frameNumber = 25;
+        this.frameNumber = 40;
         this.shaking = false;
     }
 

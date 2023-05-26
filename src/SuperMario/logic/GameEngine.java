@@ -171,12 +171,7 @@ public class GameEngine implements Runnable {
                     throw new RuntimeException(e);
                 }
                 try {
-                    if (gameState == GameState.CROSSOVER) {
-                        if (userData.getHero().getX() <= this.getCrossoverCameraLocation().getX() && userData.getHero().getVelX() < 0) {
-                            userData.getHero().setVelX(0);
-                            userData.getHero().setX(this.getCrossoverCameraLocation().getX());
-                        }
-                    } else {
+                    if (gameState == GameState.RUNNING) {
                         updateCamera();
                         if (userData.getHero().getX() <= this.getCameraLocation().getX() && userData.getHero().getVelX() < 0) {
                             userData.getHero().setVelX(0);
@@ -236,19 +231,6 @@ public class GameEngine implements Runnable {
 
         camera.moveCam(shiftAmount, 0);
     }
-
-    private void updateCrossOverCam() {
-        Hero hero = mapManager.getHero();
-        double heroVelocityX = hero.getVelX();
-        double shiftAmount = 0;
-
-        if (heroVelocityX > 0 && hero.getX() - 600 > crossoverCam.getX()) {
-            shiftAmount = heroVelocityX;
-        }
-
-        crossoverCam.moveCam(shiftAmount, 0);
-    }
-
 
     private void updateLocations() {
         mapManager.updateLocations();
@@ -352,9 +334,11 @@ public class GameEngine implements Runnable {
             } else if (inputMgr.isDown()) {
                 userData.getHero().sit();
             } else if (inputMgr.isRight()) {
-                userData.getHero().move(true, camera);
+                Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
+                userData.getHero().move(true, currentCam);
             } else if (inputMgr.isLeft()) {
-                userData.getHero().move(false, camera);
+                Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
+                userData.getHero().move(false, currentCam);
             } else if (inputMgr.isEmpty()) {
                 userData.getHero().setVelX(0);
                 userData.getHero().setSitting(false);
