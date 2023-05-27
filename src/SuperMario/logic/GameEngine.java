@@ -409,7 +409,7 @@ public class GameEngine implements Runnable {
             if (inputMgr.isEnter()) {
                 int nextWorld;
                 if (userData.getWorldNumber() == 0) {
-                    nextWorld = MapSelection.WORLD_2.getWorldNumber();
+                    nextWorld = MapSelection.BOSS_FIGHT.getWorldNumber();
                     loadNextLevel(nextWorld);
                 } else if (userData.getWorldNumber() == 1) {
                     nextWorld = MapSelection.WORLD_3.getWorldNumber();

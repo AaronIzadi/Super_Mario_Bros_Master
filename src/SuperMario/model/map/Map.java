@@ -1,6 +1,7 @@
 package SuperMario.model.map;
 
 
+import SuperMario.model.enemy.Bowser;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
@@ -26,7 +27,9 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
+    private ArrayList<InvisiblePoint> points = new ArrayList<>();
     private CheckPoint checkPoint;
+    private Bowser bowser;
     private Axe axe;
     private Castle castle;
     private Flag endPoint;
@@ -90,14 +93,21 @@ public class Map {
         this.enemies.add(enemy);
     }
 
+    public void addPoint(InvisiblePoint point) {
+        this.points.add(point);
+    }
+
     public void drawMap(Graphics2D g2) {
+        if (!points.isEmpty() && bowser != null) {
+            bowser.setBounds(points.get(0), points.get(1));
+        }
         drawBackground(g2);
         drawPrizes(g2);
         drawEnemies(g2);
         drawBricks(g2);
         drawFireballs(g2);
         drawAxe(g2);
-        if (castle != null){
+        if (castle != null) {
             castle.draw(g2);
         }
         endPoint.draw(g2);
@@ -306,5 +316,9 @@ public class Map {
 
     public void setCastle(Castle castle) {
         this.castle = castle;
+    }
+
+    public void setBowser(Bowser bowser) {
+        this.bowser = bowser;
     }
 }

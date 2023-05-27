@@ -3,6 +3,7 @@ package SuperMario.graphic.manager;
 import SuperMario.model.enemy.*;
 import SuperMario.model.map.Castle;
 import SuperMario.model.map.Flag;
+import SuperMario.model.map.InvisiblePoint;
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.Mario;
@@ -194,6 +195,8 @@ public class MapCreator {
         int crossover = new Color(112, 146, 190).getRGB();
         int boss = new Color(255, 120, 40).getRGB();
         int castleColor = new Color(140, 40, 40).getRGB();
+        int point = new Color(255, 255, 255).getRGB();
+
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -246,6 +249,9 @@ public class MapCreator {
                 } else if (currentPixel == groundBrick) {
                     Brick brick = new GroundBrick(xLocation, yLocation, this.groundBrick);
                     map.addGroundBrick(brick);
+                } else if (currentPixel == point) {
+                    InvisiblePoint invisiblePoint = new InvisiblePoint(xLocation,yLocation,null);
+                    map.addPoint(invisiblePoint);
                 } else if (currentPixel == goomba) {
                     Goomba enemy = new Goomba(xLocation, yLocation, this.goombaLeft);
                     BufferedImage[] frames = new BufferedImage[2];
@@ -282,10 +288,11 @@ public class MapCreator {
                     Castle castle = new Castle(xLocation, yLocation, this.castle);
                     map.setCastle(castle);
                 } else if (currentPixel == boss) {
-                    KingKoopa kingKoopa = new KingKoopa(xLocation, yLocation - 24, this.boss);
-                    kingKoopa.setFireStyle(imageLoader.getBossFire());
-                    kingKoopa.setFrames(imageLoader.bossFrames());
-                    map.addEnemy(kingKoopa);
+                    Bowser bowser = new Bowser(xLocation, yLocation - 24, this.boss);
+                    bowser.setFireStyle(imageLoader.getBossFire());
+                    bowser.setFrames(imageLoader.bossFrames());
+                    map.setBowser(bowser);
+                    map.addEnemy(bowser);
                 } else setHero(map, hero, currentPixel, xLocation, yLocation);
             }
         }
