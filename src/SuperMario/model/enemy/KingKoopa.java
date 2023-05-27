@@ -39,7 +39,7 @@ public class KingKoopa extends Enemy{
     }
 
     public void animate() {
-        boolean isAnimationTicked = animation.animate(8);
+        boolean isAnimationTicked = animation.animate(5);
         if (isAnimationTicked) {
             setStyle(animation.getCurrentFrame());
         }

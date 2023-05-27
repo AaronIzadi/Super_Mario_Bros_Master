@@ -1,6 +1,7 @@
 package SuperMario.graphic.manager;
 
 import SuperMario.model.enemy.*;
+import SuperMario.model.map.Castle;
 import SuperMario.model.map.Flag;
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
@@ -19,7 +20,7 @@ public class MapCreator {
     private int heroType;
     private Hero hero;
     private ImageLoader imageLoader;
-    private BufferedImage backgroundImage, crossoverBackground;
+    private BufferedImage backgroundImage, crossoverBackground, castle;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, slime, slimeOnTouch, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private BufferedImage boss, goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
@@ -69,6 +70,7 @@ public class MapCreator {
         this.slimeOnTouch = imageLoader.getSlimeOnTouch();
         this.endFlag = imageLoader.getEndFlag();
         this.boss = imageLoader.getBoss();
+        this.castle = imageLoader.getCastle();
     }
 
     public Map createCrossOver(String path, Hero hero) {
@@ -191,6 +193,7 @@ public class MapCreator {
         int slime = new Color(100, 255, 100).getRGB();
         int crossover = new Color(112, 146, 190).getRGB();
         int boss = new Color(255, 120, 40).getRGB();
+        int castleColor = new Color(140, 40, 40).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -273,8 +276,11 @@ public class MapCreator {
                     Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
                     map.addGroundBrick(brick);
                 } else if (currentPixel == end) {
-                    Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
+                    Flag endPoint = new Flag(xLocation + 24, yLocation, this.endFlag);
                     map.setEndPoint(endPoint);
+                } else if (currentPixel == castleColor) {
+                    Castle castle = new Castle(xLocation, yLocation, this.castle);
+                    map.setCastle(castle);
                 } else if (currentPixel == boss) {
                     KingKoopa kingKoopa = new KingKoopa(xLocation, yLocation - 24, this.boss);
                     kingKoopa.setFireStyle(imageLoader.getBossFire());

@@ -28,6 +28,7 @@ public class Map {
     private ArrayList<Fireball> fireballs = new ArrayList<>();
     private CheckPoint checkPoint;
     private Axe axe;
+    private Castle castle;
     private Flag endPoint;
     private BufferedImage backgroundImage;
     private String path;
@@ -95,9 +96,12 @@ public class Map {
         drawEnemies(g2);
         drawBricks(g2);
         drawFireballs(g2);
-        drawHero(g2);
         drawAxe(g2);
+        if (castle != null){
+            castle.draw(g2);
+        }
         endPoint.draw(g2);
+        drawHero(g2);
     }
 
     public void drawCrossover(Graphics2D g2) {
@@ -153,6 +157,7 @@ public class Map {
     private void drawHero(Graphics2D g2) {
         hero.draw(g2);
     }
+
 
     public void updateLocations() {
         hero.updateLocation();
@@ -297,5 +302,9 @@ public class Map {
 
     public CheckPoint getCheckPoint() {
         return checkPoint;
+    }
+
+    public void setCastle(Castle castle) {
+        this.castle = castle;
     }
 }

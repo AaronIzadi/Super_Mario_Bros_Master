@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ImageLoader {
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
-    private final BufferedImage backgroundImage, crossoverBackground;
+    private final BufferedImage backgroundImage, crossoverBackground , castle;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private final BufferedImage border, ordinaryBrick, surpriseBrick, revealedPrizeBrick, revealedCheckPoint, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
@@ -46,6 +46,7 @@ public class ImageLoader {
         this.axe1 = loadImage("/axe1.png");
         this.axe2 = loadImage("/axe2.png");
         this.axe3 = loadImage("/axe3.png");
+        this.castle = loadImage("/castle.png");
         this.upSidePipe = loadImage("/upside-pipe.png");
         this.crossoverBackground = loadImage("/crossover-background.png");
         this.brickAnimation = loadImage("/brick-animation.png");
@@ -431,5 +432,9 @@ public class ImageLoader {
         bossFrames[3] = boss3;
 
         return bossFrames;
+    }
+
+    public BufferedImage getCastle() {
+        return castle;
     }
 }

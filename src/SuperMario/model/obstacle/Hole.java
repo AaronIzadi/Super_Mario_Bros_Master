@@ -1,5 +1,6 @@
 package SuperMario.model.obstacle;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Hole extends Brick{
@@ -8,5 +9,10 @@ public class Hole extends Brick{
         super(x, y, style);
         setBreakable(false);
         setEmpty(true);
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        super.draw(g);
     }
 }
