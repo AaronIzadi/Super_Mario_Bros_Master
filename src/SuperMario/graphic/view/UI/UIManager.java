@@ -220,7 +220,8 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(25f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        displayedStr = "World:" + (engine.getUserData().getWorldNumber() + 1);
+        String worldNum = engine.getUserData().getWorldNumber() == 6 ? "BOSS!" : String.valueOf(engine.getUserData().getWorldNumber()+1);
+        displayedStr = "World:" + worldNum;
         g2.drawString(displayedStr, 550, 50);
     }
 

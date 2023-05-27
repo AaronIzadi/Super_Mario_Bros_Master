@@ -12,10 +12,11 @@ import java.io.IOException;
 public class ImageLoader {
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
-    private final BufferedImage backgroundImage , crossoverBackground;
+    private final BufferedImage backgroundImage, crossoverBackground;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private final BufferedImage border, ordinaryBrick, surpriseBrick, revealedPrizeBrick, revealedCheckPoint, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
+    private final BufferedImage boss0 , boss1, boss2, boss3, bossFire , fireballBoss;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPoint, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
@@ -33,6 +34,12 @@ public class ImageLoader {
         this.loadGameScreen = loadImage("/states/load-screen.png");
         this.pauseScreen = loadImage("/states/pause-screen.png");
         this.checkPoint = loadImage("/states/check point.png");
+        this.boss0 = loadImage("/boss/boss-0.png");
+        this.boss1 = loadImage("/boss/boss-1.png");
+        this.boss2 = loadImage("/boss/boss-2.png");
+        this.boss3 = loadImage("/boss/boss-3.png");
+        this.bossFire = loadImage("/boss/boss-fire.png");
+        this.fireballBoss = loadImage("/boss/fireball-boss.png");
         this.revealedCheckPoint = loadImage("/check-point.png");
         BufferedImage sprite = loadImage("/sprite.png");
         this.axe0 = loadImage("/axe0.png");
@@ -134,7 +141,7 @@ public class ImageLoader {
             height = 96;
         }
 
-        return getHeroForms(leftFrames, heroForm, col, width, height);
+        return getHeroForms(leftFrames, col, width, height);
     }
 
     public BufferedImage[] getHeroRightFrames(int heroForm) {
@@ -158,10 +165,10 @@ public class ImageLoader {
             height = 96;
         }
 
-        return getHeroForms(rightFrames, heroForm, col, width, height);
+        return getHeroForms(rightFrames, col, width, height);
     }
 
-    private BufferedImage[] getHeroForms(BufferedImage[] rightFrames, int heroForm, int col, int width, int height) {
+    private BufferedImage[] getHeroForms(BufferedImage[] rightFrames, int col, int width, int height) {
         for (int i = 0; i < 6; i++) {
             if (i < 5) {
                 rightFrames[i] = heroForms.getSubimage((col - 1) * width, (i) * height, width, height);
@@ -403,5 +410,26 @@ public class ImageLoader {
 
     public BufferedImage getRevealedCheckPoint() {
         return revealedCheckPoint;
+    }
+
+    public BufferedImage getBossFire() {
+        return bossFire;
+    }
+
+    public BufferedImage getBoss() {
+        return boss0;
+    }
+
+    public BufferedImage getFireballBoss() {
+        return fireballBoss;
+    }
+    public BufferedImage[] bossFrames() {
+        BufferedImage[] bossFrames = new BufferedImage[4];
+        bossFrames[0] = boss0;
+        bossFrames[1] = boss1;
+        bossFrames[2] = boss2;
+        bossFrames[3] = boss3;
+
+        return bossFrames;
     }
 }

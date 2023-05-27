@@ -46,7 +46,11 @@ public class MapManager {
             return;
         }
         map.updateLocations();
-        progressRate = getHero().getX() / getMap().getEndPoint().getX();
+        if (getMap().getEndPoint() != null) {
+            progressRate = getHero().getX() / getMap().getEndPoint().getX();
+        } else {
+            progressRate = 0.0000001;
+        }
     }
 
     public void updateLocationsForCrossover() {
@@ -71,7 +75,6 @@ public class MapManager {
         ImageLoader.getInstance().setHeroType(hero.getType());
         MapCreator mapCreator = new MapCreator();
         crossover = mapCreator.createCrossOver("/maps/" + path, hero);
-        crossover.setHero(hero);
     }
 
     public boolean createMap(String path) {
@@ -313,7 +316,7 @@ public class MapManager {
             } else if (brick instanceof CheckPoint && heroTopBounds.intersects(brickBottomBounds)) {
                 if (!((CheckPoint) brick).isRevealed()) {
                     engine.setGameState(GameState.CHECKPOINT);
-                }else{
+                } else {
                     hero.setVelY(0);
                     hero.setY(brick.getY() + brick.getDimension().height);
                 }
@@ -560,15 +563,24 @@ public class MapManager {
             if (objectBounds.intersects(enemyBounds)) {
                 if (enemy instanceof Goomba) {
                     acquirePoints(1);
+                    toBeRemoved.add(enemy);
                 } else if (enemy instanceof KoopaTroopa) {
-                    acquirePoints(2);
+                    KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
+                    if (!koopaTroopa.isHit()) {
+                        koopaTroopa.setHit(true);
+                        koopaTroopa.moveAfterHit();
+                    } else {
+                        acquirePoints(2);
+                        toBeRemoved.add(enemy);
+                    }
                 } else if (enemy instanceof Spiny) {
                     acquirePoints(3);
+                    toBeRemoved.add(enemy);
                 } else {
                     acquirePoints(1);
+                    toBeRemoved.add(enemy);
                 }
                 GameEngine.getInstance().playKickEnemy();
-                toBeRemoved.add(enemy);
                 toBeRemoved.add(object);
             }
         }

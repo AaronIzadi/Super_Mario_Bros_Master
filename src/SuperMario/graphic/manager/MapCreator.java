@@ -1,11 +1,8 @@
 package SuperMario.graphic.manager;
 
+import SuperMario.model.enemy.*;
 import SuperMario.model.map.Flag;
 import SuperMario.model.map.Map;
-import SuperMario.model.enemy.Goomba;
-import SuperMario.model.enemy.KoopaTroopa;
-import SuperMario.model.enemy.Piranha;
-import SuperMario.model.enemy.Spiny;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.Mario;
 import SuperMario.model.obstacle.*;
@@ -25,7 +22,7 @@ public class MapCreator {
     private BufferedImage backgroundImage, crossoverBackground;
     private BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private BufferedImage border, ordinaryBrick, surpriseBrick, prizeBrick, slime, slimeOnTouch, oneCoinBrick, fiveCoinBrick, groundBrick, pipe, smallPipe, upSidePipe, hole;
-    private BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
+    private BufferedImage boss, goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
 
 
     public MapCreator() {
@@ -71,6 +68,7 @@ public class MapCreator {
         this.slime = imageLoader.getSlime();
         this.slimeOnTouch = imageLoader.getSlimeOnTouch();
         this.endFlag = imageLoader.getEndFlag();
+        this.boss = imageLoader.getBoss();
     }
 
     public Map createCrossOver(String path, Hero hero) {
@@ -192,6 +190,7 @@ public class MapCreator {
         int border = new Color(127, 51, 0).getRGB();
         int slime = new Color(100, 255, 100).getRGB();
         int crossover = new Color(112, 146, 190).getRGB();
+        int boss = new Color(255, 120, 40).getRGB();
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
             for (int y = 0; y < mapImage.getHeight(); y++) {
@@ -261,7 +260,7 @@ public class MapCreator {
                     enemy.setRightImage(spinyRight);
                     map.addEnemy(enemy);
                 } else if (currentPixel == piranha) {
-                    Piranha enemy = new Piranha(xLocation, yLocation, this.piranhaClose);
+                    Piranha enemy = new Piranha(xLocation + 22, yLocation, this.piranhaClose);
                     BufferedImage[] frames = new BufferedImage[2];
                     frames[0] = this.piranhaClose;
                     frames[1] = this.piranhaOpen;
@@ -276,6 +275,11 @@ public class MapCreator {
                 } else if (currentPixel == end) {
                     Flag endPoint = new Flag(xLocation + 24, yLocation, endFlag);
                     map.setEndPoint(endPoint);
+                } else if (currentPixel == boss) {
+                    KingKoopa kingKoopa = new KingKoopa(xLocation, yLocation - 24, this.boss);
+                    kingKoopa.setFireStyle(imageLoader.getBossFire());
+                    kingKoopa.setFrames(imageLoader.bossFrames());
+                    map.addEnemy(kingKoopa);
                 } else setHero(map, hero, currentPixel, xLocation, yLocation);
             }
         }

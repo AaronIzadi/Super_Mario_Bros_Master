@@ -162,7 +162,7 @@ public class Map {
 
         updatePrizeLocation();
 
-        if (axe !=null && axe.isReleased()){
+        if (axe != null && axe.isReleased()) {
             axe.updateLocation();
         }
 
@@ -294,6 +294,7 @@ public class Map {
     public void setCheckPoint(CheckPoint checkPoint) {
         this.checkPoint = checkPoint;
     }
+
     public CheckPoint getCheckPoint() {
         return checkPoint;
     }

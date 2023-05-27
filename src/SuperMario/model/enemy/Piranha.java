@@ -12,7 +12,7 @@ public class Piranha extends Enemy {
     private Animation animation;
 
     public Piranha(double x, double y, BufferedImage style) {
-        super(x + 22, y, style);
+        super(x , y, style);
     }
 
     @Override

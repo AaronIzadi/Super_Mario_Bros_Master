@@ -10,8 +10,8 @@ public enum MapSelection {
     WORLD_3(2),
     CROSSOVER_1(3),
     CROSSOVER_2(4),
-    CROSSOVER_3(5);
-    //  BOSS_FIGHT(6);
+    CROSSOVER_3(5),
+    BOSS_FIGHT(6);
 
     private final int worldNumber;
     private final ArrayList<String> maps = new ArrayList<>();
@@ -36,9 +36,8 @@ public enum MapSelection {
             return CROSSOVER_2;
         } else if (number == 5) {
             return CROSSOVER_3;
-        }
-//        else if (number == 3)
-//            return BOSS_FIGHT;
+        } else if (number == 6)
+            return BOSS_FIGHT;
         else
             return null;
     }
@@ -54,6 +53,7 @@ public enum MapSelection {
         maps.add("crossover 1.png");
         maps.add("crossover 2.png");
         maps.add("crossover 3.png");
+        maps.add("Map 4.png");
     }
 
     public String getMapPath(int worldNumber) {
