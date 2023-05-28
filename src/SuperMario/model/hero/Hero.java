@@ -96,9 +96,17 @@ public abstract class Hero extends GameObject {
     }
 
     public void sit() {
-        if (isSuper() && !isJumping()) {
+        if (isSuper() && !isJumping() && getVelX() == 0) {
             isSitting = true;
             getDimension().height = 50;
+            setY(getY() + (96 - 50));
+        }
+    }
+
+    public void getUp() {
+        if (isSitting) {
+            isSitting = false;
+            setY(getY() - (96 - 50));
         }
     }
 

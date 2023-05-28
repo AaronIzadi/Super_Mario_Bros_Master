@@ -60,8 +60,6 @@ public class UIManager extends JPanel {
             drawAboutScreen(g2);
         } else if (gameState == GameState.HELP_SCREEN) {
             drawHelpScreen(g2);
-        } else if (gameState == GameState.CHECKPOINT) {
-            drawCheckPointScreen(g2);
         } else if (gameState == GameState.GAME_OVER) {
             drawGameOverScreen(g2);
         } else if (gameState == GameState.CROSSOVER) {
@@ -86,6 +84,8 @@ public class UIManager extends JPanel {
 
             if (gameState == GameState.PAUSED) {
                 drawPauseScreen(g2);
+            } else if (gameState == GameState.CHECKPOINT) {
+                drawCheckPointScreen(g2);
             } else if (gameState == GameState.MISSION_PASSED) {
                 drawVictoryScreen(g2);
             }
@@ -220,7 +220,7 @@ public class UIManager extends JPanel {
         g2.setFont(gameFont.deriveFont(25f));
         g2.setColor(Color.WHITE);
         String displayedStr;
-        String worldNum = engine.getUserData().getWorldNumber() == 6 ? "BOSS!" : String.valueOf(engine.getUserData().getWorldNumber()+1);
+        String worldNum = engine.getUserData().getWorldNumber() == 6 ? "BOSS!" : String.valueOf(engine.getUserData().getWorldNumber() + 1);
         displayedStr = "World:" + worldNum;
         g2.drawString(displayedStr, 550, 50);
     }

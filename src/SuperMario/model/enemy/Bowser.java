@@ -2,7 +2,6 @@ package SuperMario.model.enemy;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.model.map.InvisiblePoint;
-import SuperMario.model.map.Map;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -58,7 +57,7 @@ public class Bowser extends Enemy {
     }
 
     public void animate() {
-        boolean isAnimationTicked = animation.animate(5);
+        boolean isAnimationTicked = animation.animate(7);
         if (isAnimationTicked) {
             setStyle(animation.getCurrentFrame());
         }

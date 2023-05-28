@@ -329,7 +329,9 @@ public class GameEngine implements Runnable {
 
         } else if (gameState == GameState.RUNNING || gameState == GameState.CROSSOVER) {
 
-            if (inputMgr.isUp()) {
+            if (inputMgr.isUpAndDownSelected()) {
+                mapManager.axe();
+            } else if (inputMgr.isUp()) {
                 userData.getHero().jump();
             } else if (inputMgr.isDown()) {
                 userData.getHero().sit();
@@ -341,7 +343,7 @@ public class GameEngine implements Runnable {
                 userData.getHero().move(false, currentCam);
             } else if (inputMgr.isEmpty()) {
                 userData.getHero().setVelX(0);
-                userData.getHero().setSitting(false);
+                userData.getHero().getUp();
                 if (userData.getHero().isSuper()) {
                     userData.getHero().getDimension().height = 96;
                 }
@@ -349,8 +351,6 @@ public class GameEngine implements Runnable {
                 if (userData.getHero().isAxeActivated()) {
                     mapManager.axe();
                 }
-                mapManager.fire();
-            } else if (inputMgr.isUpAndDownSelected()) {
                 mapManager.axe();
             } else if (inputMgr.isEscape()) {
                 pauseGame();
@@ -360,7 +360,7 @@ public class GameEngine implements Runnable {
 
             if (inputMgr.isEnter()) {
                 mapManager.handleCheckPoint(checkPointSelection == CheckPointSelection.YES);
-                gameState = GameState.RUNNING;
+                pauseInCheckPoint();
             } else if (inputMgr.isLeft()) {
                 selectToSaveOnCheckPoint(true);
             } else if (inputMgr.isRight()) {
@@ -499,6 +499,15 @@ public class GameEngine implements Runnable {
         }
     }
 
+    public void pauseInCheckPoint(){
+        if (gameState == GameState.RUNNING) {
+            setGameState(GameState.CHECKPOINT);
+            soundManager.pauseBackground();
+        } else if (gameState == GameState.CHECKPOINT) {
+            setGameState(GameState.RUNNING);
+            soundManager.resumeBackground();
+        }
+    }
     private void pauseGame() {
         if (gameState == GameState.RUNNING) {
             setGameState(GameState.PAUSED);
