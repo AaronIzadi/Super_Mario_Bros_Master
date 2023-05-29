@@ -3,7 +3,7 @@ package SuperMario.graphic.manager;
 import SuperMario.model.enemy.*;
 import SuperMario.model.map.Castle;
 import SuperMario.model.map.Flag;
-import SuperMario.model.map.InvisiblePoint;
+import SuperMario.model.map.Point;
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.Mario;
@@ -250,7 +250,7 @@ public class MapCreator {
                     Brick brick = new GroundBrick(xLocation, yLocation, this.groundBrick);
                     map.addGroundBrick(brick);
                 } else if (currentPixel == point) {
-                    InvisiblePoint invisiblePoint = new InvisiblePoint(xLocation,yLocation,null);
+                    Point invisiblePoint = new Point(xLocation,yLocation,null);
                     map.addPoint(invisiblePoint);
                 } else if (currentPixel == goomba) {
                     Goomba enemy = new Goomba(xLocation, yLocation, this.goombaLeft);

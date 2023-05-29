@@ -127,7 +127,7 @@ public class MapManager {
         }
     }
 
-    public void axe() {
+    public void activateAxe() {
 
         if (getHero().getAxe() == null) {
             map.removeAxe();
@@ -146,7 +146,11 @@ public class MapManager {
                 getHero().setAxeActivated(true);
                 currentMap.addAxe(getHero().getAxe());
             }
-        } else {
+        }
+    }
+
+    public void throwAxe(){
+        if (getHero().isAxeActivated()){
             getHero().throwAxe();
         }
     }
@@ -527,7 +531,7 @@ public class MapManager {
         }
 
         ArrayList<Fireball> fireballs = currentMap.getFireballs();
-        Axe axe = currentMap.getAxe();
+        Axe axe = getMap().getHero().getAxe();
 
 
         if (axe != null) {
@@ -667,5 +671,9 @@ public class MapManager {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
+    }
+
+    public Map getCrossover() {
+        return crossover;
     }
 }

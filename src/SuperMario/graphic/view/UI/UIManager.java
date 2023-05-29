@@ -62,14 +62,6 @@ public class UIManager extends JPanel {
             drawHelpScreen(g2);
         } else if (gameState == GameState.GAME_OVER) {
             drawGameOverScreen(g2);
-        } else if (gameState == GameState.CROSSOVER) {
-            Point camLocation = engine.getCrossoverCameraLocation();
-            g2.translate(-camLocation.x, -camLocation.y);
-            engine.drawCrossover(g2);
-            g2.translate(camLocation.x, camLocation.y);
-            drawPoints(g2);
-            drawRemainingLives(g2);
-            drawAcquiredCoins(g2);
         } else {
             Point camLocation = engine.getCameraLocation();
             g2.translate(-camLocation.x, -camLocation.y);
@@ -82,7 +74,17 @@ public class UIManager extends JPanel {
             drawRemainingTime(g2);
             drawWorldNumber(g2);
 
-            if (gameState == GameState.PAUSED) {
+
+            if (gameState == GameState.CROSSOVER) {
+                drawCrossoverBackground(g2);
+                Point crossCamLocation = engine.getCrossoverCameraLocation();
+                g2.translate(-crossCamLocation.x, -crossCamLocation.y);
+                engine.drawCrossover(g2);
+                g2.translate(crossCamLocation.x, crossCamLocation.y);
+                drawPoints(g2);
+                drawRemainingLives(g2);
+                drawAcquiredCoins(g2);
+            }else if (gameState == GameState.PAUSED) {
                 drawPauseScreen(g2);
             } else if (gameState == GameState.CHECKPOINT) {
                 drawCheckPointScreen(g2);
@@ -186,6 +188,10 @@ public class UIManager extends JPanel {
         int row = engine.getPauseScreenSelection().getLineNumber();
         g2.drawImage(pauseScreen, 0, 0, null);
         g2.drawImage(selectIcon, 285, row * 95 + 195, null);
+    }
+
+    private void drawCrossoverBackground(Graphics2D g2){
+        g2.drawImage(ImageLoader.getInstance().getCrossoverBackground(), 0, 0, null);
     }
 
     private void drawRemainingTime(Graphics2D g2) {

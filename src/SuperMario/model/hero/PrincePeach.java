@@ -4,7 +4,7 @@ import SuperMario.graphic.manager.Camera;
 import SuperMario.logic.GameEngine;
 
 
-public class PrincePeach extends Hero{
+public class PrincePeach extends Hero {
 
     public PrincePeach(double x, double y) {
         super(x, y);
@@ -33,12 +33,14 @@ public class PrincePeach extends Hero{
 
     @Override
     public void move(boolean toRight, Camera camera) {
-        if (toRight) {
-            setVelX(6);
-        } else if (camera.getX() < getX()) {
-            setVelX(-6);
+        if (!isSitting()) {
+            if (toRight) {
+                setVelX(6);
+            } else if (camera.getX() < getX()) {
+                setVelX(-6);
+            }
+            setToRight(toRight);
         }
-        setToRight(toRight);
     }
 
 }

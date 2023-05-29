@@ -12,6 +12,8 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -20,6 +22,9 @@ public class InputManager implements KeyListener, MouseListener {
 
     private static final InputManager instance = new InputManager();
     private final Set<Integer> keyPressed;
+    private boolean isUpAndDownPressed;
+    private Timer timer;
+    ButtonAction currentAction = ButtonAction.NO_ACTION;
 
     private InputManager() {
         keyPressed = new HashSet<>();
@@ -34,26 +39,27 @@ public class InputManager implements KeyListener, MouseListener {
         int keyCode = event.getKeyCode();
         keyPressed.add(keyCode);
         GameState state = GameEngine.getInstance().getGameState();
-        ButtonAction currentAction = ButtonAction.NO_ACTION;
         boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.PAUSED;
-        if (keyCode == VK_UP) {
-            if (notRunningState) {
-                currentAction = ButtonAction.GO_UP;
-            } else {
-                if (keyPressed.contains(VK_DOWN)) {
-                    currentAction = ButtonAction.AXE;
-                } else {
-                    currentAction = ButtonAction.JUMP;
-                }
-            }
-        } else if (keyCode == VK_DOWN) {
+        if (keyCode == VK_DOWN) {
             if (notRunningState) {
                 currentAction = ButtonAction.GO_DOWN;
             } else {
                 if (keyPressed.contains(VK_UP)) {
-                    currentAction = ButtonAction.AXE;
+                    currentAction = ButtonAction.ACTIVATE_AXE;
+                    setTimer();
                 } else {
                     currentAction = ButtonAction.SIT;
+                }
+            }
+        } else if (keyCode == VK_UP) {
+            if (notRunningState) {
+                currentAction = ButtonAction.GO_UP;
+            } else {
+                if (keyPressed.contains(VK_DOWN)) {
+                    currentAction = ButtonAction.ACTIVATE_AXE;
+                    setTimer();
+                } else {
+                    currentAction = ButtonAction.JUMP;
                 }
             }
         } else if (keyCode == VK_RIGHT) {
@@ -69,9 +75,10 @@ public class InputManager implements KeyListener, MouseListener {
                 currentAction = ButtonAction.GO_TO_START_SCREEN;
             }
         } else if (keyCode == VK_SPACE) {
-            currentAction = ButtonAction.FIRE;
             if (GameEngine.getInstance().getUserData().getHero().getAxe() != null) {
                 currentAction = ButtonAction.THROW_AXE;
+            } else {
+                currentAction = ButtonAction.FIRE;
             }
         }
 
@@ -85,6 +92,10 @@ public class InputManager implements KeyListener, MouseListener {
 
     @Override
     public void keyReleased(KeyEvent event) {
+        if (timer != null) {
+            timer.cancel();
+        }
+        isUpAndDownPressed = false;
         keyPressed.remove(event.getKeyCode());
         try {
             notifyInput(ButtonAction.ACTION_COMPLETED);
@@ -94,8 +105,9 @@ public class InputManager implements KeyListener, MouseListener {
     }
 
     private void notifyInput(ButtonAction action) throws IOException, ParseException {
-        if (action != ButtonAction.NO_ACTION)
+        if (action != ButtonAction.NO_ACTION) {
             GameEngine.getInstance().receiveInput();
+        }
     }
 
     @Override
@@ -158,11 +170,20 @@ public class InputManager implements KeyListener, MouseListener {
         return keyPressed.isEmpty();
     }
 
-    public boolean isLeftAndRightSelected() {
-        return isLeft() && isRight();
+    public boolean isUpAndDownSelected() {
+        return keyPressed.contains(VK_UP) && keyPressed.contains(VK_DOWN) && isUpAndDownPressed;
     }
 
-    public boolean isUpAndDownSelected() {
-        return keyPressed.contains(VK_DOWN) && keyPressed.contains(VK_UP);
+    public void setTimer() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (currentAction == ButtonAction.ACTIVATE_AXE) {
+                    isUpAndDownPressed = true;
+                }
+            }
+        };
+        timer = new Timer();
+        timer.schedule(task, 2000);
     }
 }

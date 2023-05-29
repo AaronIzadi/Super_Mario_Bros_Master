@@ -23,7 +23,6 @@ public abstract class Hero extends GameObject {
     private boolean isSitting;
     private boolean tookStar;
     private boolean isAxeActivated;
-    private boolean canActivateAxe;
     private boolean isAxeCoolDownFinished = true;
     private Axe axe;
 
@@ -88,7 +87,7 @@ public abstract class Hero extends GameObject {
     public abstract void jumpOnSlime();
 
     protected void setVelYToJump(int velY) {
-        if (!isJumping() && !isFalling()) {
+        if (!isJumping() && !isFalling() && !isSitting()) {
             setJumping(true);
             setVelY(velY);
             GameEngine.getInstance().playJump();
@@ -181,8 +180,7 @@ public abstract class Hero extends GameObject {
     }
 
     public boolean canActivateAxe() {
-        canActivateAxe = coins >= 3 && isSuper() && isAxeCoolDownFinished;
-        return canActivateAxe;
+        return coins >= 3 && isSuper() && isAxeCoolDownFinished;
     }
 
     public Axe getAxe() {

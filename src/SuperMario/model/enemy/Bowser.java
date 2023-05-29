@@ -1,7 +1,7 @@
 package SuperMario.model.enemy;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.model.map.InvisiblePoint;
+import SuperMario.model.map.Point;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,8 +11,8 @@ public class Bowser extends Enemy {
     private int hp;
     private Animation animation;
     private BufferedImage fireStyle;
-    private InvisiblePoint x1;
-    private InvisiblePoint x2;
+    private Point x1;
+    private Point x2;
 
     public Bowser(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -35,7 +35,7 @@ public class Bowser extends Enemy {
         animate();
     }
 
-    public void setBounds(InvisiblePoint x1, InvisiblePoint x2) {
+    public void setBounds(Point x1, Point x2) {
         this.x1 = x1;
         this.x2 = x2;
     }

@@ -79,6 +79,7 @@ public class GameEngine implements Runnable {
     }
 
     private void reset() {
+        userData.clear();
         resetCamera();
         setGameState(GameState.START_SCREEN);
         pauseBackGround();
@@ -330,7 +331,7 @@ public class GameEngine implements Runnable {
         } else if (gameState == GameState.RUNNING || gameState == GameState.CROSSOVER) {
 
             if (inputMgr.isUpAndDownSelected()) {
-                mapManager.axe();
+                mapManager.activateAxe();
             } else if (inputMgr.isUp()) {
                 userData.getHero().jump();
             } else if (inputMgr.isDown()) {
@@ -349,9 +350,10 @@ public class GameEngine implements Runnable {
                 }
             } else if (inputMgr.isSpace()) {
                 if (userData.getHero().isAxeActivated()) {
-                    mapManager.axe();
+                    mapManager.throwAxe();
+                } else {
+                    mapManager.fire();
                 }
-                mapManager.axe();
             } else if (inputMgr.isEscape()) {
                 pauseGame();
             }
@@ -403,13 +405,14 @@ public class GameEngine implements Runnable {
             }
 
         } else if (gameState == GameState.GAME_OVER && inputMgr.isEscape()) {
+            gameState = GameState.RUNNING;
             reset();
         } else if (gameState == GameState.MISSION_PASSED) {
 
             if (inputMgr.isEnter()) {
                 int nextWorld;
                 if (userData.getWorldNumber() == 0) {
-                    nextWorld = MapSelection.BOSS_FIGHT.getWorldNumber();
+                    nextWorld = MapSelection.WORLD_2.getWorldNumber();
                     loadNextLevel(nextWorld);
                 } else if (userData.getWorldNumber() == 1) {
                     nextWorld = MapSelection.WORLD_3.getWorldNumber();
@@ -423,10 +426,13 @@ public class GameEngine implements Runnable {
             }
             pauseBackGround();
 
-        } else {
-            if (inputMgr.isEscape()) {
-                setGameState(GameState.START_SCREEN);
-            }
+        }
+
+        boolean isGameRunning = gameState == GameState.RUNNING || gameState == GameState.CROSSOVER
+                || gameState == GameState.CHECKPOINT || gameState == GameState.PAUSED;
+
+        if (!isGameRunning && inputMgr.isEscape()) {
+            setGameState(GameState.START_SCREEN);
         }
     }
 
@@ -499,7 +505,7 @@ public class GameEngine implements Runnable {
         }
     }
 
-    public void pauseInCheckPoint(){
+    public void pauseInCheckPoint() {
         if (gameState == GameState.RUNNING) {
             setGameState(GameState.CHECKPOINT);
             soundManager.pauseBackground();
@@ -508,6 +514,7 @@ public class GameEngine implements Runnable {
             soundManager.resumeBackground();
         }
     }
+
     private void pauseGame() {
         if (gameState == GameState.RUNNING) {
             setGameState(GameState.PAUSED);

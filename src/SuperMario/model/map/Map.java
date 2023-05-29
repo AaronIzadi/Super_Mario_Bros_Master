@@ -27,7 +27,7 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
-    private ArrayList<InvisiblePoint> points = new ArrayList<>();
+    private ArrayList<Point> points = new ArrayList<>();
     private CheckPoint checkPoint;
     private Bowser bowser;
     private Axe axe;
@@ -93,7 +93,7 @@ public class Map {
         this.enemies.add(enemy);
     }
 
-    public void addPoint(InvisiblePoint point) {
+    public void addPoint(Point point) {
         this.points.add(point);
     }
 
@@ -106,7 +106,6 @@ public class Map {
         drawEnemies(g2);
         drawBricks(g2);
         drawFireballs(g2);
-        drawAxe(g2);
         if (castle != null) {
             castle.draw(g2);
         }

@@ -75,7 +75,7 @@ public class Axe extends GameObject {
         if (gotThere) {
             double dx = hero.getX() - getX();
             double dy = (-1) * ((hero.getY() + 48) - getY());
-            double time = 4;
+            double time = 6;
 
             setVelX(dx / time);
             setVelY(dy / time);

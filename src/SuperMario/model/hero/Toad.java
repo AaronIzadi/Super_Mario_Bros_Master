@@ -33,12 +33,14 @@ public class Toad extends Hero {
 
     @Override
     public void move(boolean toRight, Camera camera) {
-        if (toRight) {
-            setVelX(5);
-        } else if (camera.getX() < getX()) {
-            setVelX(-5);
+        if (!isSitting()) {
+            if (toRight) {
+                setVelX(5);
+            } else if (camera.getX() < getX()) {
+                setVelX(-5);
+            }
+            setToRight(toRight);
         }
-        setToRight(toRight);
     }
 
     @Override

@@ -84,4 +84,11 @@ public class UserData {
     public void setWorldNumber(int worldNumber) {
         this.worldNumber = worldNumber;
     }
+
+    public void clear(){
+        hero = null;
+        map = null;
+        worldNumber = 0;
+        setTypesOwned();
+    }
 }
