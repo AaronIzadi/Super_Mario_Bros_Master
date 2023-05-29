@@ -1,11 +1,13 @@
 package SuperMario.graphic.view.UI;
 
+import SuperMario.graphic.view.states.MapSelection;
 import SuperMario.input.FontLoader;
 
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
 import SuperMario.model.hero.HeroType;
+import SuperMario.model.map.HitPoints;
 
 import javax.swing.*;
 import java.awt.*;
@@ -74,6 +76,10 @@ public class UIManager extends JPanel {
             drawRemainingTime(g2);
             drawWorldNumber(g2);
 
+            if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                drawHitPoint(g2);
+            }
+
 
             if (gameState == GameState.CROSSOVER) {
                 drawCrossoverBackground(g2);
@@ -84,7 +90,7 @@ public class UIManager extends JPanel {
                 drawPoints(g2);
                 drawRemainingLives(g2);
                 drawAcquiredCoins(g2);
-            }else if (gameState == GameState.PAUSED) {
+            } else if (gameState == GameState.PAUSED) {
                 drawPauseScreen(g2);
             } else if (gameState == GameState.CHECKPOINT) {
                 drawCheckPointScreen(g2);
@@ -190,7 +196,7 @@ public class UIManager extends JPanel {
         g2.drawImage(selectIcon, 285, row * 95 + 195, null);
     }
 
-    private void drawCrossoverBackground(Graphics2D g2){
+    private void drawCrossoverBackground(Graphics2D g2) {
         g2.drawImage(ImageLoader.getInstance().getCrossoverBackground(), 0, 0, null);
     }
 
@@ -228,7 +234,7 @@ public class UIManager extends JPanel {
         String displayedStr;
         String worldNum = engine.getUserData().getWorldNumber() == 6 ? "BOSS!" : String.valueOf(engine.getUserData().getWorldNumber() + 1);
         displayedStr = "World:" + worldNum;
-        g2.drawString(displayedStr, 550, 50);
+        g2.drawString(displayedStr, 530, 50);
     }
 
     private void drawPoints(Graphics2D g2) {
@@ -238,6 +244,11 @@ public class UIManager extends JPanel {
         displayedStr = "Points:" + engine.getScore();
         g2.drawString(displayedStr, 200, 50);
     }
+
+    private void drawHitPoint(Graphics2D g2) {
+        g2.drawImage(HitPoints.getInstance().getStyle(), 300, 100, null);
+    }
+
 
     private void drawStartScreen(Graphics2D g2) {
         int row = engine.getStartScreenSelection().getLineNumber();

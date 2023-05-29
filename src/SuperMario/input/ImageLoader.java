@@ -12,17 +12,18 @@ import java.io.IOException;
 public class ImageLoader {
     private BufferedImage heroForms;
     private final BufferedImage brickAnimation;
-    private final BufferedImage backgroundImage, crossoverBackground , castle;
+    private final BufferedImage backgroundImage, crossoverBackground, castle;
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private final BufferedImage border, ordinaryBrick, surpriseBrick, revealedPrizeBrick, revealedCheckPoint, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
-    private final BufferedImage boss0 , boss1, boss2, boss3, bossFire , fireballBoss;
+    private final BufferedImage boss0, boss1, boss2, boss3, fireballBoss;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPoint, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
     private final BufferedImage axe0, axe1, axe2, axe3;
     private final BufferedImage selectIcon;
     private final BufferedImage icon;
+    private final BufferedImage hp1, hp2, hp3, hp4, hp5, hp6, hp7, hp8, hp9, hp10, hp11, hp12, hp13, hp14, hp15, hp16, hp17, hp18, hp19, hp20;
     private static final ImageLoader instance = new ImageLoader();
 
     private ImageLoader() {
@@ -38,7 +39,6 @@ public class ImageLoader {
         this.boss1 = loadImage("/boss/boss-1.png");
         this.boss2 = loadImage("/boss/boss-2.png");
         this.boss3 = loadImage("/boss/boss-3.png");
-        this.bossFire = loadImage("/boss/boss-fire.png");
         this.fireballBoss = loadImage("/boss/fireball-boss.png");
         this.revealedCheckPoint = loadImage("/check-point.png");
         BufferedImage sprite = loadImage("/sprite.png");
@@ -65,6 +65,26 @@ public class ImageLoader {
         this.slime = loadImage("/slime.png");
         this.slimeOnTouch = loadImage("/slime-on touch.png");
         this.icon = loadImage("/icon.jpg");
+        this.hp1 = loadImage("/hp/1.png");
+        this.hp2 = loadImage("/hp/2.png");
+        this.hp3 = loadImage("/hp/3.png");
+        this.hp4 = loadImage("/hp/4.png");
+        this.hp5 = loadImage("/hp/5.png");
+        this.hp6 = loadImage("/hp/6.png");
+        this.hp7 = loadImage("/hp/7.png");
+        this.hp8 = loadImage("/hp/8.png");
+        this.hp9 = loadImage("/hp/9.png");
+        this.hp10 = loadImage("/hp/10.png");
+        this.hp11 = loadImage("/hp/11.png");
+        this.hp12 = loadImage("/hp/12.png");
+        this.hp13 = loadImage("/hp/13.png");
+        this.hp14 = loadImage("/hp/14.png");
+        this.hp15 = loadImage("/hp/15.png");
+        this.hp16 = loadImage("/hp/16.png");
+        this.hp17 = loadImage("/hp/17.png");
+        this.hp18 = loadImage("/hp/18.png");
+        this.hp19 = loadImage("/hp/19.png");
+        this.hp20 = loadImage("/hp/20.png");
         this.coinIcon = getSubImage(sprite, 1, 5, 48, 48);
         this.superMushroom = getSubImage(sprite, 2, 5, 48, 48);
         this.oneHeartUpMushroom = getSubImage(sprite, 3, 5, 48, 48);
@@ -413,10 +433,6 @@ public class ImageLoader {
         return revealedCheckPoint;
     }
 
-    public BufferedImage getBossFire() {
-        return bossFire;
-    }
-
     public BufferedImage getBoss() {
         return boss0;
     }
@@ -424,7 +440,8 @@ public class ImageLoader {
     public BufferedImage getFireballBoss() {
         return fireballBoss;
     }
-    public BufferedImage[] bossFrames() {
+
+    public BufferedImage[] getBossFrames() {
         BufferedImage[] bossFrames = new BufferedImage[4];
         bossFrames[0] = boss0;
         bossFrames[1] = boss1;
@@ -432,6 +449,32 @@ public class ImageLoader {
         bossFrames[3] = boss3;
 
         return bossFrames;
+    }
+
+    public BufferedImage[] getHitPointFrames() {
+        BufferedImage[] hpFrames = new BufferedImage[20];
+        hpFrames[0] = hp1;
+        hpFrames[1] = hp2;
+        hpFrames[2] = hp3;
+        hpFrames[3] = hp4;
+        hpFrames[4] = hp5;
+        hpFrames[5] = hp6;
+        hpFrames[6] = hp7;
+        hpFrames[7] = hp8;
+        hpFrames[8] = hp9;
+        hpFrames[9] = hp10;
+        hpFrames[10] = hp11;
+        hpFrames[11] = hp12;
+        hpFrames[12] = hp13;
+        hpFrames[13] = hp14;
+        hpFrames[14] = hp15;
+        hpFrames[15] = hp16;
+        hpFrames[16] = hp17;
+        hpFrames[17] = hp18;
+        hpFrames[18] = hp19;
+        hpFrames[19] = hp20;
+
+        return hpFrames;
     }
 
     public BufferedImage getCastle() {

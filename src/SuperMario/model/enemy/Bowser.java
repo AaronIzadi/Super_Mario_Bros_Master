@@ -1,6 +1,7 @@
 package SuperMario.model.enemy;
 
 import SuperMario.graphic.view.animation.Animation;
+import SuperMario.model.map.HitPoints;
 import SuperMario.model.map.Point;
 
 import java.awt.*;
@@ -9,13 +10,14 @@ import java.awt.image.BufferedImage;
 public class Bowser extends Enemy {
 
     private int hp;
+    private final HitPoints hitPoints;
     private Animation animation;
-    private BufferedImage fireStyle;
     private Point x1;
     private Point x2;
 
     public Bowser(double x, double y, BufferedImage style) {
         super(x, y, style);
+        hitPoints = HitPoints.getInstance();
         setHp(20);
         setVelX(-0.5);
     }
@@ -42,6 +44,7 @@ public class Bowser extends Enemy {
 
     public void setHp(int hp) {
         this.hp = hp;
+        hitPoints.setStyle(hp);
     }
 
     public int getHp() {
@@ -50,10 +53,6 @@ public class Bowser extends Enemy {
 
     public void setFrames(BufferedImage[] frames) {
         this.animation = new Animation(frames);
-    }
-
-    public void setFireStyle(BufferedImage fireStyle) {
-        this.fireStyle = fireStyle;
     }
 
     public void animate() {
