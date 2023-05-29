@@ -438,6 +438,7 @@ public class GameEngine implements Runnable {
 
     private void loadNextLevel(int worldNumber) {
         userData.setWorldNumber(worldNumber);
+        userData.setMapPath(mapSelection.getMapPath(worldNumber));
         mapManager.setMap(createMap(mapSelection.getMapPath(worldNumber), userData.getHero()));
         mapManager.resetCurrentMap(this);
         updateLocations();
@@ -457,6 +458,9 @@ public class GameEngine implements Runnable {
         imageLoader.setHeroType(type);
         userData.getHero().setType(type);
         int heroFormId = userData.getHero().isSuper() ? 1 : 0;
+        if (userData.getHero().getHeroForm().ifCanShootFire()) {
+            heroFormId = 2;
+        }
         userData.getHero().setHeroForm(
                 new HeroForm(
                         imageLoader.getHeroLeftFrames(heroFormId),
@@ -476,6 +480,7 @@ public class GameEngine implements Runnable {
         userData.setTypesOwned(userData.getTypesOwned());
         mapManager.setMap(createMap(userData.getMapPath(), userData.getHero()));
         mapManager.setHero(userData.getHero());
+        resetCamera();
     }
 
     private void saveGame(int fileNumber) {

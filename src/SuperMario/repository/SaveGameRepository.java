@@ -39,6 +39,7 @@ public class SaveGameRepository {
         object.put("Owns Toad", userData.getTypesOwned()[HeroType.TOAD]);
 
         object.put("Map path", userData.getMapPath());
+        object.put("World number" , userData.getWorldNumber());
 
         addToFile(fileNumber);
     }

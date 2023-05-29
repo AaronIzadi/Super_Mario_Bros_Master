@@ -47,6 +47,8 @@ public class LoadGameRepository {
         Boolean falling = (Boolean) object.get("Falling");
         Boolean jumping = (Boolean) object.get("Jumping");
         String mapPath = (String) object.get("Map path");
+        Long worldNumberAsLong = (Long) object.get("World number");
+        int worldNumber = worldNumberAsLong.intValue();
         boolean[] typesOwned = new boolean[5];
         typesOwned[HeroType.MARIO] = true;
         typesOwned[HeroType.LUIGI] = (Boolean) object.get("Owns Luigi");
@@ -80,6 +82,7 @@ public class LoadGameRepository {
         }
         UserData userData = UserData.getInstance();
 
+        hero.getHeroForm().setCanShootFire(canShootFire);
         hero.setRemainingLives(lives);
         hero.setPoints(points);
         hero.setInvincibilityTimer(timer);
@@ -92,6 +95,7 @@ public class LoadGameRepository {
         userData.setTypesOwned(typesOwned);
         userData.setHero(hero);
         userData.setMapPath(mapPath);
+        userData.setWorldNumber(worldNumber);
 
         return userData;
     }
@@ -123,6 +127,5 @@ public class LoadGameRepository {
         File file = new File(filePaths[fileId]);
         return file.length() == 0;
     }
-
 
 }

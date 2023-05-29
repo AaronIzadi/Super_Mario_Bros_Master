@@ -8,7 +8,7 @@ public class SavePaths {
     };
 
     public static boolean isFileIdValid(int fileId) {
-        return filePaths.length <= fileId || fileId < 0;
+        return fileId < 0 || filePaths.length >= fileId;
     }
 
 }
