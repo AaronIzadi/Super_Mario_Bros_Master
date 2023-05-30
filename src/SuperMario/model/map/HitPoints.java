@@ -25,7 +25,11 @@ public class HitPoints {
     }
 
     public void setStyle(int hp) {
-        style = frames[hp - 1];
+        if (hp != 0) {
+            style = frames[hp - 1];
+        } else {
+            style = null;
+        }
     }
 
     public BufferedImage getStyle() {

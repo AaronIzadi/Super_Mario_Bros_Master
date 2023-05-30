@@ -4,14 +4,19 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SoundManager {
 
     private final Clip background;
+    private final Clip bowserBackground;
     private long clipTime = 0;
+    private Timer timer;
 
     public SoundManager() {
         this.background = getClip(loadAudio("background"));
+        this.bowserBackground = getClip(loadAudio("BossFightBackground"));
     }
 
     private AudioInputStream loadAudio(String url) {
@@ -43,11 +48,23 @@ public class SoundManager {
     public void resumeBackground() {
         background.setMicrosecondPosition(clipTime);
         background.start();
+
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                playBowserBackground();
+            }
+        };
+        timer = new Timer();
+        timer.schedule(task, 82000);
     }
 
     public void pauseBackground() {
         clipTime = background.getMicrosecondPosition();
         background.stop();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
     public void restartBackground() {
@@ -124,6 +141,41 @@ public class SoundManager {
 
     public void playSuperStar() {
         Clip clip = getClip(loadAudio("superStar"));
+        clip.start();
+        pauseBackground();
+    }
+
+    public void playBowserFireBall() {
+        Clip clip = getClip(loadAudio("bowserFireball"));
+        clip.start();
+    }
+
+    public void playBowserDies() {
+        Clip clip = getClip(loadAudio("bowserDies"));
+        clip.start();
+    }
+
+    public void playBowserBackground() {
+        bowserBackground.setMicrosecondPosition(clipTime);
+        bowserBackground.start();
+        pauseBackground();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                playBowserBackground();
+            }
+        };
+        timer = new Timer();
+        timer.schedule(task, 21000);
+    }
+
+    public void stopBowserBackground() {
+        timer.cancel();
+        bowserBackground.stop();
+    }
+
+    public void playPipe() {
+        Clip clip = getClip(loadAudio("pipe"));
         clip.start();
         pauseBackground();
     }

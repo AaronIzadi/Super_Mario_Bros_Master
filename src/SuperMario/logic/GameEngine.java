@@ -87,12 +87,20 @@ public class GameEngine implements Runnable {
 
     public void resetCamera() {
         camera = new Camera();
-        soundManager.restartBackground();
+        if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+            playBossFightBackground();
+        } else {
+            soundManager.restartBackground();
+        }
     }
 
     public void reLoadCheckPoint(double x) {
         camera.setX(x - 300);
-        soundManager.restartBackground();
+        if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+            playBossFightBackground();
+        } else {
+            soundManager.restartBackground();
+        }
     }
 
     public void selectMap(int worldNumber) {
@@ -112,7 +120,11 @@ public class GameEngine implements Runnable {
         userData.setMap(mapManager.getMap());
         if (loaded) {
             setGameState(GameState.RUNNING);
-            soundManager.restartBackground();
+            if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                playBossFightBackground();
+            } else {
+                soundManager.restartBackground();
+            }
         } else {
             setGameState(GameState.START_SCREEN);
         }
@@ -124,7 +136,11 @@ public class GameEngine implements Runnable {
         userData.setMap(mapManager.getMap());
         if (loaded) {
             setGameState(GameState.RUNNING);
-            soundManager.restartBackground();
+            if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                playBossFightBackground();
+            } else {
+                soundManager.restartBackground();
+            }
             return mapManager.getMap();
         } else {
             setGameState(GameState.START_SCREEN);
@@ -215,7 +231,9 @@ public class GameEngine implements Runnable {
                 mapManager.acquirePoints(missionPassed);
             } else if (mapManager.endLevel()) {
                 soundManager.pauseBackground();
-                playStageClear();
+                if (userData.getWorldNumber() != MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                    playStageClear();
+                }
                 setGameState(GameState.MISSION_PASSED);
             }
         }
@@ -444,6 +462,11 @@ public class GameEngine implements Runnable {
         updateLocations();
         updateCamera();
         mapManager.setChecked(false);
+        if (worldNumber == MapSelection.BOSS_FIGHT.getWorldNumber()){
+            playBossFightBackground();
+        }else{
+            soundManager.resumeBackground();
+        }
         gameState = GameState.RUNNING;
     }
 
@@ -647,6 +670,26 @@ public class GameEngine implements Runnable {
 
     public void playSuperStar() {
         soundManager.playSuperStar();
+    }
+
+    public void playBowserDies() {
+        soundManager.playBowserDies();
+    }
+
+    public void playBowserFireBall() {
+        soundManager.playBowserFireBall();
+    }
+
+    public void playPipe() {
+        soundManager.playPipe();
+    }
+
+    public void playBossFightBackground() {
+        soundManager.playBowserBackground();
+    }
+
+    public void stopBossFightBackground() {
+        soundManager.stopBowserBackground();
     }
 
     public void pauseBackGround() {

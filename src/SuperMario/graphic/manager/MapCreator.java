@@ -3,7 +3,6 @@ package SuperMario.graphic.manager;
 import SuperMario.model.enemy.*;
 import SuperMario.model.map.Castle;
 import SuperMario.model.map.Flag;
-import SuperMario.model.map.Point;
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.Mario;
@@ -195,7 +194,6 @@ public class MapCreator {
         int crossover = new Color(112, 146, 190).getRGB();
         int boss = new Color(255, 120, 40).getRGB();
         int castleColor = new Color(140, 40, 40).getRGB();
-        int point = new Color(255, 255, 255).getRGB();
 
 
         for (int x = 0; x < mapImage.getWidth(); x++) {
@@ -249,9 +247,6 @@ public class MapCreator {
                 } else if (currentPixel == groundBrick) {
                     Brick brick = new GroundBrick(xLocation, yLocation, this.groundBrick);
                     map.addGroundBrick(brick);
-                } else if (currentPixel == point) {
-                    Point invisiblePoint = new Point(xLocation,yLocation,null);
-                    map.addPoint(invisiblePoint);
                 } else if (currentPixel == goomba) {
                     Goomba enemy = new Goomba(xLocation, yLocation, this.goombaLeft);
                     BufferedImage[] frames = new BufferedImage[2];

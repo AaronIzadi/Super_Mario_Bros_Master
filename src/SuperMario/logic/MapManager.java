@@ -64,6 +64,9 @@ public class MapManager {
         Hero hero = getHero();
         hero.resetLocation();
         engine.resetCamera();
+        if (MapSelection.BOSS_FIGHT.getMapPath(MapSelection.BOSS_FIGHT.getWorldNumber()).equals(map.getPath())) {
+            createMap(map.getPath(), hero);
+        }
     }
 
     private void reLoadCheckPoint(double x, double y) {
@@ -149,8 +152,18 @@ public class MapManager {
         }
     }
 
-    public void throwAxe(){
-        if (getHero().isAxeActivated()){
+    private boolean checkIfBowserDies() {
+        if (map.getBowser().getHp() <= 0) {
+            map.getAllBricks().removeIf(brick -> brick instanceof GroundBrick);
+            map.getGroundBricks().removeIf(brick -> brick instanceof GroundBrick);
+            GameEngine.getInstance().playBreakBrick();
+            return true;
+        }
+        return false;
+    }
+
+    public void throwAxe() {
+        if (getHero().isAxeActivated()) {
             getHero().throwAxe();
         }
     }
@@ -263,7 +276,17 @@ public class MapManager {
         for (Enemy enemy : enemies) {
             Rectangle enemyTopBounds = enemy.getTopBounds();
             if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny) && !(enemy instanceof Piranha)) {
-                if (enemy instanceof KoopaTroopa) {
+                if (enemy instanceof Bowser) {
+                    int newHP = ((Bowser) enemy).getHp() > 3 ? (((Bowser) enemy).getHp() - 3) : 0;
+                    ((Bowser) enemy).setHp(newHP);
+                    engine.playStomp();
+                    hero.setFalling(false);
+                    hero.jump();
+                    if (checkIfBowserDies()) {
+                        toBeRemoved.add(enemy);
+                        map.setBowser(null);
+                    }
+                } else if (enemy instanceof KoopaTroopa) {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
                         koopaTroopa.setHit(true);
@@ -274,13 +297,15 @@ public class MapManager {
                         toBeRemoved.add(enemy);
                         engine.playStomp();
                     }
+                    hero.setFalling(false);
+                    hero.jumpOnEnemy();
                 } else {
                     acquirePoints(1);
                     toBeRemoved.add(enemy);
                     engine.playStomp();
+                    hero.setFalling(false);
+                    hero.jumpOnEnemy();
                 }
-                hero.setFalling(false);
-                hero.jumpOnEnemy();
             }
         }
 
@@ -358,9 +383,18 @@ public class MapManager {
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
             if (heroBounds.intersects(enemyBounds) && !hero.isFalling()) {
-                heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
 
-                toBeRemoved.add(enemy);
+                if (!hero.ifTookStar()) {
+                    heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
+
+                    if (enemy instanceof KoopaTroopa) {
+                        ((KoopaTroopa) enemy).setHit(true);
+                    } else if (enemy instanceof Goomba) {
+                        toBeRemoved.add(enemy);
+                    }
+                }else{
+                    toBeRemoved.add(enemy);
+                }
             }
         }
         removeObjects(toBeRemoved);
@@ -563,7 +597,13 @@ public class MapManager {
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
             if (objectBounds.intersects(enemyBounds)) {
-                if (enemy instanceof Goomba) {
+                if (enemy instanceof Bowser) {
+                    ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
+                    if (checkIfBowserDies()) {
+                        toBeRemoved.add(enemy);
+                        map.setBowser(null);
+                    }
+                } else if (enemy instanceof Goomba) {
                     acquirePoints(1);
                     toBeRemoved.add(enemy);
                 } else if (enemy instanceof KoopaTroopa) {

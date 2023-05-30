@@ -1,6 +1,7 @@
 package SuperMario.model.map;
 
 
+import SuperMario.logic.GameEngine;
 import SuperMario.model.enemy.Bowser;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
@@ -27,7 +28,9 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
-    private ArrayList<Point> points = new ArrayList<>();
+
+
+
     private CheckPoint checkPoint;
     private Bowser bowser;
     private Axe axe;
@@ -93,14 +96,7 @@ public class Map {
         this.enemies.add(enemy);
     }
 
-    public void addPoint(Point point) {
-        this.points.add(point);
-    }
-
     public void drawMap(Graphics2D g2) {
-        if (!points.isEmpty() && bowser != null) {
-            bowser.setBounds(points.get(0), points.get(1));
-        }
         drawBackground(g2);
         drawPrizes(g2);
         drawEnemies(g2);
@@ -122,12 +118,6 @@ public class Map {
     private void drawFireballs(Graphics2D g2) {
         for (Fireball fireball : fireballs) {
             fireball.draw(g2);
-        }
-    }
-
-    private void drawAxe(Graphics2D g2) {
-        if (hero.getAxe() != null) {
-            hero.getAxe().draw(g2);
         }
     }
 
@@ -206,7 +196,6 @@ public class Map {
                 }
             }
         }
-
         endPoint.updateLocation();
     }
 
@@ -319,5 +308,18 @@ public class Map {
 
     public void setBowser(Bowser bowser) {
         this.bowser = bowser;
+        if (bowser == null) {
+            GameEngine.getInstance().playBowserDies();
+            GameEngine.getInstance().stopBossFightBackground();
+            GameEngine.getInstance().playStageClear();
+        }
+    }
+
+    public Bowser getBowser() {
+        return bowser;
+    }
+
+    public ArrayList<Brick> getGroundBricks() {
+        return groundBricks;
     }
 }
