@@ -237,6 +237,12 @@ public class MapManager {
         for (Brick brick : bricks) {
             Rectangle brickTopBounds = brick.getTopBounds();
             if (heroBottomBounds.intersects(brickTopBounds)) {
+                if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()){
+                    if (brick.isTimeToBreak(hero)){
+                        toBeRemoved.add(brick);
+                    }
+                }
+
                 if (!(brick instanceof Hole)) {
                     hero.setY(brick.getY() - hero.getDimension().height + 1);
                     hero.setFalling(false);
@@ -248,6 +254,7 @@ public class MapManager {
                     }
                     if (brick instanceof CrossoverTunnel && !((CrossoverTunnel) brick).isRevealed() && InputManager.getInstance().isDown()) {
                         if (engine.getGameState() == GameState.RUNNING) {
+                            engine.playPipe();
                             xBeforeCrossover = hero.getX();
                             yBeforeCrossover = hero.getY();
                             ((CrossoverTunnel) brick).setRevealed(true);
@@ -655,6 +662,8 @@ public class MapManager {
                 currentMap.removeEnemy((Enemy) object);
             } else if (object instanceof Coin || object instanceof PrizeItems) {
                 currentMap.removePrize((Prize) object);
+            } else if (object instanceof Brick) {
+                currentMap.removeBrick((Brick) object);
             }
         }
     }
@@ -711,9 +720,5 @@ public class MapManager {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
-    }
-
-    public Map getCrossover() {
-        return crossover;
     }
 }

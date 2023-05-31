@@ -28,9 +28,6 @@ public class Map {
     private ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private ArrayList<Brick> revealedBricks = new ArrayList<>();
     private ArrayList<Fireball> fireballs = new ArrayList<>();
-
-
-
     private CheckPoint checkPoint;
     private Bowser bowser;
     private Axe axe;
@@ -136,6 +133,7 @@ public class Map {
     }
 
     private void drawBricks(Graphics2D g2) {
+
         for (Brick brick : bricks) {
             if (brick != null)
                 brick.draw(g2);
@@ -178,6 +176,7 @@ public class Map {
             Brick brick = brickIterator.next();
             CoinBrick ifOneCoin;
             OrdinaryBrick ifOrdinary;
+
             if (brick instanceof CoinBrick) {
                 ifOneCoin = (CoinBrick) brick;
                 ifOneCoin.animate();
@@ -268,6 +267,9 @@ public class Map {
 
     public void removePrize(Prize object) {
         revealedPrizes.remove(object);
+    }
+    public void removeBrick(Brick brick){
+        bricks.remove(brick);
     }
 
     public String getPath() {

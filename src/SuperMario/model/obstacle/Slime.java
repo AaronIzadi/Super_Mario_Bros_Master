@@ -26,14 +26,14 @@ public class Slime extends Brick {
 
     public void setOnTouch(boolean onTouch) {
         this.onTouch = onTouch;
-        setTimer();
+        setTimerToReStyle();
     }
 
     public void slimeOnTouch(BufferedImage slimeOnTouch) {
         this.slimeOnTouch = slimeOnTouch;
     }
 
-    public void setTimer() {
+    public void setTimerToReStyle() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {

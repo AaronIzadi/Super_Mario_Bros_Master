@@ -220,7 +220,7 @@ public class MapCreator {
                     map.setCheckPoint(brick);
                 } else if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
-                    map.addBrick(brick);
+                    map.addGroundBrick(brick);
                 } else if (currentPixel == slime) {
                     Slime brick = new Slime(xLocation, yLocation, this.slime);
                     brick.slimeOnTouch(slimeOnTouch);
