@@ -87,9 +87,7 @@ public class GameEngine implements Runnable {
 
     public void resetCamera() {
         camera = new Camera();
-        if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
-            playBossFightBackground();
-        } else {
+        if (userData.getWorldNumber() != MapSelection.BOSS_FIGHT.getWorldNumber()) {
             soundManager.restartBackground();
         }
     }
@@ -198,7 +196,6 @@ public class GameEngine implements Runnable {
                 } catch (Exception ignored) {
 
                 }
-
                 render();
             }
         }).start();

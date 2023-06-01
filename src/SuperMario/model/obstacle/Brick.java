@@ -44,7 +44,7 @@ public class Brick extends GameObject {
         return null;
     }
 
-    public boolean isTimeToBreak(Hero hero) {
+    public boolean isTimeToBreak() {
 
         if (start == 0) {
             start = System.currentTimeMillis();
@@ -57,13 +57,12 @@ public class Brick extends GameObject {
             finish = 0;
         }
 
-        if (hero.getY() >= 720 + (2 * 48) + hero.getDimension().height) {
-            timer = 0;
-            start = 0;
-            finish = 0;
-        }
-
         return timer >= 2000;
     }
 
+    public void setTimer(long timer) {
+        this.timer = timer;
+        start = 0;
+        finish = 0;
+    }
 }

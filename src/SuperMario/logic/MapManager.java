@@ -235,10 +235,15 @@ public class MapManager {
         boolean heroHasBottomIntersection = false;
 
         for (Brick brick : bricks) {
+
+            if ((int) hero.getBottomBounds().getY() >= 720 - (3 * 48)) {
+                brick.setTimer(0);
+            }
+
             Rectangle brickTopBounds = brick.getTopBounds();
             if (heroBottomBounds.intersects(brickTopBounds)) {
-                if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()){
-                    if (brick.isTimeToBreak(hero)){
+                if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                    if (brick.isTimeToBreak()) {
                         toBeRemoved.add(brick);
                     }
                 }
@@ -399,7 +404,7 @@ public class MapManager {
                     } else if (enemy instanceof Goomba) {
                         toBeRemoved.add(enemy);
                     }
-                }else{
+                } else {
                     toBeRemoved.add(enemy);
                 }
             }
