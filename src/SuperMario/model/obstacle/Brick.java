@@ -2,12 +2,9 @@ package SuperMario.model.obstacle;
 
 import SuperMario.logic.GameEngine;
 import SuperMario.model.GameObject;
-import SuperMario.model.hero.Hero;
 import SuperMario.model.prize.Prize;
 
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Brick extends GameObject {
     private boolean breakable;

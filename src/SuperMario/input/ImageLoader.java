@@ -16,11 +16,12 @@ public class ImageLoader {
     private final BufferedImage superMushroom, oneHeartUpMushroom, fireFlower, coin;
     private final BufferedImage border, ordinaryBrick, surpriseBrick, revealedPrizeBrick, revealedCheckPoint, prizeBrick, oneCoinBrick, fiveCoinBrick, slime, slimeOnTouch, groundBrick, pipe, smallPipe, upSidePipe, hole;
     private final BufferedImage goombaLeft, goombaRight, shell, koopaLeft, koopaRight, spinyLeft, spinyRight, piranhaOpen, piranhaClose, superStar, endFlag;
-    private final BufferedImage boss0, boss1, boss2, boss3, fireballBoss;
+    private final BufferedImage boss0, boss1, boss2, boss3, bossUpSide, fireballBoss, bossR0, bossR1, bossR2, bossR3, bossUpSideR, fireballR;
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPoint, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
     private final BufferedImage axe0, axe1, axe2, axe3;
+    private final BufferedImage bomb, bombOff, bombOn, bombExplode;
     private final BufferedImage selectIcon;
     private final BufferedImage icon;
     private final BufferedImage hp1, hp2, hp3, hp4, hp5, hp6, hp7, hp8, hp9, hp10, hp11, hp12, hp13, hp14, hp15, hp16, hp17, hp18, hp19, hp20;
@@ -39,7 +40,18 @@ public class ImageLoader {
         this.boss1 = loadImage("/boss/boss-1.png");
         this.boss2 = loadImage("/boss/boss-2.png");
         this.boss3 = loadImage("/boss/boss-3.png");
+        this.bossUpSide = loadImage("/boss/upside.png");
+        this.bossR0 = loadImage("/boss/to right/boss-0.png");
+        this.bossR1 = loadImage("/boss/to right/boss-1.png");
+        this.bossR2 = loadImage("/boss/to right/boss-2.png");
+        this.bossR3 = loadImage("/boss/to right/boss-3.png");
+        this.bossUpSideR = loadImage("/boss/to right/upside.png");
         this.fireballBoss = loadImage("/boss/fireball-boss.png");
+        this.fireballR = loadImage("/boss/to right/fireball-boss.png");
+        this.bomb = loadImage("/boss/Bomb/bomb1.png");
+        this.bombOff = loadImage("/boss/Bomb/bomb2.png");
+        this.bombOn = loadImage("/boss/Bomb/bomb3.png");
+        this.bombExplode = loadImage("/boss/Bomb/bomb4.png");
         this.revealedCheckPoint = loadImage("/check-point.png");
         BufferedImage sprite = loadImage("/sprite.png");
         this.axe0 = loadImage("/axe0.png");
@@ -437,16 +449,26 @@ public class ImageLoader {
         return boss0;
     }
 
-    public BufferedImage getFireballBoss() {
+    public BufferedImage getFireballLeft() {
         return fireballBoss;
     }
 
-    public BufferedImage[] getBossFrames() {
+    public BufferedImage[] getBossLeftFrames() {
         BufferedImage[] bossFrames = new BufferedImage[4];
         bossFrames[0] = boss0;
         bossFrames[1] = boss1;
         bossFrames[2] = boss2;
         bossFrames[3] = boss3;
+
+        return bossFrames;
+    }
+
+    public BufferedImage[] getBossRightFrames() {
+        BufferedImage[] bossFrames = new BufferedImage[4];
+        bossFrames[0] = bossR0;
+        bossFrames[1] = bossR1;
+        bossFrames[2] = bossR2;
+        bossFrames[3] = bossR3;
 
         return bossFrames;
     }
@@ -477,7 +499,35 @@ public class ImageLoader {
         return hpFrames;
     }
 
+    public BufferedImage getFireballRight() {
+        return fireballR;
+    }
+
     public BufferedImage getCastle() {
         return castle;
+    }
+
+    public BufferedImage getBomb() {
+        return bomb;
+    }
+
+    public BufferedImage getBombOff() {
+        return bombOff;
+    }
+
+    public BufferedImage getBombOn() {
+        return bombOn;
+    }
+
+    public BufferedImage getBombExplode() {
+        return bombExplode;
+    }
+
+    public BufferedImage getBossUpSideLeft() {
+        return bossUpSide;
+    }
+
+    public BufferedImage getBossUpSideRight() {
+        return bossUpSideR;
     }
 }

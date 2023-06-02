@@ -7,7 +7,6 @@ public class Animation {
     private int index = 0, count = 0;
     private final BufferedImage[] frames;
     private BufferedImage currentFrame;
-
     private final int length;
 
     public Animation(BufferedImage... frames) {

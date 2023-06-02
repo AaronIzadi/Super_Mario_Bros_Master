@@ -2,7 +2,7 @@ package SuperMario.model.map;
 
 
 import SuperMario.logic.GameEngine;
-import SuperMario.model.enemy.Bowser;
+import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
@@ -96,6 +96,19 @@ public class Map {
     public void drawMap(Graphics2D g2) {
         drawBackground(g2);
         drawPrizes(g2);
+        if (bowser != null) {
+            bowser.attack(hero);
+            if (bowser.getFire() != null) {
+                bowser.getFire().draw(g2);
+            }
+            if (bowser.getBomb() != null) {
+                if (bowser.getBomb().isTimeToVanish()) {
+                    bowser.setBomb(null);
+                } else {
+                    bowser.getBomb().draw(g2);
+                }
+            }
+        }
         drawEnemies(g2);
         drawBricks(g2);
         drawFireballs(g2);
@@ -158,6 +171,17 @@ public class Map {
 
     public void updateLocations() {
         hero.updateLocation();
+
+        if (bowser != null) {
+            bowser.setToRight(getHero().getX() > bowser.getX());
+            if (bowser.getFire() != null) {
+                bowser.getFire().updateLocation();
+            }
+            if (bowser.getBomb() != null) {
+                bowser.getBomb().updateLocation();
+            }
+        }
+
         for (Enemy enemy : enemies) {
             enemy.updateLocation();
         }
@@ -268,7 +292,8 @@ public class Map {
     public void removePrize(Prize object) {
         revealedPrizes.remove(object);
     }
-    public void removeBrick(Brick brick){
+
+    public void removeBrick(Brick brick) {
         bricks.remove(brick);
     }
 

@@ -22,9 +22,11 @@ public abstract class Hero extends GameObject {
     private boolean toRight;
     private boolean isSitting;
     private boolean tookStar;
+    private boolean isGrabbed;
     private boolean isAxeActivated;
     private boolean isAxeCoolDownFinished = true;
     private Axe axe;
+    private int numberOfTryToEscape;
 
     public Hero(double x, double y) {
         super(x, y, null);
@@ -216,7 +218,6 @@ public abstract class Hero extends GameObject {
         axe.setReleased(true, getX());
     }
 
-
     public void acquireCoin() {
         coins++;
     }
@@ -332,4 +333,19 @@ public abstract class Hero extends GameObject {
         isAxeActivated = axeActivated;
     }
 
+    public void setGrabbed(boolean grabbed) {
+        isGrabbed = grabbed;
+    }
+
+    public boolean isGrabbed() {
+        return isGrabbed;
+    }
+
+    public void setNumberOfTryToEscape(int numberOfTryToEscape) {
+        this.numberOfTryToEscape = numberOfTryToEscape;
+    }
+
+    public int getNumberOfTryToEscape() {
+        return numberOfTryToEscape;
+    }
 }

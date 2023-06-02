@@ -1,6 +1,7 @@
 package SuperMario.graphic.manager;
 
 import SuperMario.model.enemy.*;
+import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.map.Castle;
 import SuperMario.model.map.Flag;
 import SuperMario.model.map.Map;
@@ -284,7 +285,9 @@ public class MapCreator {
                     map.setCastle(castle);
                 } else if (currentPixel == boss) {
                     Bowser bowser = new Bowser(xLocation, yLocation - 24, this.boss);
-                    bowser.setFrames(imageLoader.getBossFrames());
+                    bowser.setLeftFrames(imageLoader.getBossLeftFrames());
+                    bowser.setRightFrames(imageLoader.getBossRightFrames());
+                    bowser.setFrames();
                     map.setBowser(bowser);
                     map.addEnemy(bowser);
                 } else setHero(map, hero, currentPixel, xLocation, yLocation);

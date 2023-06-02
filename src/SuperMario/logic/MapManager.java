@@ -6,6 +6,9 @@ import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
 import SuperMario.input.ImageLoader;
 import SuperMario.model.GameObject;
+import SuperMario.model.enemy.bowser.Bomb;
+import SuperMario.model.enemy.bowser.Bowser;
+import SuperMario.model.enemy.bowser.Fire;
 import SuperMario.model.map.Map;
 import SuperMario.model.enemy.*;
 import SuperMario.model.hero.Hero;
@@ -218,8 +221,57 @@ public class MapManager {
         checkPrizeCollision();
         checkPrizeContact(engine);
         checkWeaponContact();
+
+        if (map.getBowser() != null) {
+            checkEnemyWeaponContact();
+        }
+
+        if (map.getBowser() != null) {
+            if (map.getBowser().getBomb() != null) {
+                checkBombCollisions();
+            }
+        }
     }
 
+
+    private void checkBombCollisions() {
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+            currentMap = crossover;
+        } else {
+            currentMap = map;
+        }
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
+
+        Bomb bomb = map.getBowser().getBomb();
+        Rectangle bombBottomBounds = map.getBowser().getBomb().getBottomBounds();
+
+
+        for (Brick brick : bricks) {
+
+            Rectangle brickTopBounds = brick.getTopBounds();
+            if (bombBottomBounds.intersects(brickTopBounds)) {
+                if (!(brick instanceof Hole)) {
+                    bomb.setY(brick.getY() - bomb.getDimension().height + 1);
+                    bomb.setFalling(false);
+                    bomb.setVelY(0);
+                } else {
+                    bomb.setFalling(true);
+                }
+            }
+        }
+
+        Rectangle bombTopBounds = map.getBowser().getBomb().getTopBounds();
+
+        for (Brick brick : bricks) {
+            Rectangle brickBottomBounds = brick.getBottomBounds();
+            if (bombTopBounds.intersects(brickBottomBounds)) {
+                bomb.setVelY(0);
+                bomb.setY(brick.getY() + brick.getDimension().height);
+            }
+        }
+
+    }
 
     private void checkBottomCollisions(GameEngine engine) {
         Map currentMap;
@@ -230,6 +282,7 @@ public class MapManager {
         }
         ArrayList<Brick> bricks = currentMap.getAllBricks();
         ArrayList<Enemy> enemies = currentMap.getEnemies();
+
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
         boolean heroHasBottomIntersection = false;
@@ -341,6 +394,7 @@ public class MapManager {
         } else {
             currentMap = map;
         }
+
         ArrayList<Brick> bricks = currentMap.getAllBricks();
         Rectangle heroTopBounds = hero.getTopBounds();
 
@@ -638,13 +692,106 @@ public class MapManager {
                 toBeRemoved.add(object);
             }
         }
-        for (Brick brick : bricks) {
-            Rectangle brickBounds = brick.getBounds();
-            if (objectBounds.intersects(brickBounds)) {
+
+        if (object instanceof Fireball || (object instanceof Axe && hero.getAxe().isReleased())) {
+            for (Brick brick : bricks) {
+                Rectangle brickBounds = brick.getBounds();
+                if (objectBounds.intersects(brickBounds)) {
+                    toBeRemoved.add(object);
+                }
+            }
+        }
+
+    }
+
+    private void checkEnemyWeaponContact() {
+
+        if (map.getBowser().getFire() != null) {
+            checkEnemyWeaponCollision(map.getBowser().getFire());
+        }
+
+        if (map.getBowser().getBomb() != null) {
+            checkEnemyWeaponCollision(map.getBowser().getBomb());
+        }
+
+        removeObjects(toBeRemoved);
+    }
+
+    private void checkEnemyWeaponCollision(GameObject object) {
+
+        Map currentMap;
+        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+            currentMap = crossover;
+        } else {
+            currentMap = map;
+        }
+
+        ArrayList<Enemy> enemies = currentMap.getEnemies();
+        ArrayList<Brick> bricks = currentMap.getAllBricks();
+
+        Rectangle objectBounds = object.getBounds();
+//        if (object instanceof Bomb) {
+//            objectBounds.y -= 48;
+//            objectBounds.x -= 48;
+//            objectBounds.height += 48;
+//            objectBounds.width += 48;
+//        }
+
+        for (Enemy enemy : enemies) {
+            Rectangle enemyBounds = enemy.getBounds();
+            if (objectBounds.intersects(enemyBounds)) {
+                if (object instanceof Bomb) {
+                    if (enemy instanceof Bowser) {
+                        ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
+                        if (checkIfBowserDies()) {
+                            toBeRemoved.add(enemy);
+                            map.setBowser(null);
+                        }
+                    }
+                } else if (enemy instanceof Goomba) {
+                    toBeRemoved.add(enemy);
+                } else if (enemy instanceof KoopaTroopa) {
+                    KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
+                    if (!koopaTroopa.isHit()) {
+                        koopaTroopa.setHit(true);
+                        koopaTroopa.moveAfterHit();
+                    } else {
+                        toBeRemoved.add(enemy);
+                    }
+                } else if (enemy instanceof Spiny) {
+                    toBeRemoved.add(enemy);
+                } else if (enemy instanceof Piranha) {
+                    toBeRemoved.add(enemy);
+                }
+                if (object instanceof Bomb) {
+                    ((Bomb) object).setHasIntersect(true);
+                } else {
+                    toBeRemoved.add(object);
+                }
+                GameEngine.getInstance().playKickEnemy();
+            }
+        }
+
+        if (objectBounds.intersects(hero.getBounds())) {
+            hero.onTouchEnemy(GameEngine.getInstance(), 0);
+            if (object instanceof Bomb) {
+                ((Bomb) object).setHasIntersect(true);
+            } else {
                 toBeRemoved.add(object);
             }
         }
 
+        for (Brick brick : bricks) {
+            Rectangle brickBounds = brick.getBounds();
+            if (objectBounds.intersects(brickBounds)) {
+                if (object instanceof Bomb) {
+                    ((Bomb) object).setHasIntersect(true);
+                    toBeRemoved.add(brick);
+                } else {
+                    toBeRemoved.add(object);
+                }
+            }
+        }
     }
 
 
@@ -669,6 +816,12 @@ public class MapManager {
                 currentMap.removePrize((Prize) object);
             } else if (object instanceof Brick) {
                 currentMap.removeBrick((Brick) object);
+            } else if (object instanceof Fire) {
+                currentMap.getBowser().setFire(null);
+            } else if (object instanceof Bomb) {
+                currentMap.getBowser().setBomb(null);
+            } else if (object instanceof Axe) {
+                hero.deactivateAxe();
             }
         }
     }
