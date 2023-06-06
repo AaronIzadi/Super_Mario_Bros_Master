@@ -2,7 +2,6 @@ package SuperMario.model.enemy.bowser;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
-import SuperMario.model.GameObject;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.HitPoints;
@@ -24,9 +23,11 @@ public class Bowser extends Enemy {
     private Fire fire;
     private Bomb bomb;
     private boolean isGrabAttackOn;
+    private boolean hasTouchedGround;
 
     public Bowser(double x, double y, BufferedImage style) {
         super(x, y, style);
+        setDimension(104, 120);
         hitPoints = HitPoints.getInstance();
         setHp(20);
         setVelX(-1.5);
@@ -34,14 +35,10 @@ public class Bowser extends Enemy {
 
     @Override
     public void draw(Graphics g) {
-        if (getVelY() > 0) {
-            setFalling(true);
-            setJumping(false);
+        if (Math.ceil(getVelY()) < 0) {
             BufferedImage style = isToRight() ? ImageLoader.getInstance().getBossUpSideRight() : ImageLoader.getInstance().getBossUpSideLeft();
             setStyle(style);
         } else {
-            setJumping(false);
-            setFalling(false);
             animate();
         }
         super.draw(g);
@@ -77,26 +74,24 @@ public class Bowser extends Enemy {
         }
     }
 
-    public GameObject attack(Hero hero) {
+    public void attack(Hero hero) {
 
         if (isCoolDownFinished) {
-//            return bomb();
             int random = (int) (Math.random() * 4);
             if (random == 0 && hp <= 10) {
-                return bomb();
+                bomb();
             } else if (random == 1) {
-                return fire();
+                fire();
             } else if (random == 2) {
                 jumpAttack();
             } else {
-               grabAttack(hero);
+                grabAttack(hero);
             }
         }
 
-        return null;
     }
 
-    private Fire fire() {
+    private void fire() {
 
         isCoolDownFinished = false;
 
@@ -107,7 +102,7 @@ public class Bowser extends Enemy {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 2000 + 2000);
+        timer.schedule(task, 2000 + 1000);
 
         BufferedImage style = isToRight() ? ImageLoader.getInstance().getFireballRight() : ImageLoader.getInstance().getFireballLeft();
 
@@ -117,10 +112,9 @@ public class Bowser extends Enemy {
         } else {
             fire = new Fire(getX(), getY() + 72, style, isToRight());
         }
-        return fire;
     }
 
-    private Bomb bomb() {
+    private void bomb() {
 
         isCoolDownFinished = false;
 
@@ -131,14 +125,13 @@ public class Bowser extends Enemy {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 3000 + 2000);
+        timer.schedule(task, 3000 + 1000);
 
         double x = isToRight() ? getX() + 78 : getX();
         double y = getY() + 68;
 
         bomb = new Bomb(x, y, ImageLoader.getInstance().getBomb());
 
-        return bomb;
     }
 
 
@@ -146,10 +139,12 @@ public class Bowser extends Enemy {
 
         isCoolDownFinished = false;
 
-        if (!isFalling() && !isJumping()) {
-            setVelY(5);
+        if (!isJumping()) {
             setJumping(true);
+            setVelY(7);
+            setHasTouchedGround(false);
         }
+
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -157,7 +152,7 @@ public class Bowser extends Enemy {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 3000 + 2000);
+        timer.schedule(task, 3000 + 1000);
 
     }
 
@@ -177,7 +172,7 @@ public class Bowser extends Enemy {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(task, 4000 + 2000);
+        timer.schedule(task, 4000 + 1000);
     }
 
     public Fire getFire() {
@@ -202,5 +197,13 @@ public class Bowser extends Enemy {
 
     public void setGrabAttackOn(boolean grabAttackOn) {
         isGrabAttackOn = grabAttackOn;
+    }
+
+    public void setHasTouchedGround(boolean hasTouchedGround) {
+        this.hasTouchedGround = hasTouchedGround;
+    }
+
+    public boolean hasTouchedGround() {
+        return hasTouchedGround;
     }
 }

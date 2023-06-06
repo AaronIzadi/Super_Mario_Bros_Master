@@ -227,14 +227,15 @@ public class MapManager {
         }
 
         if (map.getBowser() != null) {
+            checkBowserPossibleCollisions(map.getBowser());
             if (map.getBowser().getBomb() != null) {
-                checkBombCollisions();
+                checkBowserPossibleCollisions(map.getBowser().getBomb());
             }
         }
     }
 
 
-    private void checkBombCollisions() {
+    private void checkBowserPossibleCollisions(GameObject object) {
         Map currentMap;
         if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
@@ -242,33 +243,42 @@ public class MapManager {
             currentMap = map;
         }
         ArrayList<Brick> bricks = currentMap.getAllBricks();
-
-        Bomb bomb = map.getBowser().getBomb();
-        Rectangle bombBottomBounds = map.getBowser().getBomb().getBottomBounds();
-
+        Rectangle bottomBounds = object.getBottomBounds();
 
         for (Brick brick : bricks) {
 
             Rectangle brickTopBounds = brick.getTopBounds();
-            if (bombBottomBounds.intersects(brickTopBounds)) {
+            if (bottomBounds.intersects(brickTopBounds)) {
+
                 if (!(brick instanceof Hole)) {
-                    bomb.setY(brick.getY() - bomb.getDimension().height + 1);
-                    bomb.setFalling(false);
-                    bomb.setVelY(0);
+                    object.setY(brick.getY() - object.getDimension().height + 1);
+                    object.setFalling(false);
+                    object.setVelY(0);
                 } else {
-                    bomb.setFalling(true);
+                    object.setFalling(true);
                 }
             }
         }
 
-        Rectangle bombTopBounds = map.getBowser().getBomb().getTopBounds();
+        Rectangle topBounds = object.getTopBounds();
 
         for (Brick brick : bricks) {
             Rectangle brickBottomBounds = brick.getBottomBounds();
-            if (bombTopBounds.intersects(brickBottomBounds)) {
-                bomb.setVelY(0);
-                bomb.setY(brick.getY() + brick.getDimension().height);
+            if (topBounds.intersects(brickBottomBounds)) {
+                object.setVelY(0);
+                object.setY(brick.getY() + brick.getDimension().height);
             }
+        }
+
+        if (object.getY() + object.getDimension().height >= map.getBottomBorder() - (2 * 48)) {
+            if (object instanceof Bowser && !((Bowser) object).hasTouchedGround()) {
+                GameEngine.getInstance().shakeCamera();
+                if (hero.getBottomBounds().getY() >= 720 - (3 * 48)) {
+                    hero.onTouchEnemy(GameEngine.getInstance(), 0);
+                }
+                ((Bowser) object).setHasTouchedGround(true);
+            }
+            object.setFalling(false);
         }
 
     }
@@ -485,6 +495,7 @@ public class MapManager {
         ArrayList<Brick> bricks = currentMap.getAllBricks();
         ArrayList<Enemy> enemies = currentMap.getEnemies();
 
+
         for (Enemy enemy : enemies) {
             if (enemy instanceof Spiny && ((getHero().getY() + getHero().getStyle().getHeight()) == (enemy.getY() + enemy.getStyle().getHeight() + 1))) {
                 Spiny spiny = (Spiny) enemy;
@@ -524,10 +535,9 @@ public class MapManager {
                     }
                 }
 
-                if (enemy.getY() + enemy.getDimension().height > map.getBottomBorder()) {
+                if (enemy.getY() + enemy.getDimension().height >= map.getBottomBorder()) {
                     enemy.setFalling(false);
                     enemy.setVelY(0);
-                    enemy.setY(map.getBottomBorder() - enemy.getDimension().height);
                 }
 
                 if (!standsOnBrick && enemy.getY() < map.getBottomBorder()) {

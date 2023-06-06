@@ -13,6 +13,7 @@ public class Piranha extends Enemy {
 
     public Piranha(double x, double y, BufferedImage style) {
         super(x , y, style);
+        setDimension(50,96);
     }
 
     @Override

@@ -11,6 +11,7 @@ public class Goomba extends Enemy {
 
     public Goomba(double x, double y, BufferedImage style) {
         super(x, y, style);
+        setDimension(48, 48);
         setVelX(3);
     }
 

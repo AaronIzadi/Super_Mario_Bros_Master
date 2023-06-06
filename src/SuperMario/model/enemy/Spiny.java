@@ -9,6 +9,7 @@ public class Spiny extends Enemy {
 
     public Spiny(double x, double y, BufferedImage style) {
         super(x, y, style);
+        setDimension(54, 51);
         setVelX(3);
     }
 
