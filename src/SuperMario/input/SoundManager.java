@@ -52,7 +52,8 @@ public class SoundManager {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                playBowserBackground();
+                background.stop();
+                resumeBackground();
             }
         };
         timer = new Timer();
@@ -162,6 +163,7 @@ public class SoundManager {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+                bowserBackground.stop();
                 playBowserBackground();
             }
         };

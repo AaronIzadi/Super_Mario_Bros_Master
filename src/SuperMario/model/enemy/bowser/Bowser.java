@@ -23,7 +23,7 @@ public class Bowser extends Enemy {
     private Animation rightAnimation;
     private Animation leftAnimation;
     private final ArrayList<Fire> fire;
-    private Bomb bomb;
+    private final ArrayList<Bomb> bomb;
     private boolean isGrabAttackOn = false;
     private boolean hasTouchedGround;
     private boolean canHurt = false;
@@ -35,6 +35,7 @@ public class Bowser extends Enemy {
         setHp(20);
         setVelX(-1.5);
         fire = new ArrayList<>();
+        bomb = new ArrayList<>();
     }
 
     @Override
@@ -142,8 +143,8 @@ public class Bowser extends Enemy {
         double x = isToRight() ? getX() + 78 : getX();
         double y = getY() + 68;
 
-        bomb = new Bomb(x, y, ImageLoader.getInstance().getBomb());
-
+        bomb.add(new Bomb(x, y, ImageLoader.getInstance().getBomb()));
+        GameEngine.getInstance().playBowserFireBall();
     }
 
 
@@ -214,12 +215,8 @@ public class Bowser extends Enemy {
         return fire;
     }
 
-    public Bomb getBomb() {
+    public ArrayList<Bomb> getBomb() {
         return bomb;
-    }
-
-    public void setBomb(Bomb bomb) {
-        this.bomb = bomb;
     }
 
     public boolean isGrabAttackOn() {

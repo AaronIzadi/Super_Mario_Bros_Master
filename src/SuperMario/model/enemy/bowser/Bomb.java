@@ -26,7 +26,6 @@ public class Bomb extends GameObject {
         super.draw(g);
         if (hasIntersect) {
             setStyle(ImageLoader.getInstance().getBombOn());
-            setTimerToExplode();
         }
         if (exploded) {
             setTimerToVanish();
@@ -35,6 +34,9 @@ public class Bomb extends GameObject {
 
     public void setHasIntersect(boolean hasIntersect) {
         this.hasIntersect = hasIntersect;
+        if (hasIntersect){
+            setTimerToExplode();
+        }
     }
 
     public void setTimerToExplode() {
@@ -43,7 +45,6 @@ public class Bomb extends GameObject {
             @Override
             public void run() {
                 setStyle(ImageLoader.getInstance().getBombExplode());
-                GameEngine.getInstance().playBowserFireBall();
                 exploded = true;
             }
         };

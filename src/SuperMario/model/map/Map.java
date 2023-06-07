@@ -2,6 +2,7 @@ package SuperMario.model.map;
 
 
 import SuperMario.logic.GameEngine;
+import SuperMario.model.enemy.bowser.Bomb;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.enemy.bowser.Fire;
@@ -22,13 +23,12 @@ public class Map {
 
     private double remainingTime;
     private Hero hero;
-    private ArrayList<Brick> bricks = new ArrayList<>();
-    private ArrayList<Hole> holes = new ArrayList<>();
-    private ArrayList<Enemy> enemies = new ArrayList<>();
-    private ArrayList<Brick> groundBricks = new ArrayList<>();
-    private ArrayList<Prize> revealedPrizes = new ArrayList<>();
-    private ArrayList<Brick> revealedBricks = new ArrayList<>();
-    private ArrayList<Fireball> fireballs = new ArrayList<>();
+    private final ArrayList<Brick> bricks = new ArrayList<>();
+    private final ArrayList<Enemy> enemies = new ArrayList<>();
+    private final ArrayList<Brick> groundBricks = new ArrayList<>();
+    private final ArrayList<Prize> revealedPrizes = new ArrayList<>();
+    private final ArrayList<Brick> revealedBricks = new ArrayList<>();
+    private final ArrayList<Fireball> fireballs = new ArrayList<>();
     private CheckPoint checkPoint;
     private Bowser bowser;
     private Axe axe;
@@ -97,19 +97,31 @@ public class Map {
     public void drawMap(Graphics2D g2) {
         drawBackground(g2);
         drawPrizes(g2);
+
         if (bowser != null) {
 
             bowser.attack(hero);
             drawBowserFire(g2);
 
-            if (bowser.getBomb() != null) {
-                if (bowser.getBomb().isTimeToVanish()) {
-                    bowser.setBomb(null);
+            if (bowser.getHp() <= 10) {
+                for (Brick border : groundBricks) {
+                    if (border instanceof LavaBorder) {
+                        ((LavaBorder) border).setBurn(true);
+                    }
+                }
+                bricks.clear();
+            }
+
+            for (Bomb bomb : bowser.getBomb()) {
+                if (bomb.isTimeToVanish()) {
+                    bowser.getBomb().remove(bomb);
                 } else {
-                    bowser.getBomb().draw(g2);
+                    bomb.draw(g2);
                 }
             }
+
         }
+
         drawEnemies(g2);
         drawBricks(g2);
         drawFireballs(g2);
@@ -197,8 +209,8 @@ public class Map {
             for (Fire fire : getBowser().getFire()) {
                 fire.updateLocation();
             }
-            if (bowser.getBomb() != null) {
-                bowser.getBomb().updateLocation();
+            for (Bomb bomb : getBowser().getBomb()) {
+                bomb.updateLocation();
             }
         }
 
@@ -337,10 +349,6 @@ public class Map {
         return remainingTime;
     }
 
-    public void addHoles(Hole hole) {
-        this.holes.add(hole);
-    }
-
     public void setCheckPoint(CheckPoint checkPoint) {
         this.checkPoint = checkPoint;
     }
@@ -368,5 +376,13 @@ public class Map {
 
     public ArrayList<Brick> getGroundBricks() {
         return groundBricks;
+    }
+
+    public void stopBurning() {
+        for (Brick border : groundBricks) {
+            if (border instanceof LavaBorder) {
+                ((LavaBorder) border).setBurn(false);
+            }
+        }
     }
 }

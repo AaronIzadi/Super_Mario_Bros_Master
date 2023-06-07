@@ -22,6 +22,7 @@ public class ImageLoader {
     private final BufferedImage coinIcon;
     private final BufferedImage axe0, axe1, axe2, axe3;
     private final BufferedImage bomb, bombOff, bombOn, bombExplode;
+    private final BufferedImage fire0, fire1, fire2;
     private final BufferedImage selectIcon;
     private final BufferedImage icon;
     private final BufferedImage hp1, hp2, hp3, hp4, hp5, hp6, hp7, hp8, hp9, hp10, hp11, hp12, hp13, hp14, hp15, hp16, hp17, hp18, hp19, hp20;
@@ -58,6 +59,9 @@ public class ImageLoader {
         this.axe1 = loadImage("/axe1.png");
         this.axe2 = loadImage("/axe2.png");
         this.axe3 = loadImage("/axe3.png");
+        this.fire0 = loadImage("/fire-0.png");
+        this.fire1 = loadImage("/fire-1.png");
+        this.fire2 = loadImage("/fire-2.png");
         this.castle = loadImage("/castle.png");
         this.upSidePipe = loadImage("/upside-pipe.png");
         this.crossoverBackground = loadImage("/crossover-background.png");
@@ -499,6 +503,15 @@ public class ImageLoader {
         return hpFrames;
     }
 
+    public BufferedImage[] getLavaFrames() {
+        BufferedImage[] frames = new BufferedImage[3];
+        frames[0] = fire0;
+        frames[1] = fire1;
+        frames[2] = fire2;
+
+        return frames;
+    }
+
     public BufferedImage getFireballRight() {
         return fireballR;
     }
@@ -509,10 +522,6 @@ public class ImageLoader {
 
     public BufferedImage getBomb() {
         return bomb;
-    }
-
-    public BufferedImage getBombOff() {
-        return bombOff;
     }
 
     public BufferedImage getBombOn() {

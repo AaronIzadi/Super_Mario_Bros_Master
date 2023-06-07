@@ -191,6 +191,7 @@ public class MapCreator {
         int multiCoinBrick = new Color(20, 100, 40).getRGB();
         int smallPipe = new Color(34, 177, 76).getRGB();
         int border = new Color(127, 51, 0).getRGB();
+        int lavaBorder = new Color(185,122,87).getRGB();
         int slime = new Color(100, 255, 100).getRGB();
         int crossover = new Color(112, 146, 190).getRGB();
         int boss = new Color(255, 120, 40).getRGB();
@@ -210,7 +211,6 @@ public class MapCreator {
                 } else if (currentPixel == hole) {
                     Hole brick = new Hole(xLocation, yLocation, this.hole);
                     map.addBrick(brick);
-                    map.addHoles(brick);
                 } else if (currentPixel == checkPoint) {
                     CheckPoint brick = new CheckPoint(xLocation, yLocation, this.surpriseBrick);
                     BufferedImage[] frames = new BufferedImage[2];
@@ -221,6 +221,10 @@ public class MapCreator {
                     map.setCheckPoint(brick);
                 } else if (currentPixel == border) {
                     Brick brick = new Border(xLocation, yLocation, this.border);
+                    map.addGroundBrick(brick);
+                } else if (currentPixel == lavaBorder) {
+                    LavaBorder brick = new LavaBorder(xLocation, yLocation, this.border);
+                    brick.setFrames(imageLoader.getLavaFrames());
                     map.addGroundBrick(brick);
                 } else if (currentPixel == slime) {
                     Slime brick = new Slime(xLocation, yLocation, this.slime);

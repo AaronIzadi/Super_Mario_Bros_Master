@@ -162,6 +162,7 @@ public class MapManager {
         if (map.getBowser().getHp() <= 0) {
             map.getAllBricks().removeIf(brick -> brick instanceof GroundBrick);
             map.getGroundBricks().removeIf(brick -> brick instanceof GroundBrick);
+            map.stopBurning();
             GameEngine.getInstance().playBreakBrick();
             return true;
         }
@@ -231,8 +232,8 @@ public class MapManager {
 
         if (map.getBowser() != null) {
             checkBowserPossibleCollisions(map.getBowser());
-            if (map.getBowser().getBomb() != null) {
-                checkBowserPossibleCollisions(map.getBowser().getBomb());
+            for (Bomb bomb : map.getBowser().getBomb()) {
+                checkBowserPossibleCollisions(bomb);
             }
             if (hero.isGrabbed()) {
                 ifIsStillGrabbed();
@@ -283,6 +284,8 @@ public class MapManager {
                     hero.onTouchEnemy(GameEngine.getInstance(), 0);
                 }
                 ((Bowser) object).setHasTouchedGround(true);
+            } else if (object instanceof Bomb) {
+                ((Bomb) object).setHasIntersect(true);
             }
             object.setFalling(false);
         }
@@ -474,7 +477,7 @@ public class MapManager {
                             ((Bowser) enemy).setCanHurt(false);
                             setTimerForGrabAttack();
                         }
-                    } else if (enemy instanceof Bowser && ((Bowser)enemy).canHurt()) {
+                    } else if (enemy instanceof Bowser && ((Bowser) enemy).canHurt()) {
                         heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
                     } else {
                         heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
@@ -795,8 +798,8 @@ public class MapManager {
             checkEnemyWeaponCollision(fire);
         }
 
-        if (map.getBowser().getBomb() != null) {
-            checkEnemyWeaponCollision(map.getBowser().getBomb());
+        for (Bomb bomb : map.getBowser().getBomb()) {
+            checkEnemyWeaponCollision(bomb);
         }
 
         removeObjects(toBeRemoved);
@@ -858,7 +861,6 @@ public class MapManager {
                 } else if (object instanceof Fire && !(enemy instanceof Bowser)) {
                     toBeRemoved.add(object);
                 }
-                GameEngine.getInstance().playKickEnemy();
             }
         }
 
@@ -926,7 +928,7 @@ public class MapManager {
                 }
             } else if (object instanceof Bomb) {
                 if (map.getBowser() != null) {
-                    currentMap.getBowser().setBomb(null);
+                    currentMap.getBowser().getBomb().remove(object);
                 }
             } else if (object instanceof Axe) {
                 hero.deactivateAxe();
