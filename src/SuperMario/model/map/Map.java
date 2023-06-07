@@ -4,6 +4,7 @@ package SuperMario.model.map;
 import SuperMario.logic.GameEngine;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.enemy.Enemy;
+import SuperMario.model.enemy.bowser.Fire;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
@@ -97,10 +98,10 @@ public class Map {
         drawBackground(g2);
         drawPrizes(g2);
         if (bowser != null) {
+
             bowser.attack(hero);
-            if (bowser.getFire() != null) {
-                bowser.getFire().draw(g2);
-            }
+            drawBowserFire(g2);
+
             if (bowser.getBomb() != null) {
                 if (bowser.getBomb().isTimeToVanish()) {
                     bowser.setBomb(null);
@@ -128,6 +129,12 @@ public class Map {
     private void drawFireballs(Graphics2D g2) {
         for (Fireball fireball : fireballs) {
             fireball.draw(g2);
+        }
+    }
+
+    private void drawBowserFire(Graphics2D g2) {
+        for (Fire fire : getBowser().getFire()) {
+            fire.draw(g2);
         }
     }
 
@@ -174,8 +181,9 @@ public class Map {
 
         if (bowser != null) {
             bowser.setToRight(getHero().getX() > bowser.getX());
-            if (bowser.getFire() != null) {
-                bowser.getFire().updateLocation();
+
+            for (Fire fire: getBowser().getFire()) {
+                fire.updateLocation();
             }
             if (bowser.getBomb() != null) {
                 bowser.getBomb().updateLocation();

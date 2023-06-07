@@ -8,6 +8,7 @@ import SuperMario.model.map.HitPoints;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,7 +21,7 @@ public class Bowser extends Enemy {
     private BufferedImage[] leftFrames;
     private Animation rightAnimation;
     private Animation leftAnimation;
-    private Fire fire;
+    private ArrayList<Fire> fire;
     private Bomb bomb;
     private boolean isGrabAttackOn;
     private boolean hasTouchedGround;
@@ -31,6 +32,7 @@ public class Bowser extends Enemy {
         hitPoints = HitPoints.getInstance();
         setHp(20);
         setVelX(-1.5);
+        fire = new ArrayList<>();
     }
 
     @Override
@@ -88,7 +90,6 @@ public class Bowser extends Enemy {
                 grabAttack(hero);
             }
         }
-
     }
 
     private void fire() {
@@ -105,12 +106,13 @@ public class Bowser extends Enemy {
         timer.schedule(task, 2000 + 1000);
 
         BufferedImage style = isToRight() ? ImageLoader.getInstance().getFireballRight() : ImageLoader.getInstance().getFireballLeft();
+        double x = isToRight() ? getX() + 9 : getX() - 1;
 
         int random = (int) (Math.random() * 2);
         if (random == 0) {
-            fire = new Fire(getX(), getY() + 24, style, isToRight());
+            fire.add(new Fire(x, getY() + 24, style, isToRight()));
         } else {
-            fire = new Fire(getX(), getY() + 72, style, isToRight());
+            fire.add(new Fire(x, getY() + 72, style, isToRight()));
         }
     }
 
@@ -175,12 +177,8 @@ public class Bowser extends Enemy {
         timer.schedule(task, 4000 + 1000);
     }
 
-    public Fire getFire() {
+    public ArrayList<Fire> getFire() {
         return fire;
-    }
-
-    public void setFire(Fire fire) {
-        this.fire = fire;
     }
 
     public Bomb getBomb() {

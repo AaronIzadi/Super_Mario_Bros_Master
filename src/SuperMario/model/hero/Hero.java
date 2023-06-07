@@ -141,7 +141,7 @@ public abstract class Hero extends GameObject {
     public boolean onTouchEnemy(GameEngine engine, int losingCoins) {
 
         if (!ifTookStar()) {
-            if (!heroForm.isSuper() && !heroForm.ifCanShootFire()) {
+            if (!heroForm.isSuper()) {
                 heroDies(engine, 20, losingCoins);
                 return true;
             } else {

@@ -716,8 +716,8 @@ public class MapManager {
 
     private void checkEnemyWeaponContact() {
 
-        if (map.getBowser().getFire() != null) {
-            checkEnemyWeaponCollision(map.getBowser().getFire());
+        for (Fire fire : map.getBowser().getFire()) {
+            checkEnemyWeaponCollision(fire);
         }
 
         if (map.getBowser().getBomb() != null) {
@@ -750,8 +750,8 @@ public class MapManager {
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
             if (objectBounds.intersects(enemyBounds)) {
-                if (object instanceof Bomb) {
-                    if (enemy instanceof Bowser) {
+                if (enemy instanceof Bowser) {
+                    if (object instanceof Bomb) {
                         ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
                         if (checkIfBowserDies()) {
                             toBeRemoved.add(enemy);
@@ -760,6 +760,7 @@ public class MapManager {
                     }
                 } else if (enemy instanceof Goomba) {
                     toBeRemoved.add(enemy);
+                    toBeRemoved.add(object);
                 } else if (enemy instanceof KoopaTroopa) {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
@@ -768,15 +769,17 @@ public class MapManager {
                     } else {
                         toBeRemoved.add(enemy);
                     }
+                    toBeRemoved.add(object);
                 } else if (enemy instanceof Spiny) {
                     toBeRemoved.add(enemy);
+                    toBeRemoved.add(object);
                 } else if (enemy instanceof Piranha) {
                     toBeRemoved.add(enemy);
+                    toBeRemoved.add(object);
                 }
+
                 if (object instanceof Bomb) {
                     ((Bomb) object).setHasIntersect(true);
-                } else {
-                    toBeRemoved.add(object);
                 }
                 GameEngine.getInstance().playKickEnemy();
             }
@@ -793,6 +796,9 @@ public class MapManager {
 
         for (Brick brick : bricks) {
             Rectangle brickBounds = brick.getBounds();
+            if (object instanceof Fire) {
+                brickBounds = object.isToRight() ? brick.getLeftBounds() : brick.getRightBounds();
+            }
             if (objectBounds.intersects(brickBounds)) {
                 if (object instanceof Bomb) {
                     ((Bomb) object).setHasIntersect(true);
@@ -827,9 +833,13 @@ public class MapManager {
             } else if (object instanceof Brick) {
                 currentMap.removeBrick((Brick) object);
             } else if (object instanceof Fire) {
-                currentMap.getBowser().setFire(null);
+                if (map.getBowser() != null) {
+                    currentMap.getBowser().getFire().remove(object);
+                }
             } else if (object instanceof Bomb) {
-                currentMap.getBowser().setBomb(null);
+                if (map.getBowser() != null) {
+                    currentMap.getBowser().setBomb(null);
+                }
             } else if (object instanceof Axe) {
                 hero.deactivateAxe();
             }
