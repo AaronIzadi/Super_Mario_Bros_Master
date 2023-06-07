@@ -79,17 +79,16 @@ public class Bowser extends Enemy {
     public void attack(Hero hero) {
 
         if (isCoolDownFinished) {
-            bomb();
-//            int random = (int) (Math.random() * 4);
-//            if (random == 0 && hp <= 10) {
-//                bomb();
-//            } else if (random == 1) {
-//                fire();
-//            } else if (random == 2) {
-//                jumpAttack();
-//            } else {
-//                grabAttack(hero);
-//            }
+            int random = (int) (Math.random() * 4);
+            if (random == 0 && hp <= 10) {
+                bomb();
+            } else if (random == 1) {
+                fire();
+            } else if (random == 2) {
+                jumpAttack();
+            } else {
+                grabAttack(hero);
+            }
         }
     }
 
