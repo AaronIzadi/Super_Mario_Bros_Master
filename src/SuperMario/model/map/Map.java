@@ -177,12 +177,24 @@ public class Map {
 
 
     public void updateLocations() {
-        hero.updateLocation();
+
+        if (!hero.isGrabbed()) {
+            hero.updateLocation();
+        }
 
         if (bowser != null) {
+
             bowser.setToRight(getHero().getX() > bowser.getX());
 
-            for (Fire fire: getBowser().getFire()) {
+            if (hero.isGrabbed()) {
+                hero.setVelY(0);
+                hero.setVelX(0);
+                hero.setY(bowser.getY() + 20);
+                double x = bowser.isToRight() ? (bowser.getX() + 104 - 24) : (bowser.getX() - 24);
+                hero.setX(x);
+            }
+
+            for (Fire fire : getBowser().getFire()) {
                 fire.updateLocation();
             }
             if (bowser.getBomb() != null) {

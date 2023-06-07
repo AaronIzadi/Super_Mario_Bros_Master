@@ -304,6 +304,11 @@ public abstract class Hero extends GameObject {
         setFalling(false);
     }
 
+    public void escapeFromGrabAttack(boolean bowserIsToRight) {
+        double x = bowserIsToRight ? (104 + 96 - 24) : (-96 + 24);
+        setX(getX() + x);
+    }
+
     @Override
     public BufferedImage getStyle() {
         return super.getStyle();
@@ -339,6 +344,10 @@ public abstract class Hero extends GameObject {
 
     public boolean isGrabbed() {
         return isGrabbed;
+    }
+
+    public void addNumberOfTryToEscape() {
+        numberOfTryToEscape++;
     }
 
     public void setNumberOfTryToEscape(int numberOfTryToEscape) {

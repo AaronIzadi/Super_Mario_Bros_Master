@@ -22,6 +22,8 @@ import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MapManager {
 
@@ -34,6 +36,7 @@ public class MapManager {
     private double yHero;
     private double progressRate;
     private boolean isChecked = false;
+    private Timer grabTimer;
     private static final MapManager instance = new MapManager();
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
 
@@ -230,6 +233,9 @@ public class MapManager {
             checkBowserPossibleCollisions(map.getBowser());
             if (map.getBowser().getBomb() != null) {
                 checkBowserPossibleCollisions(map.getBowser().getBomb());
+            }
+            if (hero.isGrabbed()) {
+                ifIsStillGrabbed();
             }
         }
     }
@@ -461,15 +467,33 @@ public class MapManager {
             if (heroBounds.intersects(enemyBounds) && !hero.isFalling()) {
 
                 if (!hero.ifTookStar()) {
-                    heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
-
-                    if (enemy instanceof KoopaTroopa) {
-                        ((KoopaTroopa) enemy).setHit(true);
-                    } else if (enemy instanceof Goomba) {
-                        toBeRemoved.add(enemy);
+                    if (enemy instanceof Bowser && ((Bowser) enemy).isGrabAttackOn()) {
+                        if (!hero.isGrabbed()) {
+                            hero.setGrabbed(true);
+                            map.getBowser().stopMoving();
+                            ((Bowser) enemy).setCanHurt(false);
+                            setTimerForGrabAttack();
+                        }
+                    } else if (enemy instanceof Bowser && ((Bowser)enemy).canHurt()) {
+                        heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
+                    } else {
+                        heroDies = hero.onTouchEnemy(engine, calculateLosingCoins());
+                        if (enemy instanceof KoopaTroopa) {
+                            ((KoopaTroopa) enemy).setHit(true);
+                        } else if (enemy instanceof Goomba) {
+                            toBeRemoved.add(enemy);
+                        }
                     }
                 } else {
-                    toBeRemoved.add(enemy);
+                    if (enemy instanceof Bowser) {
+                        ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
+                        if (checkIfBowserDies()) {
+                            toBeRemoved.add(enemy);
+                            map.setBowser(null);
+                        }
+                    } else {
+                        toBeRemoved.add(enemy);
+                    }
                 }
             }
         }
@@ -482,6 +506,57 @@ public class MapManager {
                 resetCurrentMap(engine);
             }
         }
+    }
+
+    private void ifIsStillGrabbed() {
+        if (hero.getNumberOfTryToEscape() >= 10) {
+            hero.setGrabbed(false);
+            hero.escapeFromGrabAttack(map.getBowser().isToRight());
+            hero.setNumberOfTryToEscape(0);
+
+            grabTimer.cancel();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    map.getBowser().setCanHurt(true);
+                    map.getBowser().setCoolDownFinished(true);
+                    map.getBowser().moveNormal();
+                    map.getBowser().setGrabAttackOn(false);
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(task, 4000);
+        } else {
+            map.getBowser().setCoolDownFinished(false);
+        }
+    }
+
+
+    private void setTimerForGrabAttack() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (hero.isGrabbed()) {
+                    hero.setGrabbed(false);
+                    hero.onTouchEnemy(GameEngine.getInstance(), 0);
+                    hero.escapeFromGrabAttack(map.getBowser().isToRight());
+                    hero.setNumberOfTryToEscape(0);
+                    map.getBowser().moveNormal();
+                    map.getBowser().setGrabAttackOn(false);
+                    TimerTask task = new TimerTask() {
+                        @Override
+                        public void run() {
+                            map.getBowser().setCanHurt(true);
+                            map.getBowser().setCoolDownFinished(true);
+                        }
+                    };
+                    Timer timer = new Timer();
+                    timer.schedule(task, 4000);
+                }
+            }
+        };
+        grabTimer = new Timer();
+        grabTimer.schedule(task, 5000);
     }
 
     private void checkEnemyCollisions() {

@@ -352,11 +352,19 @@ public class GameEngine implements Runnable {
             } else if (inputMgr.isDown()) {
                 userData.getHero().sit();
             } else if (inputMgr.isRight()) {
-                Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
-                userData.getHero().move(true, currentCam);
+                if (userData.getHero().isGrabbed()) {
+                    userData.getHero().addNumberOfTryToEscape();
+                } else {
+                    Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
+                    userData.getHero().move(true, currentCam);
+                }
             } else if (inputMgr.isLeft()) {
-                Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
-                userData.getHero().move(false, currentCam);
+                if (userData.getHero().isGrabbed()) {
+                    userData.getHero().addNumberOfTryToEscape();
+                } else {
+                    Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
+                    userData.getHero().move(false, currentCam);
+                }
             } else if (inputMgr.isEmpty()) {
                 userData.getHero().setVelX(0);
                 userData.getHero().getUp();
@@ -459,9 +467,9 @@ public class GameEngine implements Runnable {
         updateLocations();
         updateCamera();
         mapManager.setChecked(false);
-        if (worldNumber == MapSelection.BOSS_FIGHT.getWorldNumber()){
+        if (worldNumber == MapSelection.BOSS_FIGHT.getWorldNumber()) {
             playBossFightBackground();
-        }else{
+        } else {
             soundManager.resumeBackground();
         }
         gameState = GameState.RUNNING;

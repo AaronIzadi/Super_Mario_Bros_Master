@@ -2,6 +2,7 @@ package SuperMario.model.enemy.bowser;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
+import SuperMario.logic.GameEngine;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.HitPoints;
@@ -23,8 +24,9 @@ public class Bowser extends Enemy {
     private Animation leftAnimation;
     private final ArrayList<Fire> fire;
     private Bomb bomb;
-    private boolean isGrabAttackOn;
+    private boolean isGrabAttackOn = false;
     private boolean hasTouchedGround;
+    private boolean canHurt = false;
 
     public Bowser(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -79,15 +81,22 @@ public class Bowser extends Enemy {
     public void attack(Hero hero) {
 
         if (isCoolDownFinished) {
-            int random = (int) (Math.random() * 4);
-            if (random == 0 && hp <= 10) {
-                bomb();
+            int random;
+
+            if (hp > 10) {
+                random = (int) (Math.random() * 3);
+            } else {
+                random = (int) (Math.random() * 4);
+            }
+
+            if (random == 0) {
+                grabAttack(hero);
             } else if (random == 1) {
                 fire();
             } else if (random == 2) {
                 jumpAttack();
             } else {
-                grabAttack(hero);
+                bomb();
             }
         }
     }
@@ -114,6 +123,7 @@ public class Bowser extends Enemy {
         } else {
             fire.add(new Fire(x, getY() + 72, style, isToRight()));
         }
+        GameEngine.getInstance().playBowserFireBall();
     }
 
     private void bomb() {
@@ -160,21 +170,44 @@ public class Bowser extends Enemy {
 
     private void grabAttack(Hero hero) {
 
-        isCoolDownFinished = false;
-        isGrabAttackOn = true;
+        if (!isGrabAttackOn) {
+            isCoolDownFinished = false;
+            isGrabAttackOn = true;
+            canHurt = true;
 
-        if (hero.getBottomBounds().getY() >= 720 - (3 * 48)) {
-            setVelX(getVelX() * 3);
+            moveFaster();
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    if (!hero.isGrabbed()) {
+                        moveNormal();
+                        isCoolDownFinished = true;
+                    }
+                }
+            };
+            Timer timer = new Timer();
+            timer.schedule(task, 4000);
         }
+    }
 
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                isCoolDownFinished = true;
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 4000 + 1000);
+    private void moveFaster() {
+        if (isToRight()) {
+            setVelX(4.5);
+        } else {
+            setVelX(-4.5);
+        }
+    }
+
+    public void moveNormal() {
+        if (isToRight()) {
+            setVelX(1.5);
+        } else {
+            setVelX(-1.5);
+        }
+    }
+
+    public void stopMoving() {
+        setVelX(0);
     }
 
     public ArrayList<Fire> getFire() {
@@ -203,5 +236,17 @@ public class Bowser extends Enemy {
 
     public boolean hasTouchedGround() {
         return hasTouchedGround;
+    }
+
+    public void setCoolDownFinished(boolean coolDownFinished) {
+        isCoolDownFinished = coolDownFinished;
+    }
+
+    public void setCanHurt(boolean canHurt) {
+        this.canHurt = canHurt;
+    }
+
+    public boolean canHurt() {
+        return canHurt;
     }
 }
