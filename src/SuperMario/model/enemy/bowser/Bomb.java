@@ -9,7 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Bomb extends GameObject {
-
     private boolean hasIntersect;
     private boolean exploded;
     private boolean timeToVanish;
@@ -24,11 +23,11 @@ public class Bomb extends GameObject {
     @Override
     public void draw(Graphics g) {
         super.draw(g);
-        if (hasIntersect){
+        if (hasIntersect) {
             setStyle(ImageLoader.getInstance().getBombOn());
             setTimerToExplode();
         }
-        if (exploded){
+        if (exploded) {
             setTimerToVanish();
         }
     }
@@ -37,7 +36,7 @@ public class Bomb extends GameObject {
         this.hasIntersect = hasIntersect;
     }
 
-    public void setTimerToExplode(){
+    public void setTimerToExplode() {
         hasIntersect = false;
         TimerTask task = new TimerTask() {
             @Override
@@ -50,7 +49,7 @@ public class Bomb extends GameObject {
         timer.schedule(task, 2500);
     }
 
-    public void setTimerToVanish(){
+    public void setTimerToVanish() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -64,5 +63,17 @@ public class Bomb extends GameObject {
 
     public boolean isTimeToVanish() {
         return timeToVanish;
+    }
+
+    public boolean hasIntersect() {
+        return hasIntersect;
+    }
+
+    public boolean isExploded() {
+        return exploded;
+    }
+
+    public void setTimeToVanish(boolean timeToVanish) {
+        this.timeToVanish = timeToVanish;
     }
 }

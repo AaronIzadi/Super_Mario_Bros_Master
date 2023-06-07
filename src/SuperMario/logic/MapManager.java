@@ -740,18 +740,18 @@ public class MapManager {
         ArrayList<Brick> bricks = currentMap.getAllBricks();
 
         Rectangle objectBounds = object.getBounds();
-//        if (object instanceof Bomb) {
-//            objectBounds.y -= 48;
-//            objectBounds.x -= 48;
-//            objectBounds.height += 48;
-//            objectBounds.width += 48;
-//        }
+        if (object instanceof Bomb && ((Bomb) object).isExploded()) {
+            objectBounds.y -= 48;
+            objectBounds.x -= 48;
+            objectBounds.height += 48;
+            objectBounds.width += 48;
+        }
 
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
             if (objectBounds.intersects(enemyBounds)) {
                 if (enemy instanceof Bowser) {
-                    if (object instanceof Bomb) {
+                    if (object instanceof Bomb && ((Bomb) object).isExploded()) {
                         ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
                         if (checkIfBowserDies()) {
                             toBeRemoved.add(enemy);
@@ -760,7 +760,6 @@ public class MapManager {
                     }
                 } else if (enemy instanceof Goomba) {
                     toBeRemoved.add(enemy);
-                    toBeRemoved.add(object);
                 } else if (enemy instanceof KoopaTroopa) {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
@@ -769,27 +768,34 @@ public class MapManager {
                     } else {
                         toBeRemoved.add(enemy);
                     }
-                    toBeRemoved.add(object);
                 } else if (enemy instanceof Spiny) {
                     toBeRemoved.add(enemy);
-                    toBeRemoved.add(object);
                 } else if (enemy instanceof Piranha) {
                     toBeRemoved.add(enemy);
-                    toBeRemoved.add(object);
                 }
 
                 if (object instanceof Bomb) {
-                    ((Bomb) object).setHasIntersect(true);
+                    if (!((Bomb) object).hasIntersect() && !(enemy instanceof Bowser)) {
+                        ((Bomb) object).setHasIntersect(true);
+                    } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
+                        toBeRemoved.add(enemy);
+                    }
+                } else if (object instanceof Fire && !(enemy instanceof Bowser)) {
+                    toBeRemoved.add(object);
                 }
                 GameEngine.getInstance().playKickEnemy();
             }
         }
 
         if (objectBounds.intersects(hero.getBounds())) {
-            hero.onTouchEnemy(GameEngine.getInstance(), 0);
             if (object instanceof Bomb) {
-                ((Bomb) object).setHasIntersect(true);
-            } else {
+                if (!((Bomb) object).hasIntersect()) {
+                    ((Bomb) object).setHasIntersect(true);
+                } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
+                    hero.onTouchEnemy(GameEngine.getInstance(), 0);
+                    ((Bomb) object).setTimeToVanish(true);
+                }
+            } else if (object instanceof Fire) {
                 toBeRemoved.add(object);
             }
         }
@@ -801,12 +807,19 @@ public class MapManager {
             }
             if (objectBounds.intersects(brickBounds)) {
                 if (object instanceof Bomb) {
-                    ((Bomb) object).setHasIntersect(true);
-                    toBeRemoved.add(brick);
-                } else {
+                    if (!((Bomb) object).hasIntersect()) {
+                        ((Bomb) object).setHasIntersect(true);
+                    } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
+                        toBeRemoved.add(brick);
+                    }
+                } else if (object instanceof Fire) {
                     toBeRemoved.add(object);
                 }
             }
+        }
+
+        if (object instanceof Bomb && ((Bomb) object).isTimeToVanish()) {
+            toBeRemoved.add(object);
         }
     }
 
