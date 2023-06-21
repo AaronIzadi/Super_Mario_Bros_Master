@@ -100,7 +100,7 @@ public class Map {
 
         if (bowser != null) {
 
-            bowser.attack(hero);
+            bowser.attack();
             drawBowserFire(g2);
 
             if (bowser.getHp() <= 10) {
@@ -201,7 +201,7 @@ public class Map {
             if (hero.isGrabbed()) {
                 hero.setVelY(0);
                 hero.setVelX(0);
-                hero.setY(bowser.getY() + 20);
+                hero.setY(bowser.getY() + 48);
                 double x = bowser.isToRight() ? (bowser.getX() + 104 - 24) : (bowser.getX() - 24);
                 hero.setX(x);
             }

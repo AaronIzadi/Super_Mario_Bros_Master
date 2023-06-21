@@ -2,7 +2,6 @@ package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
-import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
@@ -23,10 +22,7 @@ public class HeroForm {
     private BufferedImage rightSittingFrame;
     private boolean isSuper;
     private boolean canShootFire;
-    private boolean canActivateAxe;
-    private BufferedImage fireballStyle;
-    private BufferedImage[] axeStyle;
-
+    private final BufferedImage fireballStyle;
 
     public HeroForm(BufferedImage[] leftImages, BufferedImage[] rightImages, boolean isSuper, boolean canShootFire, int heroType) {
         this.heroType = heroType;
@@ -52,8 +48,7 @@ public class HeroForm {
             style = currentAnimation.getCurrentFrame();
         } else if (isSitting) {
             style = toRight ? rightSittingFrame : leftSittingFrame;
-        }
-        else {
+        } else {
             style = toRight ? rightStandingFrame : leftStandingFrame;
         }
 
@@ -109,22 +104,6 @@ public class HeroForm {
         this.canShootFire = canShootFire;
     }
 
-    public void setFireballStyle(BufferedImage fireballStyle) {
-        this.fireballStyle = fireballStyle;
-    }
-
-    public BufferedImage getFireballStyle() {
-        return fireballStyle;
-    }
-
-    public void setAxeStyle(BufferedImage[] axeStyle) {
-        this.axeStyle = axeStyle;
-    }
-
-    public BufferedImage[] getAxeStyle() {
-        return axeStyle;
-    }
-
     public boolean isSuper() {
         return isSuper;
     }
@@ -137,11 +116,4 @@ public class HeroForm {
         return canShootFire;
     }
 
-    public boolean ifCanActivateAxe() {
-        return canActivateAxe;
-    }
-
-    public void setCanActivateAxe(boolean canActivateAxe) {
-        this.canActivateAxe = canActivateAxe;
-    }
 }

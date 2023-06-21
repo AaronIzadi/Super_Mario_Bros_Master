@@ -22,15 +22,17 @@ public class Bowser extends Enemy {
     private BufferedImage[] leftFrames;
     private Animation rightAnimation;
     private Animation leftAnimation;
+    private Hero hero;
     private final ArrayList<Fire> fire;
     private final ArrayList<Bomb> bomb;
     private boolean isGrabAttackOn = false;
     private boolean hasTouchedGround;
     private boolean canHurt = false;
+    private boolean jump = false;
 
     public Bowser(double x, double y, BufferedImage style) {
         super(x, y, style);
-        setDimension(104, 120);
+        setDimension(125, 144);
         hitPoints = HitPoints.getInstance();
         setHp(20);
         setVelX(-1.5);
@@ -52,6 +54,19 @@ public class Bowser extends Enemy {
     public void setHp(int hp) {
         this.hp = hp;
         hitPoints.setStyle(hp);
+        stopMoving();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                moveNormal(isToRight());
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 1000);
+    }
+
+    public void setHero(Hero hero) {
+        this.hero = hero;
     }
 
     public int getHp() {
@@ -79,9 +94,27 @@ public class Bowser extends Enemy {
         }
     }
 
-    public void attack(Hero hero) {
+    @Override
+    public void updateLocation() {
+
+        if (hero.getY() + hero.getDimension().getHeight() - 1 == 720 - (2 * 48)) {
+            if (Math.abs(hero.getX() - getX()) >= (8 * 48)) {
+                moveFaster(isToRight());
+            } else if (Math.abs(hero.getX() - getX()) <= (3 * 48)) {
+                moveNormal(isToRight());
+            }
+        } else {
+            moveNormal(isToRight());
+            setVelX(getVelX() * -1);
+        }
+
+        super.updateLocation();
+    }
+
+    public void attack() {
 
         if (isCoolDownFinished) {
+
             int random;
 
             if (hp > 10) {
@@ -90,13 +123,13 @@ public class Bowser extends Enemy {
                 random = (int) (Math.random() * 4);
             }
 
-            if (random == 0) {
-                grabAttack(hero);
-            } else if (random == 1) {
+            if (random == 0 && Math.abs(hero.getX() - getX()) >= (6 * 48) && Math.abs(hero.getX() - getX()) <= (10 * 48)) {
                 fire();
-            } else if (random == 2) {
+            } else if (random == 1 && Math.abs(hero.getX() - getX()) <= (2 * 48)) {
+                grabAttack(hero);
+            } else if (random == 2 && hero.getOnLandStandingTimer()) {
                 jumpAttack();
-            } else {
+            } else if (random == 3) {
                 bomb();
             }
         }
@@ -176,12 +209,11 @@ public class Bowser extends Enemy {
             isGrabAttackOn = true;
             canHurt = true;
 
-            moveFaster();
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
                     if (!hero.isGrabbed()) {
-                        moveNormal();
+                        moveNormal(isToRight());
                         isCoolDownFinished = true;
                     }
                 }
@@ -191,16 +223,41 @@ public class Bowser extends Enemy {
         }
     }
 
-    private void moveFaster() {
-        if (isToRight()) {
+    public void canJump(boolean isFar) {
+
+        jump = false;
+
+        if (!isFar) {
+            int random = (int) (Math.random() * 8);
+            if (random == 1) {
+                jump = true;
+            }
+        } else {
+            jump = true;
+        }
+
+    }
+
+    public void jump() {
+
+        if (!isJumping() && jump) {
+            setJumping(true);
+            setVelY(7);
+        }
+
+        jump = false;
+    }
+
+    private void moveFaster(boolean toRight) {
+        if (toRight) {
             setVelX(4.5);
         } else {
             setVelX(-4.5);
         }
     }
 
-    public void moveNormal() {
-        if (isToRight()) {
+    public void moveNormal(boolean toRight) {
+        if (toRight) {
             setVelX(1.5);
         } else {
             setVelX(-1.5);

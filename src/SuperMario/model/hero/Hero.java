@@ -27,6 +27,8 @@ public abstract class Hero extends GameObject {
     private boolean isAxeCoolDownFinished = true;
     private Axe axe;
     private int numberOfTryToEscape;
+    private double start;
+    private double timer;
 
     public Hero(double x, double y) {
         super(x, y, null);
@@ -60,6 +62,7 @@ public abstract class Hero extends GameObject {
 
     @Override
     public void draw(Graphics g) {
+
         boolean movingInX = (getVelX() != 0);
         boolean movingInY = (getVelY() != 0);
 
@@ -89,7 +92,7 @@ public abstract class Hero extends GameObject {
     public abstract void jumpOnSlime();
 
     protected void setVelYToJump(int velY) {
-        if (!isJumping() && !isFalling() && !isSitting()) {
+        if (!isJumping() && !isFalling() && isSitting()) {
             setJumping(true);
             setVelY(velY);
             GameEngine.getInstance().playJump();
@@ -109,6 +112,21 @@ public abstract class Hero extends GameObject {
             isSitting = false;
             setY(getY() - (96 - 50));
         }
+    }
+
+    public boolean getOnLandStandingTimer() {
+        if (getY() + getDimension().getHeight() - 1 == 720 - (2 * 48)) {
+            if (start == 0) {
+                start = System.currentTimeMillis();
+            } else {
+                timer = System.currentTimeMillis() - start;
+            }
+        } else {
+            start = 0;
+            timer = 0;
+        }
+
+        return timer >= 4000;
     }
 
     public abstract void move(boolean toRight, Camera camera);
@@ -140,7 +158,7 @@ public abstract class Hero extends GameObject {
 
     public boolean onTouchEnemy(GameEngine engine, int losingCoins) {
 
-        if (!ifTookStar()) {
+        if (ifTookStar()) {
             if (!heroForm.isSuper()) {
                 heroDies(engine, 20, losingCoins);
                 return true;
@@ -319,11 +337,11 @@ public abstract class Hero extends GameObject {
     }
 
     public boolean ifTookStar() {
-        return tookStar;
+        return !tookStar;
     }
 
     public boolean isSitting() {
-        return isSitting;
+        return !isSitting;
     }
 
     public void setSitting(boolean sitting) {

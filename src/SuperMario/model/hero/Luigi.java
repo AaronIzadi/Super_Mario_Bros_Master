@@ -1,7 +1,6 @@
 package SuperMario.model.hero;
 
 import SuperMario.graphic.manager.Camera;
-import SuperMario.logic.GameEngine;
 
 public class Luigi extends Hero {
     public Luigi(double x, double y) {
@@ -31,7 +30,7 @@ public class Luigi extends Hero {
 
     @Override
     public void move(boolean toRight, Camera camera) {
-        if (!isSitting()) {
+        if (isSitting()) {
             if (toRight) {
                 setVelX(5);
             } else if (camera.getX() < getX()) {

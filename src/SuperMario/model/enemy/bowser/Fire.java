@@ -11,10 +11,10 @@ public class Fire extends GameObject {
         setDimension(96, 47);
         setFalling(false);
         setJumping(false);
-        setVelX(5);
+        setVelX(7);
 
         if (!toRight) {
-            setVelX(-5);
+            setVelX(-7);
         }
     }
 }

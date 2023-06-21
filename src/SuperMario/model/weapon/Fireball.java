@@ -12,10 +12,11 @@ public class Fireball extends GameObject {
         setDimension(24, 24);
         setFalling(false);
         setJumping(false);
+        setToRight(toRight);
         setVelX(10);
 
         if (!toRight) {
-            setVelX(-5);
+            setVelX(-10);
         }
     }
 }

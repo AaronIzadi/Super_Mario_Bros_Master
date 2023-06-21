@@ -288,10 +288,11 @@ public class MapCreator {
                     Castle castle = new Castle(xLocation, yLocation, this.castle);
                     map.setCastle(castle);
                 } else if (currentPixel == boss) {
-                    Bowser bowser = new Bowser(xLocation, yLocation - 24, this.boss);
+                    Bowser bowser = new Bowser(xLocation, yLocation, this.boss);
                     bowser.setLeftFrames(imageLoader.getBossLeftFrames());
                     bowser.setRightFrames(imageLoader.getBossRightFrames());
                     bowser.setFrames();
+                    bowser.setHero(this.hero);
                     map.setBowser(bowser);
                     map.addEnemy(bowser);
                 } else setHero(map, hero, currentPixel, xLocation, yLocation);

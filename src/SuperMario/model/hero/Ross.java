@@ -2,7 +2,6 @@ package SuperMario.model.hero;
 
 
 import SuperMario.graphic.manager.Camera;
-import SuperMario.logic.GameEngine;
 
 public class Ross extends Hero {
     public Ross(double x, double y) {
@@ -32,7 +31,7 @@ public class Ross extends Hero {
 
     @Override
     public void move(boolean toRight, Camera camera) {
-        if (!isSitting()) {
+        if (isSitting()) {
             if (toRight) {
                 setVelX(7);
             } else if (camera.getX() < getX()) {

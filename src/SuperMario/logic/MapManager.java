@@ -133,6 +133,10 @@ public class MapManager {
         if (fireball != null) {
             currentMap.addFireball(fireball);
             GameEngine.getInstance().playFireball();
+
+            if (currentMap.getBowser() != null) {
+                currentMap.getBowser().canJump(Math.abs(currentMap.getBowser().getX() - fireball.getX()) >= (8 * 48));
+            }
         }
     }
 
@@ -252,6 +256,23 @@ public class MapManager {
         ArrayList<Brick> bricks = currentMap.getAllBricks();
         Rectangle bottomBounds = object.getBottomBounds();
 
+        boolean toRight = object.isToRight();
+
+        Rectangle horizontalBounds = toRight ? object.getRightBounds() : object.getLeftBounds();
+
+        for (Brick brick : bricks) {
+            Rectangle brickBounds = !toRight ? brick.getRightBounds() : brick.getLeftBounds();
+
+            if (horizontalBounds.intersects(brickBounds)) {
+                object.setVelX(object.getVelX()*-1);
+                if (toRight) {
+                    object.setX(brick.getX() - object.getDimension().width);
+                } else {
+                    object.setX(brick.getX() + brick.getDimension().width);
+                }
+            }
+        }
+
         for (Brick brick : bricks) {
 
             Rectangle brickTopBounds = brick.getTopBounds();
@@ -274,6 +295,7 @@ public class MapManager {
             if (topBounds.intersects(brickBottomBounds)) {
                 object.setVelY(0);
                 object.setY(brick.getY() + brick.getDimension().height);
+                brick.reveal(GameEngine.getInstance());
             }
         }
 
@@ -423,8 +445,9 @@ public class MapManager {
                 hero.setVelY(0);
                 hero.setY(brick.getY() + brick.getDimension().height);
                 Prize prize = brick.reveal(engine);
-                if (prize != null)
+                if (prize != null) {
                     currentMap.addRevealedPrize(prize);
+                }
             } else if (brick instanceof CheckPoint && heroTopBounds.intersects(brickBottomBounds)) {
                 if (!((CheckPoint) brick).isRevealed()) {
                     engine.pauseInCheckPoint();
@@ -469,7 +492,7 @@ public class MapManager {
             Rectangle enemyBounds = enemy.getBounds();
             if (heroBounds.intersects(enemyBounds) && !hero.isFalling()) {
 
-                if (!hero.ifTookStar()) {
+                if (hero.ifTookStar()) {
                     if (enemy instanceof Bowser && ((Bowser) enemy).isGrabAttackOn()) {
                         if (!hero.isGrabbed()) {
                             hero.setGrabbed(true);
@@ -523,7 +546,7 @@ public class MapManager {
                 public void run() {
                     map.getBowser().setCanHurt(true);
                     map.getBowser().setCoolDownFinished(true);
-                    map.getBowser().moveNormal();
+                    map.getBowser().moveNormal(map.getBowser().isToRight());
                     map.getBowser().setGrabAttackOn(false);
                 }
             };
@@ -544,7 +567,7 @@ public class MapManager {
                     hero.onTouchEnemy(GameEngine.getInstance(), 0);
                     hero.escapeFromGrabAttack(map.getBowser().isToRight());
                     hero.setNumberOfTryToEscape(0);
-                    map.getBowser().moveNormal();
+                    map.getBowser().moveNormal(map.getBowser().isToRight());
                     map.getBowser().setGrabAttackOn(false);
                     TimerTask task = new TimerTask() {
                         @Override
@@ -748,6 +771,24 @@ public class MapManager {
 
         Rectangle objectBounds = object.getBounds();
 
+
+        Bowser bowser = currentMap.getBowser();
+
+        if (object instanceof Fireball && bowser != null) {
+            double distance;
+            if (object.isToRight() && !bowser.isToRight()) {
+                distance = bowser.getX() - object.getX();
+            } else if (!object.isToRight() && bowser.isToRight()) {
+                distance = object.getX() - bowser.getX();
+            } else {
+                distance = 0;
+            }
+
+            if (distance <= (2 * 48) && distance >= 48){
+                bowser.jump();
+            }
+        }
+
         for (Enemy enemy : enemies) {
             Rectangle enemyBounds = enemy.getBounds();
             if (objectBounds.intersects(enemyBounds)) {
@@ -874,6 +915,7 @@ public class MapManager {
                 }
             } else if (object instanceof Fire) {
                 toBeRemoved.add(object);
+                hero.onTouchEnemy(GameEngine.getInstance(), 0);
             }
         }
 
