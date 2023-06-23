@@ -23,7 +23,7 @@ public class SoundManager {
 
         try {
 
-            File file = new File("src/SuperMario/resources/audio/" + url + ".wav");
+            File file = new File("src/resources/audio/" + url + ".wav");
             return AudioSystem.getAudioInputStream(file);
 
         } catch (Exception e) {

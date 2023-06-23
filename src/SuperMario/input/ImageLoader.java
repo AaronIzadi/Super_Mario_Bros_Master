@@ -129,7 +129,7 @@ public class ImageLoader {
         BufferedImage imageToReturn = null;
 
         try {
-            imageToReturn = ImageIO.read(new File("src/SuperMario/resources/media" + path));
+            imageToReturn = ImageIO.read(new File("src/resources/media" + path));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -15,7 +15,7 @@ public class FontLoader {
     public FontLoader() {
 
         try {
-            File input = new File("src/SuperMario/resources/font/mario-font.ttf");
+            File input = new File("src/resources/font/mario-font.ttf");
             InputStream targetStream = Files.newInputStream(input.toPath());
             font = Font.createFont(Font.TRUETYPE_FONT, targetStream);
         } catch (FontFormatException | IOException e) {
