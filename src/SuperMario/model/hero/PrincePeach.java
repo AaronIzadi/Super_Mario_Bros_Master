@@ -3,16 +3,16 @@ package SuperMario.model.hero;
 import SuperMario.graphic.manager.Camera;
 
 
-public class PrincessPeach extends Hero {
+public class PrincePeach extends Hero {
 
-    public PrincessPeach(double x, double y) {
+    public PrincePeach(double x, double y) {
         super(x, y);
-        setType(HeroType.PRINCESS_PEACH);
+        setType(HeroType.PRINCE_PEACH);
     }
 
-    public PrincessPeach(double x, double y, int width, int height, int type, int heroForm, boolean isSuper, boolean canShootFire) {
+    public PrincePeach(double x, double y, int width, int height, int type, int heroForm, boolean isSuper, boolean canShootFire) {
         super(x, y, width, height, type, heroForm, isSuper, canShootFire);
-        setType(HeroType.PRINCESS_PEACH);
+        setType(HeroType.PRINCE_PEACH);
     }
 
     @Override

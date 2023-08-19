@@ -52,8 +52,8 @@ public class LoadGameRepository {
         boolean[] typesOwned = new boolean[5];
         typesOwned[HeroType.MARIO] = true;
         typesOwned[HeroType.LUIGI] = (Boolean) object.get("Owns Luigi");
-        typesOwned[HeroType.PRINCESS_PEACH] = (Boolean) object.get("Owns Princess Peach");
-        typesOwned[HeroType.ROSALINA] = (Boolean) object.get("Owns Rosalina");
+        typesOwned[HeroType.PRINCE_PEACH] = (Boolean) object.get("Owns Prince Peach");
+        typesOwned[HeroType.ROSS] = (Boolean) object.get("Owns Ross");
         typesOwned[HeroType.TOAD] = (Boolean) object.get("Owns Toad");
 
         Hero hero;
@@ -63,12 +63,12 @@ public class LoadGameRepository {
                 hero = new Luigi(x, y, width, height, type, formType, isSuper, canShootFire);
                 break;
             }
-            case HeroType.PRINCESS_PEACH: {
-                hero = new PrincessPeach(x, y, width, height, type, formType, isSuper, canShootFire);
+            case HeroType.PRINCE_PEACH: {
+                hero = new PrincePeach(x, y, width, height, type, formType, isSuper, canShootFire);
                 break;
             }
-            case HeroType.ROSALINA: {
-                hero = new Rosalina(x, y, width, height, type, formType, isSuper, canShootFire);
+            case HeroType.ROSS: {
+                hero = new Ross(x, y, width, height, type, formType, isSuper, canShootFire);
                 break;
             }
             case HeroType.TOAD:{

@@ -5,6 +5,7 @@ public class SavePaths {
             "src/data/data-game-1.txt",
             "src/data/data-game-2.txt",
             "src/data/data-game-3.txt",
+            "src/data/config-ap.json"
     };
 
     public static boolean isFileIdValid(int fileId) {

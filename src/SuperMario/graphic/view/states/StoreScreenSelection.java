@@ -3,8 +3,8 @@ package SuperMario.graphic.view.states;
 public enum StoreScreenSelection {
     MARIO(0),
     LUIGI(1),
-    PRINCESS_PEACH(2),
-    ROSALINA(3),
+    PRINCE_PEACH(2),
+    ROSS(3),
     TOAD(4);
 
     private final int columnNumber;
@@ -19,9 +19,9 @@ public enum StoreScreenSelection {
         else if (number == 1)
             return LUIGI;
         else if (number == 2)
-            return PRINCESS_PEACH;
+            return PRINCE_PEACH;
         else if (number == 3)
-            return ROSALINA;
+            return ROSS;
         else if (number == 4)
             return TOAD;
         else
@@ -32,9 +32,9 @@ public enum StoreScreenSelection {
         switch (this) {
             case LUIGI:
                 return 15;
-            case PRINCESS_PEACH:
+            case PRINCE_PEACH:
                 return 40;
-            case ROSALINA:
+            case ROSS:
                 return 30;
             case TOAD:
                 return 35;

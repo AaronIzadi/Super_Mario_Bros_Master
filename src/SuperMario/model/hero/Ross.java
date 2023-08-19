@@ -3,15 +3,15 @@ package SuperMario.model.hero;
 
 import SuperMario.graphic.manager.Camera;
 
-public class Rosalina extends Hero {
-    public Rosalina(double x, double y) {
+public class Ross extends Hero {
+    public Ross(double x, double y) {
         super(x, y);
-        setType(HeroType.ROSALINA);
+        setType(HeroType.ROSS);
     }
 
-    public Rosalina(double x, double y, int width, int height, int type, int heroForm, boolean isSuper, boolean canShootFire) {
+    public Ross(double x, double y, int width, int height, int type, int heroForm, boolean isSuper, boolean canShootFire) {
         super(x, y, width, height, type, heroForm, isSuper, canShootFire);
-        setType(HeroType.ROSALINA);
+        setType(HeroType.ROSS);
     }
 
     @Override

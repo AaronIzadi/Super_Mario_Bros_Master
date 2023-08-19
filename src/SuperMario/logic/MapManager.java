@@ -256,23 +256,21 @@ public class MapManager {
         ArrayList<Brick> bricks = currentMap.getAllBricks();
         Rectangle bottomBounds = object.getBottomBounds();
 
-        Rectangle rightBounds = object.getRightBounds();
-        Rectangle leftBounds = object.getLeftBounds();
+        boolean toRight = object.isToRight();
+
+        Rectangle horizontalBounds = toRight ? object.getRightBounds() : object.getLeftBounds();
 
         for (Brick brick : bricks) {
+            Rectangle brickBounds = !toRight ? brick.getRightBounds() : brick.getLeftBounds();
 
-            Rectangle brickRightBounds = brick.getRightBounds();
-            Rectangle brickLeftBounds = brick.getLeftBounds();
-
-            if (leftBounds.intersects(brickRightBounds)) {
-                object.setVelX(object.getVelX() * -1);
-                object.setX(brick.getX() + brick.getDimension().width);
+            if (horizontalBounds.intersects(brickBounds)) {
+                object.setVelX(object.getVelX()*-1);
+                if (toRight) {
+                    object.setX(brick.getX() - object.getDimension().width);
+                } else {
+                    object.setX(brick.getX() + brick.getDimension().width);
+                }
             }
-            if (rightBounds.intersects(brickLeftBounds)) {
-                object.setVelX(object.getVelX() * -1);
-                object.setX(brick.getX() - object.getDimension().width);
-            }
-
         }
 
         for (Brick brick : bricks) {
@@ -626,10 +624,8 @@ public class MapManager {
                         brickBounds = brick.getLeftBounds();
                     }
 
-                    if (!(enemy instanceof Bowser)) {
-                        if (enemyBounds.intersects(brickBounds)) {
-                            enemy.setVelX(-enemy.getVelX());
-                        }
+                    if (enemyBounds.intersects(brickBounds)) {
+                        enemy.setVelX(-enemy.getVelX());
                     }
 
                     if (enemyBottomBounds.intersects(brickTopBounds)) {
@@ -788,7 +784,7 @@ public class MapManager {
                 distance = 0;
             }
 
-            if (distance <= (2 * 48) && distance >= 48) {
+            if (distance <= (2 * 48) && distance >= 48){
                 bowser.jump();
             }
         }
