@@ -470,7 +470,7 @@ public class GameEngine implements Runnable {
         if (worldNumber == MapSelection.BOSS_FIGHT.getWorldNumber()) {
             playBossFightBackground();
         } else {
-            soundManager.resumeBackground();
+            soundManager.playBackground();
         }
         gameState = GameState.RUNNING;
     }

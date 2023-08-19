@@ -45,19 +45,25 @@ public class SoundManager {
         return null;
     }
 
-    public void resumeBackground() {
-        background.setMicrosecondPosition(clipTime);
+    public void playBackground() {
         background.start();
 
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 background.stop();
-                resumeBackground();
+                playBackground();
             }
         };
         timer = new Timer();
         timer.schedule(task, 82000);
+    }
+
+    public void resumeBackground() {
+        if (!background.isRunning()) {
+            background.setMicrosecondPosition(clipTime);
+            background.start();
+        }
     }
 
     public void pauseBackground() {
@@ -70,7 +76,7 @@ public class SoundManager {
 
     public void restartBackground() {
         clipTime = 0;
-        resumeBackground();
+        playBackground();
     }
 
     public void playJump() {

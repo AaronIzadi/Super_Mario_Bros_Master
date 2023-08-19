@@ -159,16 +159,16 @@ public class UIManager extends JPanel {
             setFontAndColor(g2);
             g2.drawString("15", 370, 535);
         }
-        //Prince Peach
-        if (!engine.getUserData().getTypesOwned()[HeroType.PRINCE_PEACH]) {
+        //Princess Peach
+        if (!engine.getUserData().getTypesOwned()[HeroType.PRINCESS_PEACH]) {
             setFontAndColor(g2);
             g2.drawString(buy, 560, 500);
 
             setFontAndColor(g2);
             g2.drawString("40", 610, 535);
         }
-        //Ross
-        if (!engine.getUserData().getTypesOwned()[HeroType.ROSS]) {
+        //Rosalina
+        if (!engine.getUserData().getTypesOwned()[HeroType.ROSALINA]) {
             setFontAndColor(g2);
             g2.drawString(buy, 780, 500);
 
