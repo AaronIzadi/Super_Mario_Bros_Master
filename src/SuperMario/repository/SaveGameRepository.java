@@ -34,8 +34,8 @@ public class SaveGameRepository {
         object.put("Jumping", hero.isJumping());
 
         object.put("Owns Luigi", userData.getTypesOwned()[HeroType.LUIGI]);
-        object.put("Owns Prince Peach", userData.getTypesOwned()[HeroType.PRINCE_PEACH]);
-        object.put("Owns Ross", userData.getTypesOwned()[HeroType.ROSS]);
+        object.put("Owns Princess Peach", userData.getTypesOwned()[HeroType.PRINCESS_PEACH]);
+        object.put("Owns Rosalina", userData.getTypesOwned()[HeroType.ROSALINA]);
         object.put("Owns Toad", userData.getTypesOwned()[HeroType.TOAD]);
 
         object.put("Map path", userData.getMapPath());

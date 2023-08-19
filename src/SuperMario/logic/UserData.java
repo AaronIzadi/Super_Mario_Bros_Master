@@ -32,8 +32,8 @@ public class UserData {
     private void setTypesOwned(){
         typesOwned[HeroType.MARIO] = true;
         typesOwned[HeroType.LUIGI] = false;
-        typesOwned[HeroType.PRINCE_PEACH] = false;
-        typesOwned[HeroType.ROSS] = false;
+        typesOwned[HeroType.PRINCESS_PEACH] = false;
+        typesOwned[HeroType.ROSALINA] = false;
         typesOwned[HeroType.TOAD] = false;
     }
 
