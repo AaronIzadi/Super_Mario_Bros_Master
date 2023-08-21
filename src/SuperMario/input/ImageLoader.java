@@ -240,13 +240,13 @@ public class ImageLoader {
                 heroForms = loadImage("/hero/luigi-forms.png");
                 break;
             case HeroType.ROSALINA:
-                heroForms = loadImage("/hero/rosalina-forms");
+                heroForms = loadImage("/hero/rosalina-forms.png");
                 break;
             case HeroType.TOAD:
                 heroForms = loadImage("/hero/toad-forms.png");
                 break;
             case HeroType.PRINCESS_PEACH:
-                heroForms = loadImage("/hero/princess peach-forms");
+                heroForms = loadImage("/hero/princess peach-forms.png");
                 break;
             default:
                 heroForms = loadImage("/hero/mario-forms.png");
