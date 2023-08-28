@@ -1,7 +1,6 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.logic.GameEngine;
-import SuperMario.model.GameObject;
 import SuperMario.model.prize.Prize;
 
 import java.awt.image.BufferedImage;

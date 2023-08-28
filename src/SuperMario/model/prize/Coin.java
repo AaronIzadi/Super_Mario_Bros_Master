@@ -3,7 +3,6 @@ package SuperMario.model.prize;
 import SuperMario.logic.GameEngine;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
-import SuperMario.model.hero.HeroType;
 
 
 import java.awt.*;

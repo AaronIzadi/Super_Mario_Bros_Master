@@ -1,7 +1,6 @@
 package SuperMario.model.enemy.bowser;
 
 import SuperMario.input.ImageLoader;
-import SuperMario.logic.GameEngine;
 import SuperMario.model.GameObject;
 
 import java.awt.*;
