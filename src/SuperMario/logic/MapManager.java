@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 public class MapManager {
 
-    private Map map = new Map();
+    private Map map;
     private Map crossover;
     private Hero hero;
     private double xBeforeCrossover;
@@ -37,8 +37,8 @@ public class MapManager {
     private double progressRate;
     private boolean isChecked = false;
     private Timer grabTimer;
-    private static final MapManager instance = new MapManager();
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
+    private static final MapManager instance = new MapManager();
 
     private MapManager() {
     }
@@ -164,7 +164,7 @@ public class MapManager {
 
     private boolean checkIfBowserDies() {
         if (map.getBowser().getHp() <= 0) {
-            map.getAllBricks().removeIf(brick -> brick instanceof GroundBrick);
+            map.getAllObstacles().removeIf(brick -> brick instanceof GroundBrick);
             map.getGroundBricks().removeIf(brick -> brick instanceof GroundBrick);
             map.stopBurning();
             GameEngine.getInstance().playBreakBrick();
@@ -253,33 +253,33 @@ public class MapManager {
         } else {
             currentMap = map;
         }
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
         Rectangle bottomBounds = object.getBottomBounds();
 
         boolean toRight = object.isToRight();
 
         Rectangle horizontalBounds = toRight ? object.getRightBounds() : object.getLeftBounds();
 
-        for (Brick brick : bricks) {
-            Rectangle brickBounds = !toRight ? brick.getRightBounds() : brick.getLeftBounds();
+        for (Obstacle obstacle : obstacles) {
+            Rectangle obstacleBounds = !toRight ? obstacle.getRightBounds() : obstacle.getLeftBounds();
 
-            if (horizontalBounds.intersects(brickBounds)) {
-                object.setVelX(object.getVelX()*-1);
+            if (horizontalBounds.intersects(obstacleBounds)) {
+                object.setVelX(object.getVelX() * -1);
                 if (toRight) {
-                    object.setX(brick.getX() - object.getDimension().width);
+                    object.setX(obstacle.getX() - object.getDimension().width);
                 } else {
-                    object.setX(brick.getX() + brick.getDimension().width);
+                    object.setX(obstacle.getX() + obstacle.getDimension().width);
                 }
             }
         }
 
-        for (Brick brick : bricks) {
+        for (Obstacle obstacle : obstacles) {
 
-            Rectangle brickTopBounds = brick.getTopBounds();
-            if (bottomBounds.intersects(brickTopBounds)) {
+            Rectangle obstacleTopBounds = obstacle.getTopBounds();
+            if (bottomBounds.intersects(obstacleTopBounds)) {
 
-                if (!(brick instanceof Hole)) {
-                    object.setY(brick.getY() - object.getDimension().height + 1);
+                if (!(obstacle instanceof Hole)) {
+                    object.setY(obstacle.getY() - object.getDimension().height + 1);
                     object.setFalling(false);
                     object.setVelY(0);
                 } else {
@@ -290,12 +290,14 @@ public class MapManager {
 
         Rectangle topBounds = object.getTopBounds();
 
-        for (Brick brick : bricks) {
-            Rectangle brickBottomBounds = brick.getBottomBounds();
-            if (topBounds.intersects(brickBottomBounds)) {
+        for (Obstacle obstacle : obstacles) {
+            Rectangle obstacleBottomBounds = obstacle.getBottomBounds();
+            if (topBounds.intersects(obstacleBottomBounds)) {
                 object.setVelY(0);
-                object.setY(brick.getY() + brick.getDimension().height);
-                brick.reveal(GameEngine.getInstance());
+                object.setY(obstacle.getY() + obstacle.getDimension().height);
+                if (obstacle instanceof Brick) {
+                    ((Brick) obstacle).reveal(GameEngine.getInstance());
+                }
             }
         }
 
@@ -321,42 +323,46 @@ public class MapManager {
         } else {
             currentMap = map;
         }
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
         ArrayList<Enemy> enemies = currentMap.getEnemies();
 
         Rectangle heroBottomBounds = hero.getBottomBounds();
 
         boolean heroHasBottomIntersection = false;
 
-        for (Brick brick : bricks) {
+        for (Obstacle obstacle : obstacles) {
 
-            if ((int) hero.getBottomBounds().getY() >= 720 - (3 * 48)) {
-                brick.setTimer(0);
+
+            if (obstacle instanceof Brick && (int) hero.getBottomBounds().getY() >= 720 - (3 * 48)) {
+                ((Brick) obstacle).setTimer(0);
             }
 
-            Rectangle brickTopBounds = brick.getTopBounds();
-            if (heroBottomBounds.intersects(brickTopBounds)) {
+            Rectangle obstacleTopBounds = obstacle.getTopBounds();
+            if (heroBottomBounds.intersects(obstacleTopBounds)) {
                 if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
-                    if (brick.isTimeToBreak()) {
-                        toBeRemoved.add(brick);
+                    if (obstacle instanceof Brick) {
+                        if (((Brick) obstacle).isTimeToBreak()) {
+                            toBeRemoved.add(obstacle);
+                        }
                     }
                 }
 
-                if (!(brick instanceof Hole)) {
-                    hero.setY(brick.getY() - hero.getDimension().height + 1);
+
+                if (!(obstacle instanceof Hole)) {
+                    hero.setY(obstacle.getY() - hero.getDimension().height + 1);
                     hero.setFalling(false);
                     hero.setVelY(0);
                     heroHasBottomIntersection = true;
-                    if (brick instanceof Slime) {
-                        ((Slime) brick).setOnTouch(true);
+                    if (obstacle instanceof Slime) {
+                        ((Slime) obstacle).setOnTouch(true);
                         hero.jumpOnSlime();
                     }
-                    if (brick instanceof CrossoverTunnel && !((CrossoverTunnel) brick).isRevealed() && InputManager.getInstance().isDown()) {
+                    if (obstacle instanceof CrossoverTunnel && !((CrossoverTunnel) obstacle).isRevealed() && InputManager.getInstance().isDown()) {
                         if (engine.getGameState() == GameState.RUNNING) {
                             engine.playPipe();
                             xBeforeCrossover = hero.getX();
                             yBeforeCrossover = hero.getY();
-                            ((CrossoverTunnel) brick).setRevealed(true);
+                            ((CrossoverTunnel) obstacle).setRevealed(true);
                             engine.setGameState(GameState.CROSSOVER);
                             if (engine.getUserData().getWorldNumber() == 0) {
                                 createCrossover(MapSelection.CROSSOVER_1.getMapPath(MapSelection.CROSSOVER_1.getWorldNumber()), hero);
@@ -436,24 +442,26 @@ public class MapManager {
             currentMap = map;
         }
 
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
         Rectangle heroTopBounds = hero.getTopBounds();
 
-        for (Brick brick : bricks) {
-            Rectangle brickBottomBounds = brick.getBottomBounds();
-            if (!(brick instanceof Hole) && !(brick instanceof CheckPoint) && heroTopBounds.intersects(brickBottomBounds)) {
+        for (Obstacle obstacle : obstacles) {
+            Rectangle obstacleBottomBounds = obstacle.getBottomBounds();
+            if (!(obstacle instanceof Hole) && !(obstacle instanceof CheckPoint) && heroTopBounds.intersects(obstacleBottomBounds)) {
                 hero.setVelY(0);
-                hero.setY(brick.getY() + brick.getDimension().height);
-                Prize prize = brick.reveal(engine);
-                if (prize != null) {
-                    currentMap.addRevealedPrize(prize);
+                hero.setY(obstacle.getY() + obstacle.getDimension().height);
+                if (obstacle instanceof Brick) {
+                    Prize prize = ((Brick) obstacle).reveal(engine);
+                    if (prize != null) {
+                        currentMap.addRevealedPrize(prize);
+                    }
                 }
-            } else if (brick instanceof CheckPoint && heroTopBounds.intersects(brickBottomBounds)) {
-                if (!((CheckPoint) brick).isRevealed()) {
+            } else if (obstacle instanceof CheckPoint && heroTopBounds.intersects(obstacleBottomBounds)) {
+                if (!((CheckPoint) obstacle).isRevealed()) {
                     engine.pauseInCheckPoint();
                 } else {
                     hero.setVelY(0);
-                    hero.setY(brick.getY() + brick.getDimension().height);
+                    hero.setY(obstacle.getY() + obstacle.getDimension().height);
                 }
             }
         }
@@ -467,7 +475,7 @@ public class MapManager {
             currentMap = map;
         }
 
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
         ArrayList<Enemy> enemies = currentMap.getEnemies();
 
         boolean heroDies = false;
@@ -475,15 +483,15 @@ public class MapManager {
 
         Rectangle heroBounds = toRight ? hero.getRightBounds() : hero.getLeftBounds();
 
-        for (Brick brick : bricks) {
-            Rectangle brickBounds = !toRight ? brick.getRightBounds() : brick.getLeftBounds();
+        for (Obstacle obstacle : obstacles) {
+            Rectangle obstacleBounds = !toRight ? obstacle.getRightBounds() : obstacle.getLeftBounds();
 
-            if (heroBounds.intersects(brickBounds)) {
+            if (heroBounds.intersects(obstacleBounds)) {
                 hero.setVelX(0);
                 if (toRight) {
-                    hero.setX(brick.getX() - hero.getDimension().width);
+                    hero.setX(obstacle.getX() - hero.getDimension().width);
                 } else {
-                    hero.setX(brick.getX() + brick.getDimension().width);
+                    hero.setX(obstacle.getX() + obstacle.getDimension().width);
                 }
             }
         }
@@ -593,7 +601,7 @@ public class MapManager {
             currentMap = map;
         }
 
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
         ArrayList<Enemy> enemies = currentMap.getEnemies();
 
 
@@ -612,26 +620,26 @@ public class MapManager {
             if (!(enemy instanceof Piranha)) {
                 boolean standsOnBrick = false;
 
-                for (Brick brick : bricks) {
+                for (Obstacle obstacle : obstacles) {
                     Rectangle enemyBounds = enemy.getLeftBounds();
-                    Rectangle brickBounds = brick.getRightBounds();
+                    Rectangle obstacleRightBounds = obstacle.getRightBounds();
 
                     Rectangle enemyBottomBounds = enemy.getBottomBounds();
-                    Rectangle brickTopBounds = brick.getTopBounds();
+                    Rectangle obstacleTopBounds = obstacle.getTopBounds();
 
                     if (enemy.getVelX() > 0) {
                         enemyBounds = enemy.getRightBounds();
-                        brickBounds = brick.getLeftBounds();
+                        obstacleRightBounds = obstacle.getLeftBounds();
                     }
 
-                    if (enemyBounds.intersects(brickBounds)) {
+                    if (enemyBounds.intersects(obstacleRightBounds)) {
                         enemy.setVelX(-enemy.getVelX());
                     }
 
-                    if (enemyBottomBounds.intersects(brickTopBounds)) {
+                    if (enemyBottomBounds.intersects(obstacleTopBounds)) {
                         enemy.setFalling(false);
                         enemy.setVelY(0);
-                        enemy.setY(brick.getY() - enemy.getDimension().height);
+                        enemy.setY(obstacle.getY() - enemy.getDimension().height);
                         standsOnBrick = true;
                     }
                 }
@@ -657,7 +665,7 @@ public class MapManager {
         }
 
         ArrayList<Prize> prizes = currentMap.getRevealedPrizes();
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
 
         for (Prize prize : prizes) {
             if (prize instanceof PrizeItems) {
@@ -667,31 +675,31 @@ public class MapManager {
                 Rectangle prizeLeftBounds = boost.getLeftBounds();
                 boost.setFalling(true);
 
-                for (Brick brick : bricks) {
-                    Rectangle brickBounds;
+                for (Obstacle obstacle : obstacles) {
+                    Rectangle obstacleBounds;
 
                     if (boost.isFalling()) {
-                        brickBounds = brick.getTopBounds();
+                        obstacleBounds = obstacle.getTopBounds();
 
-                        if (brickBounds.intersects(prizeBottomBounds)) {
+                        if (obstacleBounds.intersects(prizeBottomBounds)) {
                             boost.setFalling(false);
                             boost.setVelY(0);
-                            boost.setY(brick.getY() - boost.getDimension().height + 1);
+                            boost.setY(obstacle.getY() - boost.getDimension().height + 1);
                             if (boost.getVelX() == 0)
                                 boost.setVelX(2);
                         }
                     }
 
                     if (boost.getVelX() > 0) {
-                        brickBounds = brick.getLeftBounds();
+                        obstacleBounds = obstacle.getLeftBounds();
 
-                        if (brickBounds.intersects(prizeRightBounds)) {
+                        if (obstacleBounds.intersects(prizeRightBounds)) {
                             boost.setVelX(-boost.getVelX());
                         }
                     } else if (boost.getVelX() < 0) {
-                        brickBounds = brick.getRightBounds();
+                        obstacleBounds = obstacle.getRightBounds();
 
-                        if (brickBounds.intersects(prizeLeftBounds)) {
+                        if (obstacleBounds.intersects(prizeLeftBounds)) {
                             boost.setVelX(-boost.getVelX());
                         }
                     }
@@ -767,7 +775,7 @@ public class MapManager {
         }
 
         ArrayList<Enemy> enemies = currentMap.getEnemies();
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
 
         Rectangle objectBounds = object.getBounds();
 
@@ -784,7 +792,7 @@ public class MapManager {
                 distance = 0;
             }
 
-            if (distance <= (2 * 48) && distance >= 48){
+            if (distance <= (2 * 48) && distance >= 48) {
                 bowser.jump();
             }
         }
@@ -823,9 +831,9 @@ public class MapManager {
         }
 
         if (object instanceof Fireball || (object instanceof Axe && hero.getAxe().isReleased())) {
-            for (Brick brick : bricks) {
-                Rectangle brickBounds = brick.getBounds();
-                if (objectBounds.intersects(brickBounds)) {
+            for (Obstacle obstacle : obstacles) {
+                Rectangle obstacleBounds = obstacle.getBounds();
+                if (objectBounds.intersects(obstacleBounds)) {
                     toBeRemoved.add(object);
                 }
             }
@@ -856,7 +864,7 @@ public class MapManager {
         }
 
         ArrayList<Enemy> enemies = currentMap.getEnemies();
-        ArrayList<Brick> bricks = currentMap.getAllBricks();
+        ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
 
         Rectangle objectBounds = object.getBounds();
         if (object instanceof Bomb && ((Bomb) object).isExploded()) {
@@ -919,17 +927,17 @@ public class MapManager {
             }
         }
 
-        for (Brick brick : bricks) {
-            Rectangle brickBounds = brick.getBounds();
+        for (Obstacle obstacle : obstacles) {
+            Rectangle obstacleBounds = obstacle.getBounds();
             if (object instanceof Fire) {
-                brickBounds = object.isToRight() ? brick.getLeftBounds() : brick.getRightBounds();
+                obstacleBounds = object.isToRight() ? obstacle.getLeftBounds() : obstacle.getRightBounds();
             }
-            if (objectBounds.intersects(brickBounds)) {
+            if (objectBounds.intersects(obstacleBounds)) {
                 if (object instanceof Bomb) {
                     if (!((Bomb) object).hasIntersect()) {
                         ((Bomb) object).setHasIntersect(true);
                     } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
-                        toBeRemoved.add(brick);
+                        toBeRemoved.add(obstacle);
                     }
                 } else if (object instanceof Fire) {
                     toBeRemoved.add(object);
@@ -963,7 +971,7 @@ public class MapManager {
             } else if (object instanceof Coin || object instanceof PrizeItems) {
                 currentMap.removePrize((Prize) object);
             } else if (object instanceof Brick) {
-                currentMap.removeBrick((Brick) object);
+                currentMap.removeObstacle((Brick) object);
             } else if (object instanceof Fire) {
                 if (map.getBowser() != null) {
                     currentMap.getBowser().getFire().remove(object);

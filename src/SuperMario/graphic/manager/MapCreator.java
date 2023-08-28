@@ -105,29 +105,29 @@ public class MapCreator {
                 int yLocation = y * pixelMultiplier;
 
                 if (currentPixel == border) {
-                    Brick brick = new Border(xLocation, yLocation, this.border);
-                    crossover.addBrick(brick);
+                    Obstacle obstacle = new Border(xLocation, yLocation, this.border);
+                    crossover.addObstacle(obstacle);
                 } else if (currentPixel == surpriseBrick) {
                     Prize prize = generateRandomPrizeForCrossover(xLocation, yLocation);
-                    SurpriseBrick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
+                    SurpriseBrick prizeBrick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
                     BufferedImage[] frames = new BufferedImage[2];
                     frames[0] = this.surpriseBrick;
                     frames[1] = this.prizeBrick;
-                    brick.setFrames(frames);
-                    crossover.addBrick(brick);
+                    prizeBrick.setFrames(frames);
+                    crossover.addObstacle(prizeBrick);
                 } else if (currentPixel == tunnel) {
-                    Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
-                    crossover.addGroundBrick(brick);
+                    Obstacle obstacle = new CrossoverTunnel(xLocation, yLocation, this.pipe);
+                    crossover.addGroundBrick(obstacle);
                 } else if (currentPixel == slime) {
-                    Slime brick = new Slime(xLocation, yLocation, this.slime);
-                    brick.slimeOnTouch(slimeOnTouch);
-                    crossover.addBrick(brick);
+                    Slime slimeBrick = new Slime(xLocation, yLocation, this.slime);
+                    slimeBrick.slimeOnTouch(slimeOnTouch);
+                    crossover.addObstacle(slimeBrick);
                 } else if (currentPixel == ordinaryBrick) {
                     Brick brick = new OrdinaryBrick(xLocation, yLocation, this.ordinaryBrick);
-                    crossover.addBrick(brick);
+                    crossover.addObstacle(brick);
                 } else if (currentPixel == upSidePipe) {
-                    Brick brick = new Pipe(xLocation, yLocation, this.upSidePipe);
-                    crossover.addBrick(brick);
+                    Obstacle upSideDownPipe = new Pipe(xLocation, yLocation, this.upSidePipe);
+                    crossover.addObstacle(upSideDownPipe);
                 } else {
                     setHero(crossover, heroColor, currentPixel, xLocation, yLocation);
                 }
@@ -191,7 +191,7 @@ public class MapCreator {
         int multiCoinBrick = new Color(20, 100, 40).getRGB();
         int smallPipe = new Color(34, 177, 76).getRGB();
         int border = new Color(127, 51, 0).getRGB();
-        int lavaBorder = new Color(185,122,87).getRGB();
+        int lavaBorder = new Color(185, 122, 87).getRGB();
         int slime = new Color(100, 255, 100).getRGB();
         int crossover = new Color(112, 146, 190).getRGB();
         int boss = new Color(255, 120, 40).getRGB();
@@ -207,51 +207,63 @@ public class MapCreator {
 
                 if (currentPixel == ordinaryBrick) {
                     Brick brick = new OrdinaryBrick(xLocation, yLocation, this.ordinaryBrick);
-                    map.addBrick(brick);
+                    map.addObstacle(brick);
                 } else if (currentPixel == hole) {
-                    Hole brick = new Hole(xLocation, yLocation, this.hole);
-                    map.addBrick(brick);
+                    Hole holeObstacle = new Hole(xLocation, yLocation, this.hole);
+                    map.addObstacle(holeObstacle);
                 } else if (currentPixel == checkPoint) {
-                    CheckPoint brick = new CheckPoint(xLocation, yLocation, this.surpriseBrick);
+                    CheckPoint point = new CheckPoint(xLocation, yLocation, this.surpriseBrick);
                     BufferedImage[] frames = new BufferedImage[2];
                     frames[0] = this.surpriseBrick;
                     frames[1] = this.prizeBrick;
-                    brick.setFrames(frames);
-                    map.addBrick(brick);
-                    map.setCheckPoint(brick);
+                    point.setFrames(frames);
+                    map.addObstacle(point);
+                    map.setCheckPoint(point);
                 } else if (currentPixel == border) {
-                    Brick brick = new Border(xLocation, yLocation, this.border);
-                    map.addGroundBrick(brick);
+                    Border groundBorder = new Border(xLocation, yLocation, this.border);
+                    map.addObstacle(groundBorder);
                 } else if (currentPixel == lavaBorder) {
-                    LavaBorder brick = new LavaBorder(xLocation, yLocation, this.border);
-                    brick.setFrames(imageLoader.getLavaFrames());
-                    map.addGroundBrick(brick);
+                    LavaBorder lavaGroundBorder = new LavaBorder(xLocation, yLocation, this.border);
+                    lavaGroundBorder.setFrames(imageLoader.getLavaFrames());
+                    map.addGroundBrick(lavaGroundBorder);
                 } else if (currentPixel == slime) {
-                    Slime brick = new Slime(xLocation, yLocation, this.slime);
-                    brick.slimeOnTouch(slimeOnTouch);
-                    map.addBrick(brick);
+                    Slime slimeBrick = new Slime(xLocation, yLocation, this.slime);
+                    slimeBrick.slimeOnTouch(slimeOnTouch);
+                    map.addObstacle(slimeBrick);
                 } else if (currentPixel == surpriseBrick) {
                     Prize prize = generateRandomPrize(xLocation, yLocation);
-                    SurpriseBrick brick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
+                    SurpriseBrick prizeBrick = new SurpriseBrick(xLocation, yLocation, this.surpriseBrick, prize);
                     BufferedImage[] frames = new BufferedImage[2];
                     frames[0] = this.surpriseBrick;
                     frames[1] = this.prizeBrick;
-                    brick.setFrames(frames);
-                    map.addBrick(brick);
+                    prizeBrick.setFrames(frames);
+                    map.addObstacle(prizeBrick);
                 } else if (currentPixel == coinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
                     Brick brick = new CoinBrick(xLocation, yLocation, this.oneCoinBrick, prize);
-                    map.addBrick(brick);
+                    map.addObstacle(brick);
                 } else if (currentPixel == multiCoinBrick) {
                     Prize prize = new Coin(xLocation, yLocation, this.coin, 10);
                     Brick brick = new MultiCoinBrick(xLocation, yLocation, this.fiveCoinBrick, prize);
-                    map.addBrick(brick);
+                    map.addObstacle(brick);
                 } else if (currentPixel == smallPipe) {
-                    Brick brick = new SmallPipe(xLocation, yLocation, this.smallPipe);
-                    map.addGroundBrick(brick);
+                    Brick groundPipe = new SmallPipe(xLocation, yLocation, this.smallPipe);
+                    map.addGroundBrick(groundPipe);
                 } else if (currentPixel == groundBrick) {
                     Brick brick = new GroundBrick(xLocation, yLocation, this.groundBrick);
                     map.addGroundBrick(brick);
+                } else if (currentPixel == pipe) {
+                    Obstacle groundPipe = new Pipe(xLocation, yLocation, this.pipe);
+                    map.addGroundBrick(groundPipe);
+                } else if (currentPixel == crossover) {
+                    Obstacle crossoverTunnel = new CrossoverTunnel(xLocation, yLocation, this.pipe);
+                    map.addGroundBrick(crossoverTunnel);
+                } else if (currentPixel == end) {
+                    Flag endPoint = new Flag(xLocation + 24, yLocation, this.endFlag);
+                    map.setEndPoint(endPoint);
+                } else if (currentPixel == castleColor) {
+                    Castle castle = new Castle(xLocation, yLocation, this.castle);
+                    map.setCastle(castle);
                 } else if (currentPixel == goomba) {
                     Goomba enemy = new Goomba(xLocation, yLocation, this.goombaLeft);
                     BufferedImage[] frames = new BufferedImage[2];
@@ -275,18 +287,6 @@ public class MapCreator {
                     frames[1] = this.piranhaOpen;
                     enemy.setFrames(frames);
                     map.addEnemy(enemy);
-                } else if (currentPixel == pipe) {
-                    Brick brick = new Pipe(xLocation, yLocation, this.pipe);
-                    map.addGroundBrick(brick);
-                } else if (currentPixel == crossover) {
-                    Brick brick = new CrossoverTunnel(xLocation, yLocation, this.pipe);
-                    map.addGroundBrick(brick);
-                } else if (currentPixel == end) {
-                    Flag endPoint = new Flag(xLocation + 24, yLocation, this.endFlag);
-                    map.setEndPoint(endPoint);
-                } else if (currentPixel == castleColor) {
-                    Castle castle = new Castle(xLocation, yLocation, this.castle);
-                    map.setCastle(castle);
                 } else if (currentPixel == boss) {
                     Bowser bowser = new Bowser(xLocation, yLocation, this.boss);
                     bowser.setLeftFrames(imageLoader.getBossLeftFrames());

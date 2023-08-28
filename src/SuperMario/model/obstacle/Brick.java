@@ -6,9 +6,8 @@ import SuperMario.model.prize.Prize;
 
 import java.awt.image.BufferedImage;
 
-public class Brick extends GameObject {
-    private boolean breakable;
-    private boolean empty;
+public class Brick extends Obstacle {
+
     private long timer;
     private long start, finish;
 
@@ -17,20 +16,24 @@ public class Brick extends GameObject {
         setDimension(48, 48);
     }
 
+    @Override
     public boolean isBreakable() {
-        return breakable;
+        return super.isBreakable();
     }
 
+    @Override
     public void setBreakable(boolean breakable) {
-        this.breakable = breakable;
+        super.setBreakable(breakable);
     }
 
+    @Override
     public boolean isEmpty() {
-        return empty;
+        return super.isEmpty();
     }
 
+    @Override
     public void setEmpty(boolean empty) {
-        this.empty = empty;
+        super.setEmpty(empty);
     }
 
     public Prize reveal(GameEngine engine) {

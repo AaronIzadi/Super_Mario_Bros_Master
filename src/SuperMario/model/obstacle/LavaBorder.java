@@ -5,7 +5,7 @@ import SuperMario.graphic.view.animation.Animation;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class LavaBorder extends Brick {
+public class LavaBorder extends Border {
 
     private Animation animation;
     private boolean burn;

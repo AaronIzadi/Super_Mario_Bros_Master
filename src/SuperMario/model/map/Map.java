@@ -23,9 +23,9 @@ public class Map {
 
     private double remainingTime;
     private Hero hero;
-    private final ArrayList<Brick> bricks = new ArrayList<>();
+    private final ArrayList<Obstacle> obstacles = new ArrayList<>();
     private final ArrayList<Enemy> enemies = new ArrayList<>();
-    private final ArrayList<Brick> groundBricks = new ArrayList<>();
+    private final ArrayList<Obstacle> groundBricks = new ArrayList<>();
     private final ArrayList<Prize> revealedPrizes = new ArrayList<>();
     private final ArrayList<Brick> revealedBricks = new ArrayList<>();
     private final ArrayList<Fireball> fireballs = new ArrayList<>();
@@ -73,20 +73,20 @@ public class Map {
         return revealedPrizes;
     }
 
-    public ArrayList<Brick> getAllBricks() {
-        ArrayList<Brick> allBricks = new ArrayList<>();
+    public ArrayList<Obstacle> getAllObstacles() {
+        ArrayList<Obstacle> allObstacles = new ArrayList<>();
 
-        allBricks.addAll(bricks);
-        allBricks.addAll(groundBricks);
+        allObstacles.addAll(obstacles);
+        allObstacles.addAll(groundBricks);
 
-        return allBricks;
+        return allObstacles;
     }
 
-    public void addBrick(Brick brick) {
-        this.bricks.add(brick);
+    public void addObstacle(Obstacle obstacle) {
+        this.obstacles.add(obstacle);
     }
 
-    public void addGroundBrick(Brick brick) {
+    public void addGroundBrick(Obstacle brick) {
         this.groundBricks.add(brick);
     }
 
@@ -104,12 +104,12 @@ public class Map {
             drawBowserFire(g2);
 
             if (bowser.getHp() <= 10) {
-                for (Brick border : groundBricks) {
+                for (Obstacle border : groundBricks) {
                     if (border instanceof LavaBorder) {
                         ((LavaBorder) border).setBurn(true);
                     }
                 }
-                bricks.clear();
+                obstacles.clear();
             }
 
             for (Bomb bomb : bowser.getBomb()) {
@@ -166,13 +166,13 @@ public class Map {
 
     private void drawBricks(Graphics2D g2) {
 
-        for (Brick brick : bricks) {
-            if (brick != null)
-                brick.draw(g2);
+        for (Obstacle obstacle : obstacles) {
+            if (obstacle != null)
+                obstacle.draw(g2);
         }
 
-        for (Brick brick : groundBricks) {
-            brick.draw(g2);
+        for (Obstacle obstacle : groundBricks) {
+            obstacle.draw(g2);
         }
     }
 
@@ -237,7 +237,7 @@ public class Map {
                 ifOneCoin = (CoinBrick) brick;
                 ifOneCoin.animate();
                 if (ifOneCoin.getFrames() < 0) {
-                    bricks.remove(brick);
+                    obstacles.remove(brick);
                     getHero().acquirePoints(1);
                     brickIterator.remove();
                 }
@@ -245,7 +245,7 @@ public class Map {
                 ifOrdinary = (OrdinaryBrick) brick;
                 ifOrdinary.animate();
                 if (ifOrdinary.getFrames() < 0) {
-                    bricks.remove(brick);
+                    obstacles.remove(brick);
                     getHero().acquirePoints(1);
                     brickIterator.remove();
                 }
@@ -325,8 +325,8 @@ public class Map {
         revealedPrizes.remove(object);
     }
 
-    public void removeBrick(Brick brick) {
-        bricks.remove(brick);
+    public void removeObstacle(Obstacle obstacle) {
+        obstacles.remove(obstacle);
     }
 
     public String getPath() {
@@ -374,12 +374,12 @@ public class Map {
         return bowser;
     }
 
-    public ArrayList<Brick> getGroundBricks() {
+    public ArrayList<Obstacle> getGroundBricks() {
         return groundBricks;
     }
 
     public void stopBurning() {
-        for (Brick border : groundBricks) {
+        for (Obstacle border : groundBricks) {
             if (border instanceof LavaBorder) {
                 ((LavaBorder) border).setBurn(false);
             }

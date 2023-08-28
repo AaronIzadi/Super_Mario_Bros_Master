@@ -3,7 +3,7 @@ package SuperMario.model.obstacle;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Hole extends Brick{
+public class Hole extends Obstacle{
 
     public Hole(double x, double y, BufferedImage style) {
         super(x, y, style);
