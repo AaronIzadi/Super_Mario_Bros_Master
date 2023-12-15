@@ -6,9 +6,9 @@ import SuperMario.model.hero.Hero;
 
 import java.awt.image.BufferedImage;
 
-public class OneHeartUpMushroom extends PrizeItems {
+public class HeartMushroom extends PrizeItems {
 
-    public OneHeartUpMushroom(double x, double y, BufferedImage style) {
+    public HeartMushroom(double x, double y, BufferedImage style) {
         super(x, y, style);
         setPoint(50);
     }

@@ -312,7 +312,7 @@ public class MapCreator {
         } else if (random == 2 || random == 3) {
             generated = new FireFlower(x, y, this.fireFlower);
         } else if (random == 4) {
-            generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
+            generated = new HeartMushroom(x, y, this.oneHeartUpMushroom);
         } else if (random == 5) {
             generated = new SuperStar(x, y, this.superStar);
         } else {
@@ -330,7 +330,7 @@ public class MapCreator {
         } else if (random == 1) {
             generated = new FireFlower(x, y, this.fireFlower);
         } else if (random == 2) {
-            generated = new OneHeartUpMushroom(x, y, this.oneHeartUpMushroom);
+            generated = new HeartMushroom(x, y, this.oneHeartUpMushroom);
         } else {
             generated = new Coin(x, y, this.coin, 10);
         }
