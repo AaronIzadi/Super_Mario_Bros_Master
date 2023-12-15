@@ -81,7 +81,7 @@ Here's the class's fields to see how imprtant it is:
     private CheckPointSelection checkPointSelection = CheckPointSelection.YES;
     private final MapSelection mapSelection = MapSelection.WORLD_1;
 ```
-I won't explain more about it to make sure you check it out yourself.
+I won't explain more about it to make sure you'll check it out yourself.
 
 
 ### Thank you for your time and enjoy the game:)
