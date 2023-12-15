@@ -20,23 +20,23 @@ public class GameEngine implements Runnable {
 
     private static final GameEngine instance = new GameEngine();
     private final static int WIDTH = 1268, HEIGHT = 708;
-    private boolean isMute = false;
     private UserData userData;
     private MapManager mapManager;
     private UIManager uiManager;
     private SoundManager soundManager;
     private GameState gameState;
-    private boolean isRunning;
     private Camera camera;
+    private Camera crossoverCamera;
     private ImageLoader imageLoader;
     private Thread thread;
-    private final Camera crossoverCam = new Camera();
     private StartScreenSelection startScreenSelection = StartScreenSelection.LOAD_SCREEN;
     private LoadGameScreenSelection loadGameScreenSelection = LoadGameScreenSelection.NEW_GAME;
     private PauseScreenSelection pauseScreenSelection = PauseScreenSelection.GO_TO_MAIN_MENU;
     private StoreScreenSelection storeScreenSelection = StoreScreenSelection.MARIO;
     private CheckPointSelection checkPointSelection = CheckPointSelection.YES;
     private final MapSelection mapSelection = MapSelection.WORLD_1;
+    private boolean isRunning;
+    private boolean isMute = false;
 
     private GameEngine() {
         initial();
@@ -51,6 +51,7 @@ public class GameEngine implements Runnable {
         InputManager inputManager = InputManager.getInstance();
         gameState = GameState.START_SCREEN;
         camera = new Camera();
+        crossoverCamera = new Camera();
         uiManager = new UIManager(this, WIDTH, HEIGHT);
         soundManager = new SoundManager();
         mapManager = MapManager.getInstance();
@@ -355,14 +356,14 @@ public class GameEngine implements Runnable {
                 if (userData.getHero().isGrabbed()) {
                     userData.getHero().addNumberOfTryToEscape();
                 } else {
-                    Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
+                    Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCamera;
                     userData.getHero().move(true, currentCam);
                 }
             } else if (inputMgr.isLeft()) {
                 if (userData.getHero().isGrabbed()) {
                     userData.getHero().addNumberOfTryToEscape();
                 } else {
-                    Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCam;
+                    Camera currentCam = gameState == GameState.RUNNING ? camera : crossoverCamera;
                     userData.getHero().move(false, currentCam);
                 }
             } else if (inputMgr.isEmpty()) {
@@ -729,7 +730,7 @@ public class GameEngine implements Runnable {
     }
 
     public Point getCrossoverCameraLocation() {
-        return new Point((int) crossoverCam.getX(), (int) crossoverCam.getY());
+        return new Point((int) crossoverCamera.getX(), (int) crossoverCamera.getY());
     }
 
     public CheckPointSelection getCheckPointSelection() {
