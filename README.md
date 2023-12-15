@@ -1,7 +1,7 @@
 # Super Mario Bros.
 
 ## About this game:
-Here is the [link]([url](https://en.wikipedia.org/wiki/Super_Mario_Bros.)https://en.wikipedia.org/wiki/Super_Mario_Bros.) to the wikipedia webpage about this game.
+Here is the [link](https://en.wikipedia.org/wiki/Super_Mario_Bros.) to the wikipedia webpage about this game.
 
 
 ## Models:
@@ -30,17 +30,11 @@ Actually this is the most important one that all the above (except for map) exte
 For example take a look at this class's fields:
 ```
     private double x, y;
-
     private double velX, velY;
-
     private Dimension dimension;
-
     private BufferedImage style;
-
     private boolean toRight;
-
     private double gravityAcc;
-
     private boolean falling, jumping;
 ```
 Pretty interesting huh!
@@ -62,13 +56,32 @@ It takes time but it is not impossible to find them out.:)
 
 ## Repository:
 As you can see there is a part where you can save or load previous games.
-This part was coded by using JSON and saved the data in .txt files located in src folder.
+This part was coded using JSON, saving the data in .txt files located in src folder.
+The part of the code that helps this proccess is User Data class which is singleton that keeps data about user and current map.
 
 
 ## Game Engine:
 This is the main class handling all the things that are happening in this project!
 Take a carefull look at this class.
-I won't explain more about this class to make sure you check it out yourself.
+Here's the class's fields to see how imprtant it is:
+```
+    private UserData userData;
+    private MapManager mapManager;
+    private UIManager uiManager;
+    private SoundManager soundManager;
+    private GameState gameState;
+    private Camera camera;
+    private Camera crossoverCamera;
+    private ImageLoader imageLoader;
+    private Thread thread;
+    private StartScreenSelection startScreenSelection = StartScreenSelection.LOAD_SCREEN;
+    private LoadGameScreenSelection loadGameScreenSelection = LoadGameScreenSelection.NEW_GAME;
+    private PauseScreenSelection pauseScreenSelection = PauseScreenSelection.GO_TO_MAIN_MENU;
+    private StoreScreenSelection storeScreenSelection = StoreScreenSelection.MARIO;
+    private CheckPointSelection checkPointSelection = CheckPointSelection.YES;
+    private final MapSelection mapSelection = MapSelection.WORLD_1;
+```
+I won't explain more about it to make sure you check it out yourself.
 
 
-### Thank you for your time and enjoy the game.:)
+### Thank you for your time and enjoy the game:)
