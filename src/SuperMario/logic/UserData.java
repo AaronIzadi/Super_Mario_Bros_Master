@@ -14,11 +14,11 @@ public class UserData {
     private String mapPath;
     private int worldNumber;
     private boolean[] typesOwned;
+    private static final UserData instance = new UserData();
     private final LoadGameRepository loadGameRepository;
     private final SaveGameRepository saveGameRepository;
-    private static final UserData instance = new UserData();
 
-    private UserData(){
+    private UserData() {
         this.loadGameRepository = new LoadGameRepository();
         this.saveGameRepository = new SaveGameRepository();
         this.typesOwned = new boolean[5];
@@ -29,7 +29,7 @@ public class UserData {
         return instance;
     }
 
-    private void setTypesOwned(){
+    private void setTypesOwned() {
         typesOwned[HeroType.MARIO] = true;
         typesOwned[HeroType.LUIGI] = false;
         typesOwned[HeroType.PRINCESS_PEACH] = false;
@@ -85,7 +85,7 @@ public class UserData {
         this.worldNumber = worldNumber;
     }
 
-    public void clear(){
+    public void clear() {
         hero = null;
         map = null;
         worldNumber = 0;

@@ -48,7 +48,7 @@ public class SuperStar extends PrizeItems {
     public void onTouch(Hero hero, GameEngine engine) {
         super.onTouch(hero, engine);
         hero.setTookStar(true);
-        engine.playSuperStar();
+        engine.getSoundManager().playSuperStar();
         hero.setTimer();
     }
 

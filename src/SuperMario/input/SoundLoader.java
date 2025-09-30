@@ -7,14 +7,14 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SoundManager {
+public class SoundLoader {
 
     private final Clip background;
     private final Clip bowserBackground;
     private long clipTime = 0;
     private Timer timer;
 
-    public SoundManager() {
+    public SoundLoader() {
         this.background = getClip(loadAudio("background"));
         this.bowserBackground = getClip(loadAudio("BossFightBackground"));
     }

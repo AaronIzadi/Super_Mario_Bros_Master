@@ -28,7 +28,6 @@ public class MultiCoinBrick extends SurpriseBrick {
 
         Prize toReturn = null;
 
-
         if (numberOfCoinsLeft > 0) {
             Coin coin = new Coin(((Coin) prize).getX(), ((Coin) prize).getY(), ((Coin) prize).getStyle(), 10);
             numberOfCoinsLeft--;

@@ -45,54 +45,6 @@ public class Map {
         this.hero = hero;
     }
 
-    public void setBackgroundImage(BufferedImage backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-
-    public void setRemainingTime(double remainingTime) {
-        this.remainingTime = remainingTime;
-    }
-
-    public Hero getHero() {
-        return hero;
-    }
-
-    public void setHero(Hero hero) {
-        this.hero = hero;
-    }
-
-    public ArrayList<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public ArrayList<Fireball> getFireballs() {
-        return fireballs;
-    }
-
-    public ArrayList<Prize> getRevealedPrizes() {
-        return revealedPrizes;
-    }
-
-    public ArrayList<Obstacle> getAllObstacles() {
-        ArrayList<Obstacle> allObstacles = new ArrayList<>();
-
-        allObstacles.addAll(obstacles);
-        allObstacles.addAll(groundBricks);
-
-        return allObstacles;
-    }
-
-    public void addObstacle(Obstacle obstacle) {
-        this.obstacles.add(obstacle);
-    }
-
-    public void addGroundBrick(Obstacle brick) {
-        this.groundBricks.add(brick);
-    }
-
-    public void addEnemy(Enemy enemy) {
-        this.enemies.add(enemy);
-    }
 
     public void drawMap(Graphics2D g2) {
         drawBackground(g2);
@@ -273,6 +225,23 @@ public class Map {
         }
     }
 
+    public void stopBurning() {
+        for (Obstacle border : groundBricks) {
+            if (border instanceof LavaBorder) {
+                ((LavaBorder) border).setBurn(false);
+            }
+        }
+    }
+
+    public ArrayList<Obstacle> getAllObstacles() {
+        ArrayList<Obstacle> allObstacles = new ArrayList<>();
+
+        allObstacles.addAll(obstacles);
+        allObstacles.addAll(groundBricks);
+
+        return allObstacles;
+    }
+
     public double getBottomBorder() {
         return 720;
     }
@@ -363,11 +332,6 @@ public class Map {
 
     public void setBowser(Bowser bowser) {
         this.bowser = bowser;
-        if (bowser == null) {
-            GameEngine.getInstance().playBowserDies();
-            GameEngine.getInstance().stopBossFightBackground();
-            GameEngine.getInstance().playStageClear();
-        }
     }
 
     public Bowser getBowser() {
@@ -378,11 +342,46 @@ public class Map {
         return groundBricks;
     }
 
-    public void stopBurning() {
-        for (Obstacle border : groundBricks) {
-            if (border instanceof LavaBorder) {
-                ((LavaBorder) border).setBurn(false);
-            }
-        }
+    public void setBackgroundImage(BufferedImage backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
+
+    public void setRemainingTime(double remainingTime) {
+        this.remainingTime = remainingTime;
+    }
+
+    public Hero getHero() {
+        return hero;
+    }
+
+    public void setHero(Hero hero) {
+        this.hero = hero;
+    }
+
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public ArrayList<Fireball> getFireballs() {
+        return fireballs;
+    }
+
+    public ArrayList<Prize> getRevealedPrizes() {
+        return revealedPrizes;
+    }
+
+
+    public void addObstacle(Obstacle obstacle) {
+        this.obstacles.add(obstacle);
+    }
+
+    public void addGroundBrick(Obstacle brick) {
+        this.groundBricks.add(brick);
+    }
+
+    public void addEnemy(Enemy enemy) {
+        this.enemies.add(enemy);
+    }
+
+
 }

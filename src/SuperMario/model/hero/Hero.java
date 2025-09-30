@@ -13,6 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public abstract class Hero extends GameObject {
+
     private int remainingLives;
     private int coins;
     private int points;
@@ -95,7 +96,6 @@ public abstract class Hero extends GameObject {
         if (!isJumping() && !isFalling() && isSitting()) {
             setJumping(true);
             setVelY(velY);
-            GameEngine.getInstance().playJump();
         }
     }
 
@@ -125,7 +125,6 @@ public abstract class Hero extends GameObject {
             start = 0;
             timer = 0;
         }
-
         return timer >= 4000;
     }
 
@@ -137,7 +136,7 @@ public abstract class Hero extends GameObject {
             public void run() {
                 setTookStar(false);
                 if (!GameEngine.getInstance().isMute()) {
-                    GameEngine.getInstance().resumeBackground();
+                    GameEngine.getInstance().getSoundManager().resumeBackground();
                 }
             }
         };
@@ -163,7 +162,7 @@ public abstract class Hero extends GameObject {
                 heroDies(engine, 20, losingCoins);
                 return true;
             } else {
-                engine.shakeCamera();
+                engine.getCameraManager().shakeCamera();
                 heroForm.setSuper(false);
                 heroForm.setCanShootFire(false);
                 heroForm.onTouchEnemy(engine.getImageLoader());
@@ -177,7 +176,7 @@ public abstract class Hero extends GameObject {
 
     public void onTouchBorder(GameEngine engine, int losingCoins) {
         heroDies(engine, 30, losingCoins);
-        engine.playHeroFalls();
+        engine.getSoundManager().playHeroFalls();
     }
 
     public void heroDies(GameEngine engine, int lostScore, int losingCoins) {
@@ -185,9 +184,9 @@ public abstract class Hero extends GameObject {
         points = points > lostScore ? points - lostScore : 0;
         coins = coins > losingCoins ? coins - losingCoins : 0;
         if (remainingLives == 0) {
-            engine.playGameOver();
+            engine.getSoundManager().playGameOver();
         } else {
-            engine.playHeroDies();
+            engine.getSoundManager().playHeroDies();
         }
         heroForm.setSuper(false);
         heroForm.setCanShootFire(false);
@@ -230,6 +229,11 @@ public abstract class Hero extends GameObject {
         };
         Timer timer = new Timer();
         timer.schedule(task, 3000);
+    }
+
+    @Override
+    public BufferedImage getStyle() {
+        return super.getStyle();
     }
 
     public void throwAxe() {
@@ -302,34 +306,6 @@ public abstract class Hero extends GameObject {
 
     public void setPoints(int points) {
         this.points = points;
-    }
-
-    public void resetLocation() {
-        setVelX(0);
-        setVelY(0);
-        setX(50);
-        setY(100);
-        setJumping(false);
-        setFalling(true);
-    }
-
-    public void reLoadCheckPoint(double x, double y) {
-        setVelX(0);
-        setVelY(0);
-        setX(x);
-        setY(y);
-        setJumping(false);
-        setFalling(false);
-    }
-
-    public void escapeFromGrabAttack(boolean bowserIsToRight) {
-        double x = bowserIsToRight ? (104 + 96 - 24) : (-96 + 24);
-        setX(getX() + x);
-    }
-
-    @Override
-    public BufferedImage getStyle() {
-        return super.getStyle();
     }
 
     public void setTookStar(boolean tookStar) {

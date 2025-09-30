@@ -34,7 +34,7 @@ public abstract class PrizeItems extends GameObject implements Prize {
             setHeroForm(hero, HeroForm.FIRE);
         }
 
-        engine.playPowerUp();
+        engine.getSoundManager().playPowerUp();
     }
 
     private void setHeroForm(Hero hero, int heroFormType) {

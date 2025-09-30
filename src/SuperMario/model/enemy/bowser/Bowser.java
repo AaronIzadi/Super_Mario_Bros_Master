@@ -157,7 +157,7 @@ public class Bowser extends Enemy {
         } else {
             fire.add(new Fire(x, getY() + 72, style, isToRight()));
         }
-        GameEngine.getInstance().playBowserFireBall();
+        GameEngine.getInstance().getSoundManager().playBowserFireBall();
     }
 
     private void bomb() {
@@ -177,7 +177,7 @@ public class Bowser extends Enemy {
         double y = getY() + 68;
 
         bomb.add(new Bomb(x, y, ImageLoader.getInstance().getBomb()));
-        GameEngine.getInstance().playBowserFireBall();
+        GameEngine.getInstance().getSoundManager().playBowserFireBall();
     }
 
 

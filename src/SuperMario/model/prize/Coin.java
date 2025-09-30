@@ -39,7 +39,7 @@ public class Coin extends GameObject implements Prize {
             acquired = true;
             hero.acquirePoints(point);
             hero.acquireCoin();
-            engine.playCoin();
+            engine.getSoundManager().playCoin();
         }
     }
 

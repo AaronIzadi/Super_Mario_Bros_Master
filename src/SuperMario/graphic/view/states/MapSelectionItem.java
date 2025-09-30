@@ -13,7 +13,6 @@ public class MapSelectionItem {
         this.dimension = new Dimension();
     }
 
-
     public String getName() {
         return name;
     }

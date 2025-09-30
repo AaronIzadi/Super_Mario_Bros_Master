@@ -1,6 +1,5 @@
 package SuperMario.logic;
 
-import SuperMario.graphic.manager.InputManager;
 import SuperMario.graphic.manager.MapCreator;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
@@ -27,6 +26,7 @@ import java.util.TimerTask;
 
 public class MapManager {
 
+    private Timer grabTimer;
     private Map map;
     private Map crossover;
     private Hero hero;
@@ -36,8 +36,13 @@ public class MapManager {
     private double yHero;
     private double progressRate;
     private boolean isChecked = false;
-    private Timer grabTimer;
     private final ArrayList<GameObject> toBeRemoved = new ArrayList<>();
+
+    private GameEngine engine;
+    private GameStateManager stateManager;
+    private SoundManager soundManager;
+    private UserData userData;
+
     private static final MapManager instance = new MapManager();
 
     private MapManager() {
@@ -47,7 +52,14 @@ public class MapManager {
         return instance;
     }
 
-    public void updateLocations() {
+    public void initialize(GameEngine engine) {
+        this.engine = engine;
+        stateManager = engine.getStateManager();
+        soundManager = engine.getSoundManager();
+        userData = engine.getUserData();
+    }
+
+    void updateLocations() {
         if (map == null) {
             return;
         }
@@ -59,41 +71,48 @@ public class MapManager {
         }
     }
 
-    public void updateLocationsForCrossover() {
-        if (crossover == null) {
-            return;
+    void createMap(String path) {
+        boolean loaded = isMapCreated(path);
+        userData.setHero(hero);
+        userData.setMap(map);
+        if (loaded) {
+            stateManager.setGameState(GameState.RUNNING);
+            if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                soundManager.playBossFightBackground();
+            } else {
+                soundManager.restartBackground();
+            }
+        } else {
+            stateManager.setGameState(GameState.START_SCREEN);
         }
-        crossover.updateLocationsForCrossover();
     }
 
-    public void resetCurrentMap(GameEngine engine) {
-        Hero hero = getHero();
-        hero.resetLocation();
-        engine.resetCamera();
-        if (MapSelection.BOSS_FIGHT.getMapPath(MapSelection.BOSS_FIGHT.getWorldNumber()).equals(map.getPath())) {
-            createMap(map.getPath(), hero);
-        }
-    }
-
-    private void reLoadCheckPoint(double x, double y) {
-        getHero().reLoadCheckPoint(x, y);
-        GameEngine.getInstance().reLoadCheckPoint(x);
-    }
-
-    public void createCrossover(String path, Hero hero) {
-        ImageLoader.getInstance().setHeroType(hero.getType());
-        MapCreator mapCreator = new MapCreator();
-        crossover = mapCreator.createCrossOver("/maps/" + path, hero);
-    }
-
-    public boolean createMap(String path) {
+    private boolean isMapCreated(String path) {
         MapCreator mapCreator = new MapCreator();
         map = mapCreator.createMap("/maps/" + path);
         hero = map.getHero();
         return map != null;
     }
 
-    public boolean createMap(String path, Hero hero) {
+    Map createMap(String path, Hero hero) {
+        boolean loaded = isMapCreated(path, hero);
+        userData.setHero(hero);
+        userData.setMap(map);
+        if (loaded) {
+            stateManager.setGameState(GameState.RUNNING);
+            if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                soundManager.playBossFightBackground();
+            } else {
+                soundManager.restartBackground();
+            }
+            return map;
+        } else {
+            stateManager.setGameState(GameState.START_SCREEN);
+        }
+        return null;
+    }
+
+    private boolean isMapCreated(String path, Hero hero) {
         ImageLoader.getInstance().setHeroType(hero.getType());
         MapCreator mapCreator = new MapCreator(hero);
         map = mapCreator.createMap("/maps/" + path);
@@ -102,7 +121,55 @@ public class MapManager {
         return map != null;
     }
 
-    public void acquirePoints(int point) {
+    void updateLocationsForCrossover() {
+        if (crossover == null) {
+            return;
+        }
+        crossover.updateLocationsForCrossover();
+    }
+
+    void resetCurrentMap(GameEngine engine) {
+        Hero hero = getHero();
+        hero.setVelX(0);
+        hero.setVelY(0);
+        hero.setX(50);
+        hero.setY(100);
+        hero.setJumping(false);
+        hero.setFalling(true);
+        engine.getCameraManager().resetCamera();
+        if (MapSelection.BOSS_FIGHT.getMapPath(MapSelection.BOSS_FIGHT.getWorldNumber()).equals(map.getPath())) {
+            isMapCreated(map.getPath(), hero);
+        }
+    }
+
+    private void reLoadCheckPoint(double x, double y) {
+        Hero hero = getHero();
+        hero.setVelY(0);
+        hero.setX(x);
+        hero.setY(y);
+        hero.setJumping(false);
+        hero.setFalling(false);
+        engine.getCameraManager().reLoadCheckPoint(x);
+    }
+
+    private void createCrossover(String path, Hero hero) {
+        ImageLoader.getInstance().setHeroType(hero.getType());
+        MapCreator mapCreator = new MapCreator();
+        crossover = mapCreator.createCrossOver("/maps/" + path, hero);
+    }
+
+    void selectMap(int worldNumber) {
+        String path = engine.getInputManager().getMapSelection().selectMap(worldNumber);
+        if (path != null) {
+            if (userData.getHero() != null) {
+                createMap(path, userData.getHero());
+            } else {
+                createMap(path);
+            }
+        }
+    }
+
+    void acquirePoints(int point) {
         map.getHero().acquirePoints(point);
     }
 
@@ -110,29 +177,29 @@ public class MapManager {
         return hero;
     }
 
-    public void setHero(Hero hero) {
+    void setHero(Hero hero) {
         this.hero = hero;
     }
 
-    public Map getMap() {
+    Map getMap() {
         return map;
     }
 
-    public void setMap(Map map) {
+    void setMap(Map map) {
         this.map = map;
     }
 
-    public void fire() {
+    void fire() {
         Fireball fireball = getHero().fire();
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+        if (stateManager.getGameState() == GameState.RUNNING) {
             currentMap = map;
         } else {
             currentMap = crossover;
         }
         if (fireball != null) {
             currentMap.addFireball(fireball);
-            GameEngine.getInstance().playFireball();
+            soundManager.playFireball();
 
             if (currentMap.getBowser() != null) {
                 currentMap.getBowser().canJump(Math.abs(currentMap.getBowser().getX() - fireball.getX()) >= (8 * 48));
@@ -140,7 +207,7 @@ public class MapManager {
         }
     }
 
-    public void activateAxe() {
+    void activateAxe() {
 
         if (getHero().getAxe() == null) {
             map.removeAxe();
@@ -149,7 +216,7 @@ public class MapManager {
         if (map.getAxe() == null) {
             getHero().activateAxe();
             Map currentMap;
-            if (GameEngine.getInstance().getGameState() == GameState.RUNNING) {
+            if (stateManager.getGameState() == GameState.RUNNING) {
                 currentMap = map;
             } else {
                 currentMap = crossover;
@@ -167,19 +234,19 @@ public class MapManager {
             map.getAllObstacles().removeIf(brick -> brick instanceof GroundBrick);
             map.getGroundBricks().removeIf(brick -> brick instanceof GroundBrick);
             map.stopBurning();
-            GameEngine.getInstance().playBreakBrick();
+            soundManager.playBreakBrick();
             return true;
         }
         return false;
     }
 
-    public void throwAxe() {
+    void throwAxe() {
         if (getHero().isAxeActivated()) {
             getHero().throwAxe();
         }
     }
 
-    public boolean isGameOver() {
+    boolean isGameOver() {
         return hero.getRemainingLives() == 0 || map.isTimeOver();
     }
 
@@ -203,10 +270,10 @@ public class MapManager {
         crossover.drawCrossover(g2);
     }
 
-    public int passMission() {
+    int passMission() {
         if (hero.getX() >= map.getEndPoint().getX() && !map.getEndPoint().isTouched()) {
             map.getEndPoint().setTouched(true);
-            GameEngine.getInstance().playFlagPole();
+            soundManager.playFlagPole();
             int height = (int) getHero().getY();
             return height * 2;
         } else {
@@ -214,11 +281,11 @@ public class MapManager {
         }
     }
 
-    public boolean endLevel() {
+    boolean endLevel() {
         return hero.getX() >= map.getEndPoint().getX() + 320;
     }
 
-    public void checkCollisions(GameEngine engine) {
+    void checkCollisions(GameEngine engine) {
         if (map == null) {
             return;
         }
@@ -248,7 +315,7 @@ public class MapManager {
 
     private void checkBowserPossibleCollisions(GameObject object) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -296,16 +363,16 @@ public class MapManager {
                 object.setVelY(0);
                 object.setY(obstacle.getY() + obstacle.getDimension().height);
                 if (obstacle instanceof Brick) {
-                    ((Brick) obstacle).reveal(GameEngine.getInstance());
+                    ((Brick) obstacle).reveal(engine);
                 }
             }
         }
 
         if (object.getY() + object.getDimension().height >= map.getBottomBorder() - (2 * 48)) {
             if (object instanceof Bowser && !((Bowser) object).hasTouchedGround()) {
-                GameEngine.getInstance().shakeCamera();
+                engine.getCameraManager().shakeCamera();
                 if (hero.getBottomBounds().getY() >= 720 - (3 * 48)) {
-                    hero.onTouchEnemy(GameEngine.getInstance(), 0);
+                    hero.onTouchEnemy(engine, 0);
                 }
                 ((Bowser) object).setHasTouchedGround(true);
             } else if (object instanceof Bomb) {
@@ -318,7 +385,7 @@ public class MapManager {
 
     private void checkBottomCollisions(GameEngine engine) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -339,7 +406,7 @@ public class MapManager {
 
             Rectangle obstacleTopBounds = obstacle.getTopBounds();
             if (heroBottomBounds.intersects(obstacleTopBounds)) {
-                if (engine.getUserData().getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
+                if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
                     if (obstacle instanceof Brick) {
                         if (((Brick) obstacle).isTimeToBreak()) {
                             toBeRemoved.add(obstacle);
@@ -357,22 +424,22 @@ public class MapManager {
                         ((Slime) obstacle).setOnTouch(true);
                         hero.jumpOnSlime();
                     }
-                    if (obstacle instanceof CrossoverTunnel && !((CrossoverTunnel) obstacle).isRevealed() && InputManager.getInstance().isDown()) {
-                        if (engine.getGameState() == GameState.RUNNING) {
-                            engine.playPipe();
+                    if (obstacle instanceof CrossoverTunnel && !((CrossoverTunnel) obstacle).isRevealed() && engine.getInputManager().getInputReceiver().isDown()) {
+                        if (stateManager.getGameState() == GameState.RUNNING) {
+                            soundManager.playPipe();
                             xBeforeCrossover = hero.getX();
                             yBeforeCrossover = hero.getY();
                             ((CrossoverTunnel) obstacle).setRevealed(true);
-                            engine.setGameState(GameState.CROSSOVER);
-                            if (engine.getUserData().getWorldNumber() == 0) {
+                            stateManager.setGameState(GameState.CROSSOVER);
+                            if (userData.getWorldNumber() == 0) {
                                 createCrossover(MapSelection.CROSSOVER_1.getMapPath(MapSelection.CROSSOVER_1.getWorldNumber()), hero);
-                            } else if (engine.getUserData().getWorldNumber() == 1) {
+                            } else if (userData.getWorldNumber() == 1) {
                                 createCrossover(MapSelection.CROSSOVER_2.getMapPath(MapSelection.CROSSOVER_2.getWorldNumber()), hero);
                             } else {
                                 createCrossover(MapSelection.CROSSOVER_3.getMapPath(MapSelection.CROSSOVER_3.getWorldNumber()), hero);
                             }
                         } else {
-                            engine.setGameState(GameState.RUNNING);
+                            stateManager.setGameState(GameState.RUNNING);
                             hero.setSitting(false);
                             hero.setLocation(xBeforeCrossover, yBeforeCrossover);
                         }
@@ -391,12 +458,13 @@ public class MapManager {
                 if (enemy instanceof Bowser) {
                     int newHP = ((Bowser) enemy).getHp() > 3 ? (((Bowser) enemy).getHp() - 3) : 0;
                     ((Bowser) enemy).setHp(newHP);
-                    engine.playStomp();
+                    soundManager.playStomp();
                     hero.setFalling(false);
                     hero.jump();
                     if (checkIfBowserDies()) {
                         toBeRemoved.add(enemy);
                         map.setBowser(null);
+                        soundManager.heroWinsOverBowser();
                     }
                 } else if (enemy instanceof KoopaTroopa) {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
@@ -407,16 +475,18 @@ public class MapManager {
                     } else {
                         acquirePoints(2);
                         toBeRemoved.add(enemy);
-                        engine.playStomp();
+                        soundManager.playStomp();
                     }
                     hero.setFalling(false);
                     hero.jumpOnEnemy();
+                    soundManager.playJump();
                 } else {
                     acquirePoints(1);
                     toBeRemoved.add(enemy);
-                    engine.playStomp();
+                    soundManager.playStomp();
                     hero.setFalling(false);
                     hero.jumpOnEnemy();
+                    soundManager.playJump();
                 }
             }
         }
@@ -436,7 +506,7 @@ public class MapManager {
 
     private void checkTopCollisions(GameEngine engine) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -458,7 +528,7 @@ public class MapManager {
                 }
             } else if (obstacle instanceof CheckPoint && heroTopBounds.intersects(obstacleBottomBounds)) {
                 if (!((CheckPoint) obstacle).isRevealed()) {
-                    engine.pauseInCheckPoint();
+                    pauseInCheckPoint();
                 } else {
                     hero.setVelY(0);
                     hero.setY(obstacle.getY() + obstacle.getDimension().height);
@@ -469,7 +539,7 @@ public class MapManager {
 
     private void checkHeroHorizontalCollision(GameEngine engine) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -524,6 +594,7 @@ public class MapManager {
                         if (checkIfBowserDies()) {
                             toBeRemoved.add(enemy);
                             map.setBowser(null);
+                            soundManager.heroWinsOverBowser();
                         }
                     } else {
                         toBeRemoved.add(enemy);
@@ -545,9 +616,9 @@ public class MapManager {
     private void ifIsStillGrabbed() {
         if (hero.getNumberOfTryToEscape() >= 10) {
             hero.setGrabbed(false);
-            hero.escapeFromGrabAttack(map.getBowser().isToRight());
+            double x = map.getBowser().isToRight() ? (104 + 96 - 24) : (-96 + 24);
+            hero.setX(hero.getX() + x);
             hero.setNumberOfTryToEscape(0);
-
             grabTimer.cancel();
             TimerTask task = new TimerTask() {
                 @Override
@@ -572,8 +643,9 @@ public class MapManager {
             public void run() {
                 if (hero.isGrabbed()) {
                     hero.setGrabbed(false);
-                    hero.onTouchEnemy(GameEngine.getInstance(), 0);
-                    hero.escapeFromGrabAttack(map.getBowser().isToRight());
+                    hero.onTouchEnemy(engine, 0);
+                    double x = map.getBowser().isToRight() ? (104 + 96 - 24) : (-96 + 24);
+                    hero.setX(hero.getX() + x);
                     hero.setNumberOfTryToEscape(0);
                     map.getBowser().moveNormal(map.getBowser().isToRight());
                     map.getBowser().setGrabAttackOn(false);
@@ -595,26 +667,14 @@ public class MapManager {
 
     private void checkEnemyCollisions() {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
         }
 
         ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
-        ArrayList<Enemy> enemies = currentMap.getEnemies();
-
-
-        for (Enemy enemy : enemies) {
-            if (enemy instanceof Spiny && ((getHero().getY() + getHero().getStyle().getHeight()) == (enemy.getY() + enemy.getStyle().getHeight() + 1))) {
-                Spiny spiny = (Spiny) enemy;
-                if (Math.abs(spiny.getX() - getHero().getX()) <= 192) {
-                    spiny.moveFaster();
-                } else {
-                    spiny.moveNormal();
-                }
-            }
-        }
+        ArrayList<Enemy> enemies = getEnemies(currentMap);
 
         for (Enemy enemy : enemies) {
             if (!(enemy instanceof Piranha)) {
@@ -656,9 +716,26 @@ public class MapManager {
         }
     }
 
+    private ArrayList<Enemy> getEnemies(Map currentMap) {
+        ArrayList<Enemy> enemies = currentMap.getEnemies();
+
+
+        for (Enemy enemy : enemies) {
+            if (enemy instanceof Spiny && ((getHero().getY() + getHero().getStyle().getHeight()) == (enemy.getY() + enemy.getStyle().getHeight() + 1))) {
+                Spiny spiny = (Spiny) enemy;
+                if (Math.abs(spiny.getX() - getHero().getX()) <= 192) {
+                    spiny.moveFaster();
+                } else {
+                    spiny.moveNormal();
+                }
+            }
+        }
+        return enemies;
+    }
+
     private void checkPrizeCollision() {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -719,7 +796,7 @@ public class MapManager {
 
     private void checkPrizeContact(GameEngine engine) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -743,7 +820,7 @@ public class MapManager {
 
     private void checkWeaponContact() {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -768,7 +845,7 @@ public class MapManager {
     private void checkWeaponCollision(GameObject object) {
 
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -805,6 +882,7 @@ public class MapManager {
                     if (checkIfBowserDies()) {
                         toBeRemoved.add(enemy);
                         map.setBowser(null);
+                        soundManager.heroWinsOverBowser();
                     }
                 } else if (enemy instanceof Goomba) {
                     acquirePoints(1);
@@ -825,7 +903,7 @@ public class MapManager {
                     acquirePoints(1);
                     toBeRemoved.add(enemy);
                 }
-                GameEngine.getInstance().playKickEnemy();
+                soundManager.playKickEnemy();
                 toBeRemoved.add(object);
             }
         }
@@ -857,7 +935,7 @@ public class MapManager {
     private void checkEnemyWeaponCollision(GameObject object) {
 
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -883,6 +961,7 @@ public class MapManager {
                         if (checkIfBowserDies()) {
                             toBeRemoved.add(enemy);
                             map.setBowser(null);
+                            soundManager.heroWinsOverBowser();
                         }
                     }
                 } else if (enemy instanceof Goomba) {
@@ -918,12 +997,12 @@ public class MapManager {
                 if (!((Bomb) object).hasIntersect()) {
                     ((Bomb) object).setHasIntersect(true);
                 } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
-                    hero.onTouchEnemy(GameEngine.getInstance(), 0);
+                    hero.onTouchEnemy(engine, 0);
                     ((Bomb) object).setTimeToVanish(true);
                 }
             } else if (object instanceof Fire) {
                 toBeRemoved.add(object);
-                hero.onTouchEnemy(GameEngine.getInstance(), 0);
+                hero.onTouchEnemy(engine, 0);
             }
         }
 
@@ -957,7 +1036,7 @@ public class MapManager {
         }
 
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -986,6 +1065,16 @@ public class MapManager {
         }
     }
 
+    private void pauseInCheckPoint() {
+        if (stateManager.getGameState() == GameState.RUNNING) {
+            stateManager.setGameState(GameState.CHECKPOINT);
+            soundManager.pauseBackground();
+        } else if (stateManager.getGameState() == GameState.CHECKPOINT) {
+            stateManager.setGameState(GameState.RUNNING);
+            soundManager.resumeBackground();
+        }
+    }
+
     public void handleCheckPoint(boolean isChecked) {
         this.isChecked = isChecked;
         if (isChecked) {
@@ -1008,7 +1097,7 @@ public class MapManager {
 
     public void addRevealedBrick(OrdinaryBrick ordinaryBrick) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -1018,7 +1107,7 @@ public class MapManager {
 
     public void addRevealedBrick(CoinBrick coinBrick) {
         Map currentMap;
-        if (GameEngine.getInstance().getGameState() == GameState.CROSSOVER) {
+        if (stateManager.getGameState() == GameState.CROSSOVER) {
             currentMap = crossover;
         } else {
             currentMap = map;
@@ -1036,7 +1125,7 @@ public class MapManager {
         return (int) map.getRemainingTime();
     }
 
-    public void setChecked(boolean checked) {
-        isChecked = checked;
+    void setChecked() {
+        isChecked = false;
     }
 }

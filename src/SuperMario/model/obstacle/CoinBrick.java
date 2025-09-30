@@ -47,7 +47,7 @@ public class CoinBrick extends SurpriseBrick {
                 return null;
 
             manager.addRevealedBrick(this);
-            engine.playBreakBrick();
+            engine.getSoundManager().playBreakBrick();
 
             double newX = getX() - 27, newY = getY() - 27;
             setLocation(newX, newY);

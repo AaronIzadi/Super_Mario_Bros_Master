@@ -17,6 +17,6 @@ public class HeartMushroom extends PrizeItems {
     public void onTouch(Hero hero, GameEngine engine) {
         hero.acquirePoints(getPoint());
         hero.setRemainingLives(hero.getRemainingLives() + 1);
-        engine.playOneUp();
+        engine.getSoundManager().playOneUp();
     }
 }

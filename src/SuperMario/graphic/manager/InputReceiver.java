@@ -18,19 +18,19 @@ import java.util.TimerTask;
 import static java.awt.event.KeyEvent.*;
 
 
-public class InputManager implements KeyListener, MouseListener {
+public class InputReceiver implements KeyListener, MouseListener {
 
-    private static final InputManager instance = new InputManager();
+    private static final InputReceiver instance = new InputReceiver();
     private final Set<Integer> keyPressed;
     private boolean isUpAndDownPressed;
     private Timer timer;
     ButtonAction currentAction = ButtonAction.NO_ACTION;
 
-    private InputManager() {
+    private InputReceiver() {
         keyPressed = new HashSet<>();
     }
 
-    public static InputManager getInstance() {
+    public static InputReceiver getInstance() {
         return instance;
     }
 
@@ -38,7 +38,7 @@ public class InputManager implements KeyListener, MouseListener {
     public void keyPressed(KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyPressed.add(keyCode);
-        GameState state = GameEngine.getInstance().getGameState();
+        GameState state = GameEngine.getInstance().getStateManager().getGameState();
         boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.PAUSED;
         if (keyCode == VK_DOWN) {
             if (notRunningState) {
@@ -106,8 +106,21 @@ public class InputManager implements KeyListener, MouseListener {
 
     private void notifyInput(ButtonAction action) throws IOException, ParseException {
         if (action != ButtonAction.NO_ACTION) {
-            GameEngine.getInstance().receiveInput();
+            GameEngine.getInstance().getInputManager().receiveInput();
         }
+    }
+
+    public void setTimer() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (currentAction == ButtonAction.ACTIVATE_AXE) {
+                    isUpAndDownPressed = true;
+                }
+            }
+        };
+        timer = new Timer();
+        timer.schedule(task, 2000);
     }
 
     @Override
@@ -172,18 +185,5 @@ public class InputManager implements KeyListener, MouseListener {
 
     public boolean isUpAndDownSelected() {
         return keyPressed.contains(VK_UP) && keyPressed.contains(VK_DOWN) && isUpAndDownPressed;
-    }
-
-    public void setTimer() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (currentAction == ButtonAction.ACTIVATE_AXE) {
-                    isUpAndDownPressed = true;
-                }
-            }
-        };
-        timer = new Timer();
-        timer.schedule(task, 2000);
     }
 }
