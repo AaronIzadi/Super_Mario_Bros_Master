@@ -59,6 +59,10 @@ public class MapManager {
         userData = engine.getUserData();
     }
 
+    public SoundManager getSoundManager() {
+        return soundManager;
+    }
+
     void updateLocations() {
         if (map == null) {
             return;
@@ -423,6 +427,7 @@ public class MapManager {
                     if (obstacle instanceof Slime) {
                         ((Slime) obstacle).setOnTouch(true);
                         hero.jumpOnSlime();
+                        soundManager.playJump();
                     }
                     if (obstacle instanceof CrossoverTunnel && !((CrossoverTunnel) obstacle).isRevealed() && engine.getInputManager().getInputReceiver().isDown()) {
                         if (stateManager.getGameState() == GameState.RUNNING) {
@@ -461,6 +466,7 @@ public class MapManager {
                     soundManager.playStomp();
                     hero.setFalling(false);
                     hero.jump();
+                    soundManager.playJump();
                     if (checkIfBowserDies()) {
                         toBeRemoved.add(enemy);
                         map.setBowser(null);

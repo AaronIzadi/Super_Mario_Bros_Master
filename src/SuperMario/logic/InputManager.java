@@ -98,6 +98,7 @@ public class InputManager {
                 mapManager.activateAxe();
             } else if (inputReceiver.isUp()) {
                 userData.getHero().jump();
+                mapManager.getSoundManager().playJump();
             } else if (inputReceiver.isDown()) {
                 userData.getHero().sit();
             } else if (inputReceiver.isRight()) {
