@@ -69,6 +69,18 @@ public class CoinBrick extends SurpriseBrick {
         return frames;
     }
 
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public void decrementFrames() {
+        frames--;
+    }
+
+    public void setPrize(Prize prize) {
+        this.prize = prize;
+    }
+
     @Override
     public void animate() {
         boolean isAnimationTicked = animation.animate(30);

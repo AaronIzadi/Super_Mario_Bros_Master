@@ -51,6 +51,22 @@ public class OrdinaryBrick extends Brick {
         return frames;
     }
 
+    public boolean isBreaking() {
+        return breaking;
+    }
+
+    public void setBreaking(boolean breaking) {
+        this.breaking = breaking;
+    }
+
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public void decrementFrames() {
+        frames--;
+    }
+
     public void animate() {
         if (breaking) {
             boolean isAnimationTicked = animation.animate(30);

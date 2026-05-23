@@ -303,4 +303,56 @@ public class Bowser extends Enemy {
     public boolean canHurt() {
         return canHurt;
     }
+
+    public int getHpValue() {
+        return hp;
+    }
+
+    public void setHpValue(int hp) {
+        this.hp = hp;
+    }
+
+    public HitPoints getHitPoints() {
+        return hitPoints;
+    }
+
+    public boolean isCoolDownFinished() {
+        return isCoolDownFinished;
+    }
+
+    public Hero getHero() {
+        return hero;
+    }
+
+    public Animation getRightAnimation() {
+        return rightAnimation;
+    }
+
+    public void setRightAnimation(Animation rightAnimation) {
+        this.rightAnimation = rightAnimation;
+    }
+
+    public Animation getLeftAnimation() {
+        return leftAnimation;
+    }
+
+    public void setLeftAnimation(Animation leftAnimation) {
+        this.leftAnimation = leftAnimation;
+    }
+
+    public BufferedImage[] getRightFrames() {
+        return rightFrames;
+    }
+
+    public BufferedImage[] getLeftFrames() {
+        return leftFrames;
+    }
+
+    public void setJumpIntent(boolean jump) {
+        this.jump = jump;
+    }
+
+    public boolean isJumpIntent() {
+        return jump;
+    }
 }

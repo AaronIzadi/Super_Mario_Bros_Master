@@ -134,7 +134,6 @@ public class MapCreator {
             }
         }
 
-        System.out.println("Loading crossover.");
         return crossover;
 
     }
@@ -159,7 +158,6 @@ public class MapCreator {
         BufferedImage mapImage = imageLoader.loadImage(mapPath);
 
         if (mapImage == null) {
-            System.out.println("Given path is invalid...");
             return null;
         }
 
@@ -299,7 +297,6 @@ public class MapCreator {
             }
         }
 
-        System.out.println("Loading map.");
         return map;
     }
 

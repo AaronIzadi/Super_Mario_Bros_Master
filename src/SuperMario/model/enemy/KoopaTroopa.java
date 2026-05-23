@@ -76,4 +76,20 @@ public class KoopaTroopa extends Enemy {
     public void setShell(BufferedImage shell) {
         this.shell = shell;
     }
+
+    public BufferedImage getRightImage() {
+        return rightImage;
+    }
+
+    public BufferedImage getShell() {
+        return shell;
+    }
+
+    public Double getLastVelX() {
+        return lastVelX;
+    }
+
+    public void setLastVelX(Double lastVelX) {
+        this.lastVelX = lastVelX;
+    }
 }

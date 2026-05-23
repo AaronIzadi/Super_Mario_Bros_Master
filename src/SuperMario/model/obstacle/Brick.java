@@ -64,4 +64,24 @@ public class Brick extends Obstacle {
         start = 0;
         finish = 0;
     }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getFinish() {
+        return finish;
+    }
+
+    public void setFinish(long finish) {
+        this.finish = finish;
+    }
+
+    public long getTimer() {
+        return timer;
+    }
 }

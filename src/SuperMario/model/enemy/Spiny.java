@@ -44,4 +44,7 @@ public class Spiny extends Enemy {
         this.rightImage = rightImage;
     }
 
+    public BufferedImage getRightImage() {
+        return rightImage;
+    }
 }

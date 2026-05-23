@@ -44,4 +44,16 @@ public class LavaBorder extends Border {
             setStyle(animation.getCurrentFrame());
         }
     }
+
+    public boolean isBurn() {
+        return burn;
+    }
+
+    public Animation getAnimation() {
+        return animation;
+    }
+
+    public BufferedImage getMainStyle() {
+        return mainStyle;
+    }
 }

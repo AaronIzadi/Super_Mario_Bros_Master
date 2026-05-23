@@ -1,8 +1,8 @@
 package SuperMario.model.weapon;
 
-
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
+import SuperMario.logic.weapon.WeaponLogic;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 
@@ -32,34 +32,11 @@ public class Axe extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        if (!isReleased) {
-            if (hero.getToRight()) {
-                g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
-            } else {
-                g.drawImage(leftStyle, (int) getX(), (int) getY(), null);
-            }
-        } else {
-            super.draw(g);
-            animate();
-        }
-    }
-
-    public void animate() {
-        boolean isAnimationTicked = axeAnimation.animate(25);
-        if (isAnimationTicked) {
-            setStyle(axeAnimation.getCurrentFrame());
-        }
+        WeaponLogic.draw(this, g);
     }
 
     public void setReleased(boolean released, double xReleasePoint) {
-        this.isReleased = released;
-        this.xReleasePoint = xReleasePoint;
-        if (isReleased) {
-            setVelX(8);
-            if (!hero.getToRight()) {
-                setVelX(-8);
-            }
-        }
+        WeaponLogic.setReleased(this, released, xReleasePoint);
     }
 
     public boolean isReleased() {
@@ -72,28 +49,46 @@ public class Axe extends GameObject {
 
     @Override
     public void updateLocation() {
-        if (gotThere) {
-            double dx = hero.getX() - getX();
-            double dy = (-1) * ((hero.getY() + 48) - getY());
-            double time = 6;
+        WeaponLogic.update(this);
+    }
 
-            setVelX(dx / time);
-            setVelY(dy / time);
-        }
+    public Hero getHero() {
+        return hero;
+    }
 
-        setY(getY() - getVelY());
-        setX(getX() + getVelX());
+    public Animation getAxeAnimation() {
+        return axeAnimation;
+    }
 
-        if (Math.abs(xReleasePoint - getX()) >= (4 * 48)) {
-            gotThere = true;
-        }
+    public BufferedImage getLeftStyle() {
+        return leftStyle;
+    }
 
-        if (Math.floor(hero.getX()) == Math.floor(getX()) || Math.ceil(hero.getX()) == Math.ceil(getX())) {
-            gotBack = true;
-        }
+    public void setReleasedFlag(boolean released) {
+        isReleased = released;
+    }
 
-        if (gotThere && gotBack) {
-            hero.deactivateAxe();
-        }
+    public double getXReleasePoint() {
+        return xReleasePoint;
+    }
+
+    public void setXReleasePoint(double xReleasePoint) {
+        this.xReleasePoint = xReleasePoint;
+    }
+
+    public boolean isGotThere() {
+        return gotThere;
+    }
+
+    public void setGotThere(boolean gotThere) {
+        this.gotThere = gotThere;
+    }
+
+    public boolean isGotBack() {
+        return gotBack;
+    }
+
+    public void setGotBack(boolean gotBack) {
+        this.gotBack = gotBack;
     }
 }

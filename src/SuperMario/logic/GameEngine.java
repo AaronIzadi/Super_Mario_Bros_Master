@@ -1,5 +1,6 @@
 package SuperMario.logic;
 
+import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.UI.UIManager;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
@@ -29,14 +30,14 @@ public class GameEngine {
 
 
     private GameEngine() {
-        initial();
+        initialize();
     }
 
     public static GameEngine getInstance() {
         return instance;
     }
 
-    private void initial() {
+    private void initialize() {
         userData = UserData.getInstance();
         imageLoader = ImageLoader.getInstance();
         soundManager = new SoundManager();
@@ -46,7 +47,7 @@ public class GameEngine {
         mapManager.initialize(this);
 
         inputManager = new InputManager(this, userData, mapManager, cameraManager);
-        uiManager = new UIManager(this, 1268, 708);
+        uiManager = new UIManager(this, GameConstants.WINDOW_WIDTH, GameConstants.WINDOW_HEIGHT);
         loopManager = new GameLoopManager(this, mapManager, cameraManager, stateManager, inputManager, uiManager);
 
         JFrame frame = new JFrame("Super Mario Bros.");
@@ -91,8 +92,7 @@ public class GameEngine {
     }
 
     void checkAndThenLoadFile(int fileId) throws IOException {
-        if (2 < fileId || fileId < 0) {
-            startGame(fileId);
+        if (fileId < GameConstants.MIN_SAVE_SLOT || fileId > GameConstants.MAX_SAVE_SLOT) {
             return;
         }
         if (!userData.getLoadGameRepository().isFileEmpty(fileId)) {
@@ -118,8 +118,6 @@ public class GameEngine {
 
     void loadGame(int fileNumber) throws IOException {
         userData = userData.getLoadGameRepository().getUserData(fileNumber);
-        userData.setHero(userData.getHero());
-        userData.setTypesOwned(userData.getTypesOwned());
         mapManager.setMap(mapManager.createMap(userData.getMapPath(), userData.getHero()));
         mapManager.setHero(userData.getHero());
         cameraManager.resetCamera();
@@ -136,7 +134,7 @@ public class GameEngine {
         imageLoader.setHeroType(type);
         userData.getHero().setType(type);
         int heroFormId = userData.getHero().isSuper() ? 1 : 0;
-        if (userData.getHero().getHeroForm().ifCanShootFire()) {
+        if (userData.getHero().getHeroForm().canShootFire()) {
             heroFormId = 2;
         }
         userData.getHero().setHeroForm(
@@ -144,7 +142,7 @@ public class GameEngine {
                         imageLoader.getHeroLeftFrames(heroFormId),
                         imageLoader.getHeroRightFrames(heroFormId),
                         userData.getHero().isSuper(),
-                        userData.getHero().getHeroForm().ifCanShootFire(),
+                        userData.getHero().getHeroForm().canShootFire(),
                         type));
     }
 

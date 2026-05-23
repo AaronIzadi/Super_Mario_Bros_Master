@@ -60,4 +60,20 @@ public class Coin extends GameObject implements Prize {
     public int getRevealBoundary() {
         return revealBoundary;
     }
+
+    public boolean isRevealed() {
+        return revealed;
+    }
+
+    public void setRevealed(boolean revealed) {
+        this.revealed = revealed;
+    }
+
+    public boolean isAcquired() {
+        return acquired;
+    }
+
+    public void setAcquired(boolean acquired) {
+        this.acquired = acquired;
+    }
 }

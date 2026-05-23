@@ -44,6 +44,14 @@ public class SuperStar extends PrizeItems {
         }
     }
 
+    public boolean isJumpTimerActivated() {
+        return isJumpTimerActivated;
+    }
+
+    public void setJumpTimerActivated(boolean jumpTimerActivated) {
+        isJumpTimerActivated = jumpTimerActivated;
+    }
+
     @Override
     public void onTouch(Hero hero, GameEngine engine) {
         super.onTouch(hero, engine);

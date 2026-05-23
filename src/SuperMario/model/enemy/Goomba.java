@@ -36,4 +36,7 @@ public class Goomba extends Enemy {
         this.animation = animation;
     }
 
+    public Animation getAnimation() {
+        return animation;
+    }
 }

@@ -1,6 +1,7 @@
 package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
+import SuperMario.logic.hero.HeroFormLogic;
 import SuperMario.input.ImageLoader;
 import SuperMario.model.weapon.Fireball;
 
@@ -22,74 +23,29 @@ public class HeroForm {
     private BufferedImage rightSittingFrame;
     private boolean isSuper;
     private boolean canShootFire;
-    private final BufferedImage fireballStyle;
+    private BufferedImage fireballStyle;
 
     public HeroForm(BufferedImage[] leftImages, BufferedImage[] rightImages, boolean isSuper, boolean canShootFire, int heroType) {
         this.heroType = heroType;
         this.isSuper = isSuper;
         this.canShootFire = canShootFire;
-
-        setFrames(leftImages, rightImages);
+        HeroFormLogic.configureFrames(this, leftImages, rightImages);
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.setHeroType(heroType);
         fireballStyle = imageLoader.getFireballImage();
     }
 
-    public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY, boolean isSitting) {
-
-        BufferedImage style;
-
-        if (movingInY) {
-            style = toRight ? rightJumpingFrame : leftJumpingFrame;
-        } else if (movingInX) {
-            Animation currentAnimation = toRight ? rightAnimation : leftAnimation;
-            currentAnimation.animate(20);
-            style = currentAnimation.getCurrentFrame();
-        } else if (isSitting) {
-            style = toRight ? rightSittingFrame : leftSittingFrame;
-        } else {
-            style = toRight ? rightStandingFrame : leftStandingFrame;
-        }
-
-        return style;
-    }
-
-    private void setFrames(BufferedImage[] leftImages, BufferedImage[] rightImages) {
-
-        int size = leftImages.length;
-
-        leftJumpingFrame = leftImages[0];
-        rightJumpingFrame = rightImages[0];
-        leftStandingFrame = leftImages[1];
-        rightStandingFrame = rightImages[1];
-        leftSittingFrame = leftImages[5];
-        rightSittingFrame = rightImages[5];
-
-        BufferedImage[] leftFrames = new BufferedImage[size - 3];
-        BufferedImage[] rightFrames = new BufferedImage[size - 3];
-
-        for (int i = 0; i < size - 3; i++) {
-            leftFrames[i] = leftImages[i + 2];
-            rightFrames[i] = rightImages[i + 2];
-        }
-
-        rightAnimation = new Animation(rightFrames);
-        leftAnimation = new Animation(leftFrames);
+    public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY, boolean isCrouching) {
+        return HeroFormLogic.getCurrentStyle(this, toRight, movingInX, movingInY, isCrouching);
     }
 
     public void onTouchEnemy(ImageLoader imageLoader) {
-        BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(0);
-        BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(0);
-
-        setFrames(leftFrames, rightFrames);
+        HeroFormLogic.resetToSmallOnDamage(this, imageLoader);
     }
 
     public Fireball fire(boolean toRight, double x, double y) {
-        if (canShootFire) {
-            return new Fireball(x, y + 48, fireballStyle, toRight);
-        }
-        return null;
+        return HeroFormLogic.createFireball(this, toRight, x, y);
     }
 
     public int getHeroType() {
@@ -112,8 +68,79 @@ public class HeroForm {
         isSuper = aSuper;
     }
 
-    public boolean ifCanShootFire() {
+    public boolean canShootFire() {
         return canShootFire;
     }
 
+    public Animation getLeftAnimation() {
+        return leftAnimation;
+    }
+
+    public void setLeftAnimation(Animation leftAnimation) {
+        this.leftAnimation = leftAnimation;
+    }
+
+    public Animation getRightAnimation() {
+        return rightAnimation;
+    }
+
+    public void setRightAnimation(Animation rightAnimation) {
+        this.rightAnimation = rightAnimation;
+    }
+
+    public BufferedImage getLeftStandingFrame() {
+        return leftStandingFrame;
+    }
+
+    public void setLeftStandingFrame(BufferedImage leftStandingFrame) {
+        this.leftStandingFrame = leftStandingFrame;
+    }
+
+    public BufferedImage getRightStandingFrame() {
+        return rightStandingFrame;
+    }
+
+    public void setRightStandingFrame(BufferedImage rightStandingFrame) {
+        this.rightStandingFrame = rightStandingFrame;
+    }
+
+    public BufferedImage getLeftJumpingFrame() {
+        return leftJumpingFrame;
+    }
+
+    public void setLeftJumpingFrame(BufferedImage leftJumpingFrame) {
+        this.leftJumpingFrame = leftJumpingFrame;
+    }
+
+    public BufferedImage getRightJumpingFrame() {
+        return rightJumpingFrame;
+    }
+
+    public void setRightJumpingFrame(BufferedImage rightJumpingFrame) {
+        this.rightJumpingFrame = rightJumpingFrame;
+    }
+
+    public BufferedImage getLeftSittingFrame() {
+        return leftSittingFrame;
+    }
+
+    public void setLeftSittingFrame(BufferedImage leftSittingFrame) {
+        this.leftSittingFrame = leftSittingFrame;
+    }
+
+    public BufferedImage getRightSittingFrame() {
+        return rightSittingFrame;
+    }
+
+    public void setRightSittingFrame(BufferedImage rightSittingFrame) {
+        this.rightSittingFrame = rightSittingFrame;
+    }
+
+    public BufferedImage getFireballStyle() {
+        return fireballStyle;
+    }
+
+    public void setFireballStyle(BufferedImage fireballStyle) {
+        this.fireballStyle = fireballStyle;
+    }
 }

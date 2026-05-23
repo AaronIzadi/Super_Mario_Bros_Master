@@ -47,4 +47,21 @@ public class MultiCoinBrick extends SurpriseBrick {
     @Override
     public void animate() {
     }
+
+    public int getNumberOfCoinsLeft() {
+        return numberOfCoinsLeft;
+    }
+
+    public void setNumberOfCoinsLeft(int numberOfCoinsLeft) {
+        this.numberOfCoinsLeft = numberOfCoinsLeft;
+    }
+
+    public void setPrize(Prize prize) {
+        this.prize = prize;
+    }
+
+    @Override
+    public Prize getPrize() {
+        return prize;
+    }
 }

@@ -33,6 +33,18 @@ public class Slime extends Brick {
         this.slimeOnTouch = slimeOnTouch;
     }
 
+    public boolean isOnTouch() {
+        return onTouch;
+    }
+
+    public void setOnTouchFlag(boolean onTouch) {
+        this.onTouch = onTouch;
+    }
+
+    public BufferedImage getSlimeOnTouch() {
+        return slimeOnTouch;
+    }
+
     public void setTimerToReStyle() {
         TimerTask task = new TimerTask() {
             @Override
