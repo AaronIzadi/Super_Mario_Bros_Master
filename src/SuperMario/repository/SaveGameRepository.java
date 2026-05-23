@@ -18,7 +18,7 @@ public class SaveGameRepository {
 
         object.put("Hero Type", hero.getType());
         object.put("Hero form is super", hero.getHeroForm().isSuper());
-        object.put("Hero form can shoot", hero.getHeroForm().ifCanShootFire());
+        object.put("Hero form can shoot", hero.getHeroForm().canShootFire());
         object.put("Hero form type", hero.getHeroForm().getHeroType());
         object.put("Remaining Lives", hero.getRemainingLives());
         object.put("Points", hero.getPoints());

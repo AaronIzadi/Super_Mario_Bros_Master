@@ -65,5 +65,11 @@ public class SurpriseBrick extends Brick {
         this.animation = animation;
     }
 
+    public Animation getAnimation() {
+        return animation;
+    }
 
+    public void setPrize(Prize prize) {
+        this.prize = prize;
+    }
 }

@@ -61,4 +61,20 @@ public class CheckPoint extends Brick {
     public boolean isRevealed() {
         return isRevealed;
     }
+
+    public void setRevealed(boolean revealed) {
+        isRevealed = revealed;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public Animation getAnimation() {
+        return animation;
+    }
 }

@@ -69,6 +69,10 @@ public class Piranha extends Enemy {
         this.animation = animation;
     }
 
+    public Animation getAnimation() {
+        return animation;
+    }
+
     @Override
     public void updateLocation() {
         super.updateLocation();

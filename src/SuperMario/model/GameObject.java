@@ -1,5 +1,10 @@
 package SuperMario.model;
 
+import SuperMario.config.GameConstants;
+import SuperMario.logic.collision.CollisionBounds;
+import SuperMario.logic.physics.Physics;
+import SuperMario.logic.render.EntityRenderer;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -29,30 +34,17 @@ public abstract class GameObject {
 
         setVelX(0);
         setVelY(0);
-        setGravityAcc(0.38);
+        setGravityAcc(GameConstants.GRAVITY);
         jumping = false;
         falling = true;
     }
 
     public void draw(Graphics g) {
-        BufferedImage style = getStyle();
-
-        if (style != null) {
-            g.drawImage(style, (int) x, (int) y, null);
-        }
+        EntityRenderer.drawSprite(this, g);
     }
 
-    public void updateLocation(){
-        if (isJumping() && getVelY() <= 0) {
-            setJumping(false);
-            setFalling(true);
-        }
-
-        if (isFalling() || isJumping()) {
-            setVelY(getVelY() - getGravityAcc());
-        }
-        setY(getY() - getVelY()); // this is negative because the Y-vector in drawing is not the way we supposed :)
-        setX(getX() + getVelX());
+    public void updateLocation() {
+        Physics.updateLocation(this);
     }
 
     public void setLocation(double x, double y) {
@@ -121,23 +113,23 @@ public abstract class GameObject {
     }
 
     public Rectangle getTopBounds() {
-        return new Rectangle((int) x + dimension.width / 6, (int) y, 2 * dimension.width / 3, dimension.height / 2);
+        return CollisionBounds.getTopBounds(this);
     }
 
     public Rectangle getBottomBounds() {
-        return new Rectangle((int) x + dimension.width / 6, (int) y + dimension.height / 2, 2 * dimension.width / 3, dimension.height / 2);
+        return CollisionBounds.getBottomBounds(this);
     }
 
     public Rectangle getLeftBounds() {
-        return new Rectangle((int) x, (int) y + dimension.height / 4, dimension.width / 4, dimension.height / 2);
+        return CollisionBounds.getLeftBounds(this);
     }
 
     public Rectangle getRightBounds() {
-        return new Rectangle((int) x + 3 * dimension.width / 4, (int) y + dimension.height / 4, dimension.width / 4, dimension.height / 2);
+        return CollisionBounds.getRightBounds(this);
     }
 
     public Rectangle getBounds() {
-        return new Rectangle((int) x, (int) y, dimension.width, dimension.height);
+        return CollisionBounds.getBounds(this);
     }
 
     public boolean isFalling() {

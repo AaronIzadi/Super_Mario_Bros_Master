@@ -82,4 +82,11 @@ public abstract class PrizeItems extends GameObject implements Prize {
         this.point = point;
     }
 
+    public boolean isRevealed() {
+        return revealed;
+    }
+
+    public void setRevealed(boolean revealed) {
+        this.revealed = revealed;
+    }
 }

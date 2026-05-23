@@ -1,16 +1,15 @@
 package SuperMario.model.hero;
 
+import SuperMario.config.GameConstants;
 import SuperMario.graphic.manager.Camera;
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.hero.HeroLogic;
 import SuperMario.model.GameObject;
-import SuperMario.input.ImageLoader;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public abstract class Hero extends GameObject {
 
@@ -21,214 +20,96 @@ public abstract class Hero extends GameObject {
     private HeroForm heroForm;
     private int type;
     private boolean toRight;
-    private boolean isSitting;
+    private boolean crouching;
     private boolean tookStar;
     private boolean isGrabbed;
     private boolean isAxeActivated;
     private boolean isAxeCoolDownFinished = true;
     private Axe axe;
     private int numberOfTryToEscape;
-    private double start;
-    private double timer;
+    private double standingStart;
+    private double standingTimer;
 
     public Hero(double x, double y) {
         super(x, y, null);
-        setDimension(48, 48);
-        manageHero(HeroForm.SMALL, false, false);
+        setDimension(GameConstants.HERO_DEFAULT_SIZE, GameConstants.HERO_DEFAULT_SIZE);
+        HeroLogic.initializeNewHero(this);
     }
 
     public Hero(double x, double y, int width, int height, int type, int heroForm, boolean isSuper, boolean canShootFire) {
         super(x, y, null);
         this.type = type;
         setDimension(width, height);
-        manageHero(heroForm, isSuper, canShootFire);
-    }
-
-    private void manageHero(int heroForm, boolean isSuper, boolean canShootFire) {
-        remainingLives = 3;
-        points = 0;
-        coins = 0;
-        invincibilityTimer = 0;
-        toRight = true;
-        tookStar = false;
-
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.setHeroType(type);
-        BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(heroForm);
-        BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(heroForm);
-
-        this.heroForm = new HeroForm(leftFrames, rightFrames, isSuper, canShootFire, type);
-        setStyle(this.heroForm.getCurrentStyle(toRight, false, false, false));
+        HeroLogic.initializeHero(this, heroForm, isSuper, canShootFire);
     }
 
     @Override
     public void draw(Graphics g) {
-
-        boolean movingInX = (getVelX() != 0);
-        boolean movingInY = (getVelY() != 0);
-
-        setStyle(heroForm.getCurrentStyle(toRight, movingInX, movingInY, isSitting));
-
-        super.draw(g);
-
-        if (axe != null) {
-            if (!axe.isReleased()) {
-                if (toRight) {
-                    axe.setX(getX() + 24);
-                } else {
-                    axe.setX(getX() - 48);
-                }
-                axe.setVelX(getVelX());
-                axe.setVelY(getVelY());
-                axe.setY(getY());
-            }
-            axe.draw(g);
-        }
+        HeroLogic.draw(this, g);
     }
 
-    public abstract void jump();
+    public void jump() {
+        HeroLogic.jump(this);
+    }
 
-    public abstract void jumpOnEnemy();
+    public void jumpOnEnemy() {
+        HeroLogic.jumpOnEnemy(this);
+    }
 
-    public abstract void jumpOnSlime();
-
-    protected void setVelYToJump(int velY) {
-        if (!isJumping() && !isFalling() && isSitting()) {
-            setJumping(true);
-            setVelY(velY);
-        }
+    public void jumpOnSlime() {
+        HeroLogic.jumpOnSlime(this);
     }
 
     public void sit() {
-        if (isSuper() && !isJumping() && getVelX() == 0) {
-            isSitting = true;
-            getDimension().height = 50;
-            setY(getY() + (96 - 50));
-        }
+        HeroLogic.sit(this);
     }
 
     public void getUp() {
-        if (isSitting) {
-            isSitting = false;
-            setY(getY() - (96 - 50));
-        }
+        HeroLogic.getUp(this);
     }
 
     public boolean getOnLandStandingTimer() {
-        if (getY() + getDimension().getHeight() - 1 == 720 - (2 * 48)) {
-            if (start == 0) {
-                start = System.currentTimeMillis();
-            } else {
-                timer = System.currentTimeMillis() - start;
-            }
-        } else {
-            start = 0;
-            timer = 0;
-        }
-        return timer >= 4000;
+        return HeroLogic.getOnLandStandingTimer(this);
     }
 
-    public abstract void move(boolean toRight, Camera camera);
+    public void move(boolean toRight, Camera camera) {
+        HeroLogic.move(this, toRight, camera);
+    }
 
     public void setTimer() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setTookStar(false);
-                if (!GameEngine.getInstance().isMute()) {
-                    GameEngine.getInstance().getSoundManager().resumeBackground();
-                }
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 15000);
+        HeroLogic.setTimer(this);
     }
 
     public void setTimerToRun() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setTookStar(false);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 1000);
+        HeroLogic.setTimerToRun(this);
     }
 
     public boolean onTouchEnemy(GameEngine engine, int losingCoins) {
-
-        if (ifTookStar()) {
-            if (!heroForm.isSuper()) {
-                heroDies(engine, 20, losingCoins);
-                return true;
-            } else {
-                engine.getCameraManager().shakeCamera();
-                heroForm.setSuper(false);
-                heroForm.setCanShootFire(false);
-                heroForm.onTouchEnemy(engine.getImageLoader());
-                setDimension(48, 48);
-                setY(getY() + getDimension().getHeight());
-                return false;
-            }
-        }
-        return false;
+        return HeroLogic.onTouchEnemy(this, engine, losingCoins);
     }
 
     public void onTouchBorder(GameEngine engine, int losingCoins) {
-        heroDies(engine, 30, losingCoins);
-        engine.getSoundManager().playHeroFalls();
+        HeroLogic.onTouchBorder(this, engine, losingCoins);
     }
 
     public void heroDies(GameEngine engine, int lostScore, int losingCoins) {
-        remainingLives--;
-        points = points > lostScore ? points - lostScore : 0;
-        coins = coins > losingCoins ? coins - losingCoins : 0;
-        if (remainingLives == 0) {
-            engine.getSoundManager().playGameOver();
-        } else {
-            engine.getSoundManager().playHeroDies();
-        }
-        heroForm.setSuper(false);
-        heroForm.setCanShootFire(false);
-        heroForm.onTouchEnemy(engine.getImageLoader());
-        setDimension(48, 48);
+        HeroLogic.heroDies(this, engine, lostScore, losingCoins);
     }
 
     public Fireball fire() {
-        return heroForm.fire(toRight, getX(), getY());
+        return HeroLogic.fire(this);
     }
 
     public boolean canActivateAxe() {
-        return coins >= 3 && isSuper() && isAxeCoolDownFinished;
-    }
-
-    public Axe getAxe() {
-        return axe;
+        return HeroLogic.canActivateAxe(this);
     }
 
     public void activateAxe() {
-        if (canActivateAxe()) {
-            coins -= 3;
-            if (toRight) {
-                axe = new Axe(getX() + 24, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
-            } else {
-                axe = new Axe(getX() - 48, getY(), ImageLoader.getInstance().getAxeUpRight(), this);
-            }
-        }
+        HeroLogic.activateAxe(this);
     }
 
     public void deactivateAxe() {
-        axe = null;
-        setAxeActivated(false);
-        isAxeCoolDownFinished = false;
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                isAxeCoolDownFinished = true;
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000);
+        HeroLogic.deactivateAxe(this);
     }
 
     @Override
@@ -237,15 +118,15 @@ public abstract class Hero extends GameObject {
     }
 
     public void throwAxe() {
-        axe.setReleased(true, getX());
+        HeroLogic.throwAxe(this);
     }
 
     public void acquireCoin() {
-        coins++;
+        HeroLogic.acquireCoin(this);
     }
 
     public void acquirePoints(int point) {
-        points = points + point;
+        HeroLogic.acquirePoints(this, point);
     }
 
     public int getRemainingLives() {
@@ -312,16 +193,16 @@ public abstract class Hero extends GameObject {
         this.tookStar = tookStar;
     }
 
-    public boolean ifTookStar() {
-        return !tookStar;
+    public boolean hasStarPower() {
+        return tookStar;
     }
 
-    public boolean isSitting() {
-        return !isSitting;
+    public boolean isCrouching() {
+        return crouching;
     }
 
-    public void setSitting(boolean sitting) {
-        isSitting = sitting;
+    public void setCrouching(boolean crouching) {
+        this.crouching = crouching;
     }
 
     public boolean isAxeActivated() {
@@ -350,5 +231,37 @@ public abstract class Hero extends GameObject {
 
     public int getNumberOfTryToEscape() {
         return numberOfTryToEscape;
+    }
+
+    public Axe getAxe() {
+        return axe;
+    }
+
+    public void setAxe(Axe axe) {
+        this.axe = axe;
+    }
+
+    public boolean isAxeCoolDownFinished() {
+        return isAxeCoolDownFinished;
+    }
+
+    public void setAxeCoolDownFinished(boolean axeCoolDownFinished) {
+        isAxeCoolDownFinished = axeCoolDownFinished;
+    }
+
+    public double getStandingStart() {
+        return standingStart;
+    }
+
+    public void setStandingStart(double standingStart) {
+        this.standingStart = standingStart;
+    }
+
+    public double getStandingTimer() {
+        return standingTimer;
+    }
+
+    public void setStandingTimer(double standingTimer) {
+        this.standingTimer = standingTimer;
     }
 }

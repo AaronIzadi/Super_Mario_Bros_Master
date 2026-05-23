@@ -1,5 +1,6 @@
 package SuperMario.logic;
 
+import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.UI.UIManager;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
@@ -38,8 +39,7 @@ public class GameLoopManager implements Runnable {
     public void run() {
         renderLoop();
         long lastTime = System.nanoTime();
-        double amountOfTicks = 60.0;
-        double ns = 1000000000 / amountOfTicks;
+        double ns = 1_000_000_000 / GameConstants.TICKS_PER_SECOND;
         double delta = 0;
         long timer = System.currentTimeMillis();
 
@@ -58,8 +58,8 @@ public class GameLoopManager implements Runnable {
                 timer = System.currentTimeMillis();
             }
 
-            if (System.currentTimeMillis() - timer > 1000) {
-                timer += 1000;
+            if (System.currentTimeMillis() - timer > GameConstants.MAP_TIMER_INTERVAL_MS) {
+                timer += GameConstants.MAP_TIMER_INTERVAL_MS;
                 mapManager.updateTime();
             }
         }
@@ -69,7 +69,7 @@ public class GameLoopManager implements Runnable {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(12);
+                    Thread.sleep(GameConstants.RENDER_SLEEP_MS);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
@@ -81,8 +81,8 @@ public class GameLoopManager implements Runnable {
                             engine.getUserData().getHero().setX(engine.getCameraManager().getCameraLocation().getX());
                         }
                     }
-                } catch (Exception ignored) {
-
+                } catch (RuntimeException ignored) {
+                    // Hero or camera may be unavailable during transient game states.
                 }
                 render();
             }

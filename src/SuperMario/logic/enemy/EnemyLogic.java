@@ -1,0 +1,162 @@
+package SuperMario.logic.enemy;
+
+import SuperMario.graphic.view.animation.Animation;
+import SuperMario.logic.physics.Physics;
+import SuperMario.logic.render.EntityRenderer;
+import SuperMario.model.enemy.Goomba;
+import SuperMario.model.enemy.KoopaTroopa;
+import SuperMario.model.enemy.Piranha;
+import SuperMario.model.enemy.Spiny;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public final class EnemyLogic {
+
+    private EnemyLogic() {
+    }
+
+    public static void draw(Goomba goomba, Graphics g) {
+        EntityRenderer.draw(goomba, g);
+        animate(goomba);
+    }
+
+    public static void animate(Goomba goomba) {
+        Animation animation = goomba.getAnimation();
+        if (animation == null) {
+            return;
+        }
+        boolean isAnimationTicked = animation.animate(5);
+        if (isAnimationTicked) {
+            goomba.setStyle(animation.getCurrentFrame());
+        }
+    }
+
+    public static void update(Goomba goomba) {
+        Physics.updateLocation(goomba);
+    }
+
+    public static void draw(KoopaTroopa koopa, Graphics g) {
+        if (koopa.isHit()) {
+            g.drawImage(koopa.getShell(), (int) koopa.getX(), (int) koopa.getY() + 26, null);
+        } else {
+            if (koopa.getVelX() > 0) {
+                g.drawImage(koopa.getRightImage(), (int) koopa.getX(), (int) koopa.getY(), null);
+            } else {
+                EntityRenderer.draw(koopa, g);
+            }
+        }
+    }
+
+    public static void update(KoopaTroopa koopa) {
+        if (!koopa.isHit()) {
+            Physics.updateLocation(koopa);
+            koopa.setLastVelX(koopa.getVelX());
+        } else {
+            setTimer(koopa);
+        }
+    }
+
+    public static void moveAfterHit(KoopaTroopa koopa) {
+        if (koopa.getLastVelX() > 0) {
+            koopa.setX(koopa.getX() + 24);
+        } else {
+            koopa.setX(koopa.getX() - 24);
+        }
+    }
+
+    public static void setTimer(KoopaTroopa koopa) {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                koopa.setHit(false);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 3000);
+    }
+
+    public static void draw(Piranha piranha, Graphics g) {
+        if (piranha.getY() >= 580) {
+            piranha.setY(580);
+            piranha.setVelY(0);
+            setTimerToGoUp(piranha);
+        }
+        if (piranha.getY() <= 480) {
+            piranha.setY(480);
+            piranha.setVelY(0);
+            setTimerToGoDown(piranha);
+        }
+        EntityRenderer.draw(piranha, g);
+        animate(piranha);
+    }
+
+    public static void setTimerToGoDown(Piranha piranha) {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                piranha.setVelY(-1);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 2000);
+    }
+
+    public static void setTimerToGoUp(Piranha piranha) {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                piranha.setVelY(1);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 3000);
+    }
+
+    public static void animate(Piranha piranha) {
+        Animation animation = piranha.getAnimation();
+        if (animation == null) {
+            return;
+        }
+        boolean isAnimationTicked = animation.animate(7);
+        if (isAnimationTicked) {
+            piranha.setStyle(animation.getCurrentFrame());
+        }
+    }
+
+    public static void update(Piranha piranha) {
+        Physics.updateLocation(piranha);
+    }
+
+    public static void draw(Spiny spiny, Graphics g) {
+        if (spiny.getVelX() > 0) {
+            g.drawImage(spiny.getRightImage(), (int) spiny.getX(), (int) spiny.getY(), null);
+            spiny.setToRight(true);
+        } else {
+            EntityRenderer.draw(spiny, g);
+            spiny.setToRight(false);
+        }
+    }
+
+    public static void moveFaster(Spiny spiny) {
+        if (spiny.isToRight()) {
+            spiny.setVelX(6);
+        } else {
+            spiny.setVelX(-6);
+        }
+    }
+
+    public static void moveNormal(Spiny spiny) {
+        if (spiny.isToRight()) {
+            spiny.setVelX(3);
+        } else {
+            spiny.setVelX(-3);
+        }
+    }
+
+    public static void update(Spiny spiny) {
+        Physics.updateLocation(spiny);
+    }
+}

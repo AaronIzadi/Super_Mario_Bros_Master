@@ -35,4 +35,12 @@ public class HitPoints {
     public BufferedImage getStyle() {
         return style;
     }
+
+    public BufferedImage[] getFrames() {
+        return frames;
+    }
+
+    public void setStyleImage(BufferedImage style) {
+        this.style = style;
+    }
 }

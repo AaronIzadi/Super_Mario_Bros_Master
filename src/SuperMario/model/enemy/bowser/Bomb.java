@@ -78,4 +78,12 @@ public class Bomb extends GameObject {
     public void setTimeToVanish(boolean timeToVanish) {
         this.timeToVanish = timeToVanish;
     }
+
+    public void setHasIntersectFlag(boolean hasIntersect) {
+        this.hasIntersect = hasIntersect;
+    }
+
+    public void setExploded(boolean exploded) {
+        this.exploded = exploded;
+    }
 }

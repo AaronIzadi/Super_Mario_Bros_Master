@@ -1,23 +1,18 @@
 package SuperMario.model.map;
 
-
-import SuperMario.logic.GameEngine;
-import SuperMario.model.enemy.bowser.Bomb;
-import SuperMario.model.enemy.bowser.Bowser;
+import SuperMario.config.GameConstants;
+import SuperMario.logic.map.MapWorldLogic;
 import SuperMario.model.enemy.Enemy;
-import SuperMario.model.enemy.bowser.Fire;
+import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
-import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
-import SuperMario.model.prize.PrizeItems;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Map {
 
@@ -37,7 +32,6 @@ public class Map {
     private BufferedImage backgroundImage;
     private String path;
 
-
     public Map() {
     }
 
@@ -45,192 +39,24 @@ public class Map {
         this.hero = hero;
     }
 
-
     public void drawMap(Graphics2D g2) {
-        drawBackground(g2);
-        drawPrizes(g2);
-
-        if (bowser != null) {
-
-            bowser.attack();
-            drawBowserFire(g2);
-
-            if (bowser.getHp() <= 10) {
-                for (Obstacle border : groundBricks) {
-                    if (border instanceof LavaBorder) {
-                        ((LavaBorder) border).setBurn(true);
-                    }
-                }
-                obstacles.clear();
-            }
-
-            for (Bomb bomb : bowser.getBomb()) {
-                if (bomb.isTimeToVanish()) {
-                    bowser.getBomb().remove(bomb);
-                } else {
-                    bomb.draw(g2);
-                }
-            }
-
-        }
-
-        drawEnemies(g2);
-        drawBricks(g2);
-        drawFireballs(g2);
-        if (castle != null) {
-            castle.draw(g2);
-        }
-        endPoint.draw(g2);
-        drawHero(g2);
+        MapWorldLogic.drawMap(this, g2);
     }
 
     public void drawCrossover(Graphics2D g2) {
-        drawBricks(g2);
-        drawPrizes(g2);
-        drawHero(g2);
+        MapWorldLogic.drawCrossover(this, g2);
     }
-
-    private void drawFireballs(Graphics2D g2) {
-        for (Fireball fireball : fireballs) {
-            fireball.draw(g2);
-        }
-    }
-
-    private void drawBowserFire(Graphics2D g2) {
-        for (Fire fire : getBowser().getFire()) {
-            fire.draw(g2);
-        }
-    }
-
-    private void drawPrizes(Graphics2D g2) {
-        for (Prize prize : revealedPrizes) {
-            if (prize instanceof Coin) {
-                ((Coin) prize).draw(g2);
-            } else if (prize instanceof PrizeItems) {
-                ((PrizeItems) prize).draw(g2);
-            }
-        }
-    }
-
-    private void drawBackground(Graphics2D g2) {
-        g2.drawImage(backgroundImage, 0, 0, null);
-    }
-
-    private void drawBricks(Graphics2D g2) {
-
-        for (Obstacle obstacle : obstacles) {
-            if (obstacle != null)
-                obstacle.draw(g2);
-        }
-
-        for (Obstacle obstacle : groundBricks) {
-            obstacle.draw(g2);
-        }
-    }
-
-    private void drawEnemies(Graphics2D g2) {
-        for (Enemy enemy : enemies) {
-            if (enemy != null)
-                enemy.draw(g2);
-        }
-    }
-
-    private void drawHero(Graphics2D g2) {
-        hero.draw(g2);
-    }
-
 
     public void updateLocations() {
-
-        if (!hero.isGrabbed()) {
-            hero.updateLocation();
-        }
-
-        if (bowser != null) {
-
-            bowser.setToRight(getHero().getX() > bowser.getX());
-
-            if (hero.isGrabbed()) {
-                hero.setVelY(0);
-                hero.setVelX(0);
-                hero.setY(bowser.getY() + 48);
-                double x = bowser.isToRight() ? (bowser.getX() + 104 - 24) : (bowser.getX() - 24);
-                hero.setX(x);
-            }
-
-            for (Fire fire : getBowser().getFire()) {
-                fire.updateLocation();
-            }
-            for (Bomb bomb : getBowser().getBomb()) {
-                bomb.updateLocation();
-            }
-        }
-
-        for (Enemy enemy : enemies) {
-            enemy.updateLocation();
-        }
-
-        updatePrizeLocation();
-
-        if (axe != null && axe.isReleased()) {
-            axe.updateLocation();
-        }
-
-        for (Fireball fireball : fireballs) {
-            fireball.updateLocation();
-        }
-
-        for (Iterator<Brick> brickIterator = revealedBricks.iterator(); brickIterator.hasNext(); ) {
-            Brick brick = brickIterator.next();
-            CoinBrick ifOneCoin;
-            OrdinaryBrick ifOrdinary;
-
-            if (brick instanceof CoinBrick) {
-                ifOneCoin = (CoinBrick) brick;
-                ifOneCoin.animate();
-                if (ifOneCoin.getFrames() < 0) {
-                    obstacles.remove(brick);
-                    getHero().acquirePoints(1);
-                    brickIterator.remove();
-                }
-            } else {
-                ifOrdinary = (OrdinaryBrick) brick;
-                ifOrdinary.animate();
-                if (ifOrdinary.getFrames() < 0) {
-                    obstacles.remove(brick);
-                    getHero().acquirePoints(1);
-                    brickIterator.remove();
-                }
-            }
-        }
-        endPoint.updateLocation();
+        MapWorldLogic.updateLocations(this);
     }
 
     public void updateLocationsForCrossover() {
-        hero.updateLocation();
-        updatePrizeLocation();
-    }
-
-    private void updatePrizeLocation() {
-        for (Iterator<Prize> prizeIterator = revealedPrizes.iterator(); prizeIterator.hasNext(); ) {
-            Prize prize = prizeIterator.next();
-            if (prize instanceof Coin) {
-                ((Coin) prize).updateLocation();
-                if (((Coin) prize).getRevealBoundary() > ((Coin) prize).getY()) {
-                    prizeIterator.remove();
-                }
-            } else if (prize instanceof PrizeItems) {
-                ((PrizeItems) prize).updateLocation();
-            }
-        }
+        MapWorldLogic.updateLocationsForCrossover(this);
     }
 
     public void stopBurning() {
-        for (Obstacle border : groundBricks) {
-            if (border instanceof LavaBorder) {
-                ((LavaBorder) border).setBurn(false);
-            }
-        }
+        MapWorldLogic.stopBurning(this);
     }
 
     public ArrayList<Obstacle> getAllObstacles() {
@@ -243,7 +69,7 @@ public class Map {
     }
 
     public double getBottomBorder() {
-        return 720;
+        return GameConstants.WORLD_HEIGHT;
     }
 
     public void addRevealedPrize(Prize prize) {
@@ -330,6 +156,10 @@ public class Map {
         this.castle = castle;
     }
 
+    public Castle getCastle() {
+        return castle;
+    }
+
     public void setBowser(Bowser bowser) {
         this.bowser = bowser;
     }
@@ -340,6 +170,14 @@ public class Map {
 
     public ArrayList<Obstacle> getGroundBricks() {
         return groundBricks;
+    }
+
+    public ArrayList<Obstacle> getObstacles() {
+        return obstacles;
+    }
+
+    public BufferedImage getBackgroundImage() {
+        return backgroundImage;
     }
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
@@ -370,6 +208,9 @@ public class Map {
         return revealedPrizes;
     }
 
+    public ArrayList<Brick> getRevealedBricks() {
+        return revealedBricks;
+    }
 
     public void addObstacle(Obstacle obstacle) {
         this.obstacles.add(obstacle);
@@ -382,6 +223,4 @@ public class Map {
     public void addEnemy(Enemy enemy) {
         this.enemies.add(enemy);
     }
-
-
 }
