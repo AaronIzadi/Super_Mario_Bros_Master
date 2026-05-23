@@ -1,0 +1,256 @@
+package SuperMario.logic.brick;
+
+import SuperMario.graphic.view.animation.Animation;
+import SuperMario.input.ImageLoader;
+import SuperMario.logic.GameEngine;
+import SuperMario.logic.MapManager;
+import SuperMario.logic.render.EntityRenderer;
+import SuperMario.model.hero.Hero;
+import SuperMario.model.obstacle.*;
+import SuperMario.model.prize.Coin;
+import SuperMario.model.prize.Prize;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public final class BrickLogic {
+
+    private BrickLogic() {
+    }
+
+    public static Prize reveal(Brick brick, GameEngine engine) {
+        return null;
+    }
+
+    public static boolean isTimeToBreak(Brick brick) {
+        long start = brick.getStart();
+        long finish = brick.getFinish();
+        long timer = brick.getTimer();
+
+        if (start == 0) {
+            brick.setStart(System.currentTimeMillis());
+        } else {
+            finish = System.currentTimeMillis();
+            brick.setFinish(finish);
+            timer = finish - start;
+            brick.setTimer(timer);
+            if (timer >= 2000) {
+                return true;
+            }
+            brick.setFinish(0);
+        }
+
+        return timer >= 2000;
+    }
+
+    public static Prize reveal(OrdinaryBrick brick, GameEngine engine) {
+        MapManager manager = engine.getMapManager();
+        if (!manager.getHero().isSuper()) {
+            return null;
+        }
+        brick.setBreaking(true);
+        manager.addRevealedBrick(brick);
+        engine.getSoundManager().playBreakBrick();
+
+        double newX = brick.getX() - 27, newY = brick.getY() - 27;
+        brick.setLocation(newX, newY);
+
+        return null;
+    }
+
+    public static void animate(OrdinaryBrick brick) {
+        if (brick.isBreaking()) {
+            Animation animation = brick.getAnimation();
+            boolean isAnimationTicked = animation.animate(30);
+            if (isAnimationTicked) {
+                brick.setStyle(animation.getCurrentFrame());
+                brick.decrementFrames();
+            }
+        }
+    }
+
+    public static Prize reveal(SurpriseBrick brick, GameEngine engine) {
+        BufferedImage newStyle = engine.getImageLoader().getRevealedPrizeBrick();
+
+        Prize prize = brick.getPrize();
+        if (prize != null) {
+            prize.reveal();
+        }
+
+        brick.setEmpty(true);
+        brick.setStyle(newStyle);
+
+        Prize toReturn = prize;
+        brick.setPrize(null);
+        return toReturn;
+    }
+
+    public static void animate(SurpriseBrick brick) {
+        Animation animation = brick.getAnimation();
+        if (animation == null) {
+            return;
+        }
+        boolean isAnimationTicked = animation.animate(5);
+        if (isAnimationTicked) {
+            brick.setStyle(animation.getCurrentFrame());
+        }
+    }
+
+    public static void draw(SurpriseBrick brick, Graphics g) {
+        EntityRenderer.draw(brick, g);
+        if (!brick.isEmpty()) {
+            animate(brick);
+        }
+    }
+
+    public static Prize reveal(CoinBrick brick, GameEngine engine) {
+        Prize prize = brick.getPrize();
+        if (prize != null) {
+            prize.reveal();
+
+            brick.setEmpty(true);
+            brick.setBreakable(true);
+            Prize toReturn = prize;
+            brick.setPrize(null);
+            return toReturn;
+        } else {
+            MapManager manager = engine.getMapManager();
+            if (!manager.getHero().isSuper()) {
+                return null;
+            }
+
+            manager.addRevealedBrick(brick);
+            engine.getSoundManager().playBreakBrick();
+
+            double newX = brick.getX() - 27, newY = brick.getY() - 27;
+            brick.setLocation(newX, newY);
+
+            return null;
+        }
+    }
+
+    public static void draw(CoinBrick brick, Graphics g) {
+        EntityRenderer.draw(brick, g);
+    }
+
+    public static void animate(CoinBrick brick) {
+        Animation animation = brick.getAnimation();
+        boolean isAnimationTicked = animation.animate(30);
+        if (isAnimationTicked) {
+            brick.setStyle(animation.getCurrentFrame());
+            brick.decrementFrames();
+        }
+    }
+
+    public static Prize reveal(MultiCoinBrick brick, GameEngine engine) {
+        BufferedImage newStyle = engine.getImageLoader().getRevealedPrizeBrick();
+
+        Prize toReturn = null;
+        int coinsLeft = brick.getNumberOfCoinsLeft();
+        Prize prize = brick.getPrize();
+
+        if (coinsLeft > 0) {
+            Coin coin = new Coin(((Coin) prize).getX(), ((Coin) prize).getY(), ((Coin) prize).getStyle(), 10);
+            brick.setNumberOfCoinsLeft(coinsLeft - 1);
+            toReturn = prize;
+            prize.reveal();
+            brick.setPrize(coin);
+        }
+
+        if (brick.getNumberOfCoinsLeft() <= 0) {
+            brick.setEmpty(true);
+            brick.setStyle(newStyle);
+        }
+
+        return toReturn;
+    }
+
+    public static void animate(MultiCoinBrick brick) {
+    }
+
+    public static Point check(CheckPoint checkpoint, boolean checked) {
+        checkpoint.setChecked(checked);
+        checkpoint.setRevealed(true);
+        BufferedImage newStyle;
+
+        if (checked) {
+            newStyle = ImageLoader.getInstance().getRevealedCheckPoint();
+        } else {
+            newStyle = ImageLoader.getInstance().getRevealedPrizeBrick();
+        }
+
+        checkpoint.setStyle(newStyle);
+        checkpoint.setEmpty(true);
+
+        return new Point((int) checkpoint.getX(), (int) checkpoint.getY());
+    }
+
+    public static void draw(CheckPoint checkpoint, Graphics g) {
+        EntityRenderer.draw(checkpoint, g);
+        if (!checkpoint.isChecked() && !checkpoint.isEmpty()) {
+            animate(checkpoint);
+        }
+    }
+
+    public static void animate(CheckPoint checkpoint) {
+        Animation animation = checkpoint.getAnimation();
+        if (animation == null) {
+            return;
+        }
+        boolean isAnimationTicked = animation.animate(5);
+        if (isAnimationTicked) {
+            checkpoint.setStyle(animation.getCurrentFrame());
+        }
+    }
+
+    public static void draw(LavaBorder lava, Graphics g) {
+        if (lava.isBurn()) {
+            animate(lava);
+        } else {
+            lava.setStyle(lava.getMainStyle());
+        }
+        EntityRenderer.draw(lava, g);
+    }
+
+    public static void animate(LavaBorder lava) {
+        Animation animation = lava.getAnimation();
+        if (animation == null) {
+            return;
+        }
+        boolean isAnimationTicked = animation.animate(8);
+        if (isAnimationTicked) {
+            lava.setStyle(animation.getCurrentFrame());
+        }
+    }
+
+    public static void draw(Slime slime, Graphics g) {
+        if (slime.isOnTouch()) {
+            g.drawImage(slime.getSlimeOnTouch(), (int) slime.getX() - 4, (int) slime.getY(), null);
+        } else {
+            EntityRenderer.draw(slime, g);
+        }
+    }
+
+    public static void setOnTouch(Slime slime, boolean onTouch) {
+        slime.setOnTouchFlag(onTouch);
+        setTimerToReStyle(slime);
+    }
+
+    public static void setTimerToReStyle(Slime slime) {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                slime.setOnTouchFlag(false);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(task, 500);
+    }
+
+    public static boolean onTouchHero(CrossoverTunnel tunnel, Hero hero) {
+        hero.setVelY(-5);
+        return hero.getY() == 600;
+    }
+}
