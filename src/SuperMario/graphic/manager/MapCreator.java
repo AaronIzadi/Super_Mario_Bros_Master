@@ -1,5 +1,6 @@
 package SuperMario.graphic.manager;
 
+import SuperMario.config.GameConstants;
 import SuperMario.model.enemy.*;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.map.Castle;
@@ -84,7 +85,7 @@ public class MapCreator {
         }
 
         Map crossover = new Map(hero);
-        crossover.setRemainingTime(100);
+        crossover.setRemainingTime(GameConstants.CROSSOVER_MAP_TIME_SECONDS);
         crossover.setBackgroundImage(crossoverBackground);
         int pixelMultiplier = 48;
 
@@ -166,7 +167,7 @@ public class MapCreator {
         }
 
         Map map = new Map();
-        map.setRemainingTime(400);
+        map.setRemainingTime(GameConstants.DEFAULT_MAP_TIME_SECONDS);
         map.setBackgroundImage(backgroundImage);
         String[] paths = mapPath.split("/");
         map.setPath(paths[paths.length - 1]);
@@ -305,11 +306,11 @@ public class MapCreator {
         int random = (int) (Math.random() * 12);
 
         if (random == 0 || random == 1) {
-            generated = new SuperMushroom(x, y, this.superMushroom);
+            generated = new PrizeItems(x, y, this.superMushroom, PrizeType.SUPER_MUSHROOM);
         } else if (random == 2 || random == 3) {
-            generated = new FireFlower(x, y, this.fireFlower);
+            generated = new PrizeItems(x, y, this.fireFlower, PrizeType.FIRE_FLOWER);
         } else if (random == 4) {
-            generated = new HeartMushroom(x, y, this.oneHeartUpMushroom);
+            generated = new PrizeItems(x, y, this.oneHeartUpMushroom, PrizeType.HEART_MUSHROOM);
         } else if (random == 5) {
             generated = new SuperStar(x, y, this.superStar);
         } else {
@@ -323,11 +324,11 @@ public class MapCreator {
         int random = (int) (Math.random() * 12);
 
         if (random == 0) {
-            generated = new SuperMushroom(x, y, this.superMushroom);
+            generated = new PrizeItems(x, y, this.superMushroom, PrizeType.SUPER_MUSHROOM);
         } else if (random == 1) {
-            generated = new FireFlower(x, y, this.fireFlower);
+            generated = new PrizeItems(x, y, this.fireFlower, PrizeType.FIRE_FLOWER);
         } else if (random == 2) {
-            generated = new HeartMushroom(x, y, this.oneHeartUpMushroom);
+            generated = new PrizeItems(x, y, this.oneHeartUpMushroom, PrizeType.HEART_MUSHROOM);
         } else {
             generated = new Coin(x, y, this.coin, 10);
         }

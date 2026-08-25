@@ -110,16 +110,12 @@ public class Map {
         this.path = path;
     }
 
-    public void updateTime(double passed) {
-        remainingTime = remainingTime - passed;
-    }
-
-    public boolean isTimeOver() {
-        return remainingTime <= 0;
-    }
-
     public double getRemainingTime() {
         return remainingTime;
+    }
+
+    public void setRemainingTime(double remainingTime) {
+        this.remainingTime = remainingTime;
     }
 
     public void setCheckPoint(CheckPoint checkPoint) {
@@ -160,10 +156,6 @@ public class Map {
 
     public void setBackgroundImage(BufferedImage backgroundImage) {
         this.backgroundImage = backgroundImage;
-    }
-
-    public void setRemainingTime(double remainingTime) {
-        this.remainingTime = remainingTime;
     }
 
     public Hero getHero() {

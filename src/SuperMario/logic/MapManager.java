@@ -239,7 +239,17 @@ public class MapManager implements MapCollisionCallbacks {
     }
 
     boolean isGameOver() {
-        return hero.getRemainingLives() == 0 || map.isTimeOver();
+        return hero.getRemainingLives() == 0 || isTimeOver();
+    }
+
+    boolean isTimeOver() {
+        return map != null && map.getRemainingTime() <= 0;
+    }
+
+    void decrementRemainingTime() {
+        if (map != null) {
+            map.setRemainingTime(map.getRemainingTime() - GameConstants.MAP_TIME_DECREMENT_SECONDS);
+        }
     }
 
     public int getScore() {
@@ -319,14 +329,8 @@ public class MapManager implements MapCollisionCallbacks {
         getActiveMap().addRevealedBrick(coinBrick);
     }
 
-    public void updateTime() {
-        if (map != null) {
-            map.updateTime(1);
-        }
-    }
-
     public int getRemainingTime() {
-        return (int) map.getRemainingTime();
+        return map != null ? (int) map.getRemainingTime() : 0;
     }
 
     void setChecked() {

@@ -1,6 +1,6 @@
 package SuperMario.logic.collision;
 
-import SuperMario.logic.prize.PrizeLogic;
+import SuperMario.logic.prize.PrizeHandler;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
@@ -82,10 +82,10 @@ final class PrizeCollisionHandler {
         for (Prize prize : prizes) {
             Rectangle prizeBounds = ((GameObject) prize).getBounds();
             if (prizeBounds.intersects(heroBounds)) {
-                PrizeLogic.onTouch(prize, hero, callbacks.getEngine());
+                PrizeHandler.onTouch(prize, hero, callbacks.getEngine());
                 toBeRemoved.add((GameObject) prize);
             } else if (prize instanceof Coin) {
-                PrizeLogic.onTouch(prize, hero, callbacks.getEngine());
+                PrizeHandler.onTouch(prize, hero, callbacks.getEngine());
             }
         }
 

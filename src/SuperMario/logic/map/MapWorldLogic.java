@@ -5,7 +5,7 @@ import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.logic.enemy.EnemyLogic;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.logic.physics.Physics;
-import SuperMario.logic.prize.PrizeLogic;
+import SuperMario.logic.prize.PrizeHandler;
 import SuperMario.logic.render.EntityRenderer;
 import SuperMario.logic.weapon.WeaponLogic;
 import SuperMario.model.enemy.bowser.Bomb;
@@ -16,10 +16,7 @@ import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
-import SuperMario.model.prize.FireFlower;
 import SuperMario.model.prize.Prize;
-import SuperMario.model.prize.PrizeItems;
-import SuperMario.model.prize.SuperStar;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
@@ -172,11 +169,7 @@ public final class MapWorldLogic {
 
     private static void drawPrizes(Map map, Graphics2D g2) {
         for (Prize prize : map.getRevealedPrizes()) {
-            if (prize instanceof Coin) {
-                PrizeLogic.draw((Coin) prize, g2);
-            } else if (prize instanceof PrizeItems) {
-                PrizeLogic.draw((PrizeItems) prize, g2);
-            }
+            PrizeHandler.draw(prize, g2);
         }
     }
 
@@ -207,18 +200,12 @@ public final class MapWorldLogic {
     private static void updatePrizeLocation(Map map) {
         for (Iterator<Prize> prizeIterator = map.getRevealedPrizes().iterator(); prizeIterator.hasNext(); ) {
             Prize prize = prizeIterator.next();
+            PrizeHandler.update(prize);
             if (prize instanceof Coin) {
                 Coin coin = (Coin) prize;
-                PrizeLogic.update(coin);
                 if (coin.getRevealBoundary() > coin.getY()) {
                     prizeIterator.remove();
                 }
-            } else if (prize instanceof SuperStar) {
-                PrizeLogic.update((SuperStar) prize);
-            } else if (prize instanceof FireFlower) {
-                PrizeLogic.update((FireFlower) prize);
-            } else if (prize instanceof PrizeItems) {
-                PrizeLogic.update((PrizeItems) prize);
             }
         }
     }

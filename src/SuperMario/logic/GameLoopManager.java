@@ -61,7 +61,9 @@ public class GameLoopManager implements Runnable {
 
             if (System.currentTimeMillis() - timer > GameConstants.MAP_TIMER_INTERVAL_MS) {
                 timer += GameConstants.MAP_TIMER_INTERVAL_MS;
-                mapManager.updateTime();
+                if (stateManager.getGameState() == GameState.RUNNING) {
+                    mapManager.decrementRemainingTime();
+                }
             }
         }
     }

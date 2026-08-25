@@ -21,6 +21,9 @@ public final class GameConstants {
     public static final double TICKS_PER_SECOND = 60.0;
     public static final int RENDER_SLEEP_MS = 12;
     public static final int MAP_TIMER_INTERVAL_MS = 1000;
+    public static final double DEFAULT_MAP_TIME_SECONDS = 400;
+    public static final double CROSSOVER_MAP_TIME_SECONDS = 100;
+    public static final double MAP_TIME_DECREMENT_SECONDS = 1;
 
     public static final int STAR_POWER_DURATION_MS = 15_000;
     public static final int STAR_RUN_DURATION_MS = 1_000;

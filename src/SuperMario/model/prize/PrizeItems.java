@@ -4,14 +4,21 @@ import SuperMario.model.GameObject;
 
 import java.awt.image.BufferedImage;
 
-public abstract class PrizeItems extends GameObject implements Prize {
+public class PrizeItems extends GameObject implements Prize {
 
+    private final PrizeType type;
     private boolean revealed = false;
     private int point;
 
-    public PrizeItems(double x, double y, BufferedImage style) {
+    public PrizeItems(double x, double y, BufferedImage style, PrizeType type) {
         super(x, y, style);
+        this.type = type;
+        this.point = type.getPoints();
         setDimension(48, 48);
+    }
+
+    public PrizeType getType() {
+        return type;
     }
 
     @Override
