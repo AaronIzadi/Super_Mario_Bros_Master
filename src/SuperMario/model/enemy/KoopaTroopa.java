@@ -10,6 +10,7 @@ public class KoopaTroopa extends Enemy {
     private BufferedImage shell;
     private boolean isHit;
     private Double lastVelX = 0.0;
+    private int shellRecoveryTicks;
 
     public KoopaTroopa(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -48,5 +49,13 @@ public class KoopaTroopa extends Enemy {
 
     public void setLastVelX(Double lastVelX) {
         this.lastVelX = lastVelX;
+    }
+
+    public int getShellRecoveryTicks() {
+        return shellRecoveryTicks;
+    }
+
+    public void setShellRecoveryTicks(int shellRecoveryTicks) {
+        this.shellRecoveryTicks = shellRecoveryTicks;
     }
 }

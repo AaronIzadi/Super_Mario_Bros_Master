@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 public class Slime extends Brick {
     private BufferedImage slimeOnTouch;
     private boolean onTouch;
+    private int restyleTicks;
 
     public Slime(double x, double y, BufferedImage style) {
         super(x + 4, y, style);
@@ -26,5 +27,13 @@ public class Slime extends Brick {
 
     public BufferedImage getSlimeOnTouch() {
         return slimeOnTouch;
+    }
+
+    public int getRestyleTicks() {
+        return restyleTicks;
+    }
+
+    public void setRestyleTicks(int restyleTicks) {
+        this.restyleTicks = restyleTicks;
     }
 }

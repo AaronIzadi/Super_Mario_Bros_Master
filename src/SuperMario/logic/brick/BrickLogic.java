@@ -1,5 +1,6 @@
 package SuperMario.logic.brick;
 
+import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
@@ -13,8 +14,6 @@ import SuperMario.model.prize.Prize;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class BrickLogic {
 
@@ -289,18 +288,7 @@ public final class BrickLogic {
 
     public static void setOnTouch(Slime slime, boolean onTouch) {
         slime.setOnTouchFlag(onTouch);
-        setTimerToReStyle(slime);
-    }
-
-    public static void setTimerToReStyle(Slime slime) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                slime.setOnTouchFlag(false);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 500);
+        slime.setRestyleTicks(GameConstants.msToTicks(GameConstants.SLIME_RESTYLE_MS));
     }
 
     public static boolean onTouchHero(CrossoverTunnel tunnel, Hero hero) {

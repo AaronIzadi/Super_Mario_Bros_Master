@@ -18,8 +18,6 @@ import SuperMario.model.obstacle.Obstacle;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 final class BowserCollisionHandler {
 
@@ -198,21 +196,8 @@ final class BowserCollisionHandler {
             double x = bowser.isToRight() ? (104 + 96 - 24) : (-96 + 24);
             hero.setX(hero.getX() + x);
             hero.setNumberOfTryToEscape(0);
-            Timer grabTimer = callbacks.getGrabTimer();
-            if (grabTimer != null) {
-                grabTimer.cancel();
-            }
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    bowser.setCanHurt(true);
-                    bowser.setCoolDownFinished(true);
-                    BowserLogic.moveNormal(bowser, bowser.isToRight());
-                    bowser.setGrabAttackOn(false);
-                }
-            };
-            Timer timer = new Timer();
-            timer.schedule(task, 4000);
+            hero.setGrabTimeoutTicks(0);
+            bowser.setPostGrabRecoveryTicks(GameConstants.msToTicks(GameConstants.GRAB_RECOVERY_MS));
         } else {
             bowser.setCoolDownFinished(false);
         }
@@ -221,33 +206,6 @@ final class BowserCollisionHandler {
     static void setTimerForGrabAttack(CollisionContext ctx) {
         MapCollisionCallbacks callbacks = ctx.callbacks();
         Hero hero = callbacks.getHero();
-        Bowser bowser = callbacks.getMap().getBowser();
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (hero.isGrabbed()) {
-                    hero.setGrabbed(false);
-                    HeroLogic.onTouchEnemy(hero, callbacks.getEngine(), 0);
-                    double x = bowser.isToRight() ? (104 + 96 - 24) : (-96 + 24);
-                    hero.setX(hero.getX() + x);
-                    hero.setNumberOfTryToEscape(0);
-                    BowserLogic.moveNormal(bowser, bowser.isToRight());
-                    bowser.setGrabAttackOn(false);
-                    TimerTask followUp = new TimerTask() {
-                        @Override
-                        public void run() {
-                            bowser.setCanHurt(true);
-                            bowser.setCoolDownFinished(true);
-                        }
-                    };
-                    Timer timer = new Timer();
-                    timer.schedule(followUp, 4000);
-                }
-            }
-        };
-        Timer grabTimer = new Timer();
-        grabTimer.schedule(task, 5000);
-        callbacks.setGrabTimer(grabTimer);
+        hero.setGrabTimeoutTicks(GameConstants.msToTicks(GameConstants.GRAB_ATTACK_TIMEOUT_MS));
     }
 }

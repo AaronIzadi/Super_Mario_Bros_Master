@@ -4,8 +4,6 @@ import SuperMario.logic.GameEngine;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
 
-import java.util.Timer;
-
 public interface MapCollisionCallbacks {
 
     Map getActiveMap();
@@ -43,8 +41,4 @@ public interface MapCollisionCallbacks {
     int calculateLosingCoins();
 
     void pauseInCheckPoint();
-
-    void setGrabTimer(Timer timer);
-
-    Timer getGrabTimer();
 }

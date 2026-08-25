@@ -26,6 +26,19 @@ public final class GameConstants {
     public static final int STAR_RUN_DURATION_MS = 1_000;
     public static final int AXE_COOLDOWN_MS = 3_000;
 
+    public static final int KOOPA_SHELL_RECOVERY_MS = 3_000;
+    public static final int PIRANHA_GO_DOWN_DELAY_MS = 2_000;
+    public static final int PIRANHA_GO_UP_DELAY_MS = 3_000;
+    public static final int BOWSER_HP_RECOVERY_MS = 1_000;
+    public static final int BOWSER_ATTACK_COOLDOWN_MS = 3_000;
+    public static final int BOWSER_GRAB_ATTACK_WAIT_MS = 4_000;
+    public static final int BOMB_EXPLODE_DELAY_MS = 2_500;
+    public static final int BOMB_VANISH_DELAY_MS = 1_500;
+    public static final int SLIME_RESTYLE_MS = 500;
+    public static final int SUPER_STAR_JUMP_DELAY_MS = 1_000;
+    public static final int GRAB_ATTACK_TIMEOUT_MS = 5_000;
+    public static final int GRAB_RECOVERY_MS = 4_000;
+
     /** Horizontal throw speed (pixels per tick). */
     public static final double AXE_THROW_SPEED = 9.0;
     /** Initial upward velocity for the throw arc. */
@@ -53,4 +66,8 @@ public final class GameConstants {
 
     public static final int MIN_SAVE_SLOT = 0;
     public static final int MAX_SAVE_SLOT = 2;
+
+    public static int msToTicks(long milliseconds) {
+        return (int) (milliseconds * TICKS_PER_SECOND / 1000.0);
+    }
 }

@@ -13,6 +13,10 @@ public class Bowser extends Enemy {
 
     private int hp;
     private boolean isCoolDownFinished = true;
+    private int cooldownTicks;
+    private int hpRecoveryTicks;
+    private int grabReactionTicks;
+    private int postGrabRecoveryTicks;
     private final HitPoints hitPoints;
     private BufferedImage[] rightFrames;
     private BufferedImage[] leftFrames;
@@ -105,7 +109,39 @@ public class Bowser extends Enemy {
     }
 
     public boolean isCoolDownFinished() {
-        return isCoolDownFinished;
+        return isCoolDownFinished && cooldownTicks <= 0;
+    }
+
+    public int getCooldownTicks() {
+        return cooldownTicks;
+    }
+
+    public void setCooldownTicks(int cooldownTicks) {
+        this.cooldownTicks = cooldownTicks;
+    }
+
+    public int getHpRecoveryTicks() {
+        return hpRecoveryTicks;
+    }
+
+    public void setHpRecoveryTicks(int hpRecoveryTicks) {
+        this.hpRecoveryTicks = hpRecoveryTicks;
+    }
+
+    public int getGrabReactionTicks() {
+        return grabReactionTicks;
+    }
+
+    public void setGrabReactionTicks(int grabReactionTicks) {
+        this.grabReactionTicks = grabReactionTicks;
+    }
+
+    public int getPostGrabRecoveryTicks() {
+        return postGrabRecoveryTicks;
+    }
+
+    public void setPostGrabRecoveryTicks(int postGrabRecoveryTicks) {
+        this.postGrabRecoveryTicks = postGrabRecoveryTicks;
     }
 
     public Hero getHero() {

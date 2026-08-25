@@ -1,7 +1,6 @@
 package SuperMario.model.weapon;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.input.ImageLoader;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 
@@ -17,14 +16,14 @@ public class Axe extends GameObject {
     private boolean gotThere = false;
     private boolean gotBack = false;
 
-    public Axe(double x, double y, BufferedImage style, Hero hero) {
+    public Axe(double x, double y, BufferedImage style, Hero hero, Animation axeAnimation, BufferedImage leftStyle) {
         super(x, y, style);
         this.hero = hero;
-        this.axeAnimation = new Animation(ImageLoader.getInstance().axeFrames());
+        this.axeAnimation = axeAnimation;
+        this.leftStyle = leftStyle;
         setDimension(68, 68);
         setFalling(false);
         setJumping(false);
-        setLeftStyle(ImageLoader.getInstance().getAxeUpLeft());
     }
 
     public boolean isReleased() {

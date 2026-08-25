@@ -3,6 +3,7 @@ package SuperMario.logic;
 import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.UI.UIManager;
 import SuperMario.graphic.view.states.GameState;
+import SuperMario.logic.timer.EntityTimerLogic;
 import SuperMario.graphic.view.states.MapSelection;
 
 public class GameLoopManager implements Runnable {
@@ -94,6 +95,8 @@ public class GameLoopManager implements Runnable {
     }
 
     private void gameLoop() {
+        EntityTimerLogic.tick(mapManager.getMap(), engine);
+
         if (stateManager.getGameState() != GameState.CROSSOVER) {
             mapManager.updateLocations();
             mapManager.checkCollisions(engine);

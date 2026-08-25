@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 public class SuperStar extends PrizeItems {
 
-    private boolean isJumpTimerActivated = false;
+    private int jumpDelayTicks;
 
     public SuperStar(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -12,11 +12,11 @@ public class SuperStar extends PrizeItems {
         setVelX(2);
     }
 
-    public boolean isJumpTimerActivated() {
-        return isJumpTimerActivated;
+    public int getJumpDelayTicks() {
+        return jumpDelayTicks;
     }
 
-    public void setJumpTimerActivated(boolean jumpTimerActivated) {
-        isJumpTimerActivated = jumpTimerActivated;
+    public void setJumpDelayTicks(int jumpDelayTicks) {
+        this.jumpDelayTicks = jumpDelayTicks;
     }
 }

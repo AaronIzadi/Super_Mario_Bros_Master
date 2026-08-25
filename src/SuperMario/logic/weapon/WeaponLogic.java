@@ -1,6 +1,8 @@
 package SuperMario.logic.weapon;
 
 import SuperMario.config.GameConstants;
+import SuperMario.graphic.view.animation.Animation;
+import SuperMario.input.ImageLoader;
 import SuperMario.logic.physics.Physics;
 import SuperMario.logic.render.EntityRenderer;
 import SuperMario.logic.hero.HeroLogic;
@@ -17,6 +19,20 @@ public final class WeaponLogic {
 
     public static void update(Fireball fireball) {
         Physics.updateLocation(fireball);
+    }
+
+    public static Axe createAxe(Hero hero) {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        double x = hero.getToRight()
+                ? hero.getX() + 24
+                : hero.getX() - GameConstants.TILE_SIZE;
+        return new Axe(
+                x,
+                hero.getY(),
+                imageLoader.getAxeUpRight(),
+                hero,
+                new Animation(imageLoader.axeFrames()),
+                imageLoader.getAxeUpLeft());
     }
 
     public static void draw(Axe axe, Graphics g) {

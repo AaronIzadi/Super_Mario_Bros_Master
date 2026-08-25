@@ -14,7 +14,11 @@ public final class HeroFormLogic {
 
     public static HeroForm createForm(BufferedImage[] leftImages, BufferedImage[] rightImages,
                                       boolean isSuper, boolean canShootFire, int heroType) {
-        return new HeroForm(leftImages, rightImages, isSuper, canShootFire, heroType);
+        HeroForm form = new HeroForm(leftImages, rightImages, isSuper, canShootFire, heroType);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.setHeroType(heroType);
+        form.setFireballStyle(imageLoader.getFireballImage());
+        return form;
     }
 
     public static BufferedImage getCurrentStyle(HeroForm form, boolean toRight, boolean movingInX,

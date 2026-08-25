@@ -14,8 +14,6 @@ import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class HeroLogic {
 
@@ -129,28 +127,11 @@ public final class HeroLogic {
     }
 
     public static void setTimer(Hero hero) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                hero.setTookStar(false);
-                if (!GameEngine.getInstance().isMute()) {
-                    GameEngine.getInstance().getSoundManager().resumeBackground();
-                }
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, GameConstants.STAR_POWER_DURATION_MS);
+        hero.setStarPowerTicks(GameConstants.msToTicks(GameConstants.STAR_POWER_DURATION_MS));
     }
 
     public static void setTimerToRun(Hero hero) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                hero.setTookStar(false);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, GameConstants.STAR_RUN_DURATION_MS);
+        hero.setStarRunTicks(GameConstants.msToTicks(GameConstants.STAR_RUN_DURATION_MS));
     }
 
     public static boolean onTouchEnemy(Hero hero, GameEngine engine, int losingCoins) {
@@ -196,35 +177,20 @@ public final class HeroLogic {
     }
 
     public static boolean canActivateAxe(Hero hero) {
-        return hero.getCoins() >= 3 && hero.isSuper() && hero.isAxeCoolDownFinished();
+        return hero.getCoins() >= 3 && hero.isSuper() && hero.getAxeCooldownTicks() <= 0;
     }
 
     public static void activateAxe(Hero hero) {
         if (canActivateAxe(hero)) {
             hero.setCoins(hero.getCoins() - 3);
-            Axe axe;
-            if (hero.getToRight()) {
-                axe = new Axe(hero.getX() + 24, hero.getY(), ImageLoader.getInstance().getAxeUpRight(), hero);
-            } else {
-                axe = new Axe(hero.getX() - GameConstants.TILE_SIZE, hero.getY(),
-                        ImageLoader.getInstance().getAxeUpRight(), hero);
-            }
-            hero.setAxe(axe);
+            hero.setAxe(WeaponLogic.createAxe(hero));
         }
     }
 
     public static void deactivateAxe(Hero hero) {
         hero.setAxe(null);
         hero.setAxeActivated(false);
-        hero.setAxeCoolDownFinished(false);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                hero.setAxeCoolDownFinished(true);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, GameConstants.AXE_COOLDOWN_MS);
+        hero.setAxeCooldownTicks(GameConstants.msToTicks(GameConstants.AXE_COOLDOWN_MS));
     }
 
     public static void throwAxe(Hero hero) {

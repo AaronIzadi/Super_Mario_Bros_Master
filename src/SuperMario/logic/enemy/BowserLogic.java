@@ -1,5 +1,6 @@
 package SuperMario.logic.enemy;
 
+import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
@@ -14,8 +15,6 @@ import SuperMario.model.hero.Hero;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class BowserLogic {
 
@@ -38,14 +37,7 @@ public final class BowserLogic {
         bowser.setHpValue(hp);
         BossHudLogic.setStyle(bowser.getHitPoints(), hp);
         stopMoving(bowser);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                moveNormal(bowser, bowser.isToRight());
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 1000);
+        bowser.setHpRecoveryTicks(GameConstants.msToTicks(GameConstants.BOWSER_HP_RECOVERY_MS));
     }
 
     public static void animate(Bowser bowser) {
@@ -102,16 +94,7 @@ public final class BowserLogic {
     }
 
     private static void fire(Bowser bowser) {
-        bowser.setCoolDownFinished(false);
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                bowser.setCoolDownFinished(true);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 2000 + 1000);
+        startAttackCooldown(bowser, GameConstants.BOWSER_ATTACK_COOLDOWN_MS);
 
         BufferedImage style = bowser.isToRight()
                 ? ImageLoader.getInstance().getFireballRight()
@@ -128,16 +111,7 @@ public final class BowserLogic {
     }
 
     private static void bomb(Bowser bowser) {
-        bowser.setCoolDownFinished(false);
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                bowser.setCoolDownFinished(true);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000 + 1000);
+        startAttackCooldown(bowser, 4000);
 
         double x = bowser.isToRight() ? bowser.getX() + 78 : bowser.getX();
         double y = bowser.getY() + 68;
@@ -147,22 +121,13 @@ public final class BowserLogic {
     }
 
     private static void jumpAttack(Bowser bowser) {
-        bowser.setCoolDownFinished(false);
+        startAttackCooldown(bowser, 4000);
 
         if (!bowser.isJumping()) {
             bowser.setJumping(true);
             bowser.setVelY(7);
             bowser.setHasTouchedGround(false);
         }
-
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                bowser.setCoolDownFinished(true);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000 + 1000);
     }
 
     private static void grabAttack(Bowser bowser, Hero hero) {
@@ -170,19 +135,13 @@ public final class BowserLogic {
             bowser.setCoolDownFinished(false);
             bowser.setGrabAttackOn(true);
             bowser.setCanHurt(true);
-
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    if (!hero.isGrabbed()) {
-                        moveNormal(bowser, bowser.isToRight());
-                        bowser.setCoolDownFinished(true);
-                    }
-                }
-            };
-            Timer timer = new Timer();
-            timer.schedule(task, 4000);
+            bowser.setGrabReactionTicks(GameConstants.msToTicks(GameConstants.BOWSER_GRAB_ATTACK_WAIT_MS));
         }
+    }
+
+    private static void startAttackCooldown(Bowser bowser, int durationMs) {
+        bowser.setCoolDownFinished(false);
+        bowser.setCooldownTicks(GameConstants.msToTicks(durationMs));
     }
 
     public static void canJump(Bowser bowser, boolean isFar) {
@@ -237,41 +196,13 @@ public final class BowserLogic {
         if (bomb.hasIntersect()) {
             bomb.setStyle(ImageLoader.getInstance().getBombOn());
         }
-        if (bomb.isExploded()) {
-            setTimerToVanish(bomb);
-        }
     }
 
     public static void setHasIntersect(Bomb bomb, boolean hasIntersect) {
         bomb.setHasIntersectFlag(hasIntersect);
-        if (hasIntersect) {
-            setTimerToExplode(bomb);
+        if (hasIntersect && bomb.getExplodeTicks() == 0 && !bomb.isExploded()) {
+            bomb.setExplodeTicks(GameConstants.msToTicks(GameConstants.BOMB_EXPLODE_DELAY_MS));
         }
-    }
-
-    public static void setTimerToExplode(Bomb bomb) {
-        bomb.setHasIntersectFlag(false);
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                bomb.setStyle(ImageLoader.getInstance().getBombExplode());
-                bomb.setExploded(true);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 2500);
-    }
-
-    public static void setTimerToVanish(Bomb bomb) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                bomb.setStyle(null);
-                bomb.setTimeToVanish(true);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 1500);
     }
 
     public static void update(Fire fire) {
@@ -280,5 +211,19 @@ public final class BowserLogic {
 
     public static void update(Bomb bomb) {
         Physics.updateLocation(bomb);
+    }
+
+    public static void handleGrabTimeout(Hero hero, Bowser bowser, GameEngine engine) {
+        if (!hero.isGrabbed()) {
+            return;
+        }
+        hero.setGrabbed(false);
+        HeroLogic.onTouchEnemy(hero, engine, 0);
+        double x = bowser.isToRight() ? (104 + 96 - 24) : (-96 + 24);
+        hero.setX(hero.getX() + x);
+        hero.setNumberOfTryToEscape(0);
+        moveNormal(bowser, bowser.isToRight());
+        bowser.setGrabAttackOn(false);
+        bowser.setPostGrabRecoveryTicks(GameConstants.msToTicks(GameConstants.GRAB_RECOVERY_MS));
     }
 }

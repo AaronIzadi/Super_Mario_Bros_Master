@@ -1,5 +1,6 @@
 package SuperMario.logic.enemy;
 
+import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.logic.physics.Physics;
 import SuperMario.logic.render.EntityRenderer;
@@ -12,8 +13,6 @@ import SuperMario.model.enemy.bowser.Bowser;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class EnemyLogic {
 
@@ -56,8 +55,8 @@ public final class EnemyLogic {
         if (!koopa.isHit()) {
             Physics.updateLocation(koopa);
             koopa.setLastVelX(koopa.getVelX());
-        } else {
-            setTimer(koopa);
+        } else if (koopa.getShellRecoveryTicks() == 0) {
+            koopa.setShellRecoveryTicks(GameConstants.msToTicks(GameConstants.KOOPA_SHELL_RECOVERY_MS));
         }
     }
 
@@ -69,52 +68,30 @@ public final class EnemyLogic {
         }
     }
 
-    public static void setTimer(KoopaTroopa koopa) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                koopa.setHit(false);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000);
-    }
-
     public static void draw(Piranha piranha, Graphics g) {
         if (piranha.getY() >= 580) {
             piranha.setY(580);
-            piranha.setVelY(0);
-            setTimerToGoUp(piranha);
+            if (piranha.getVelY() != 0) {
+                piranha.setVelY(0);
+                schedulePiranhaMovement(piranha, 1, GameConstants.PIRANHA_GO_UP_DELAY_MS);
+            }
         }
         if (piranha.getY() <= 480) {
             piranha.setY(480);
-            piranha.setVelY(0);
-            setTimerToGoDown(piranha);
+            if (piranha.getVelY() != 0) {
+                piranha.setVelY(0);
+                schedulePiranhaMovement(piranha, -1, GameConstants.PIRANHA_GO_DOWN_DELAY_MS);
+            }
         }
         EntityRenderer.drawSprite(piranha, g);
         animate(piranha);
     }
 
-    public static void setTimerToGoDown(Piranha piranha) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                piranha.setVelY(-1);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 2000);
-    }
-
-    public static void setTimerToGoUp(Piranha piranha) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                piranha.setVelY(1);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000);
+    private static void schedulePiranhaMovement(Piranha piranha, double velY, int delayMs) {
+        if (piranha.getMovementDelayTicks() == 0) {
+            piranha.setPendingVelY(velY);
+            piranha.setMovementDelayTicks(GameConstants.msToTicks(delayMs));
+        }
     }
 
     public static void animate(Piranha piranha) {

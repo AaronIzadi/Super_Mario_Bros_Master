@@ -25,6 +25,10 @@ public abstract class Hero extends GameObject {
     private int numberOfTryToEscape;
     private double standingStart;
     private double standingTimer;
+    private int starPowerTicks;
+    private int starRunTicks;
+    private int axeCooldownTicks;
+    private int grabTimeoutTicks;
 
     public Hero(double x, double y) {
         super(x, y, null);
@@ -173,5 +177,37 @@ public abstract class Hero extends GameObject {
 
     public void setStandingTimer(double standingTimer) {
         this.standingTimer = standingTimer;
+    }
+
+    public int getStarPowerTicks() {
+        return starPowerTicks;
+    }
+
+    public void setStarPowerTicks(int starPowerTicks) {
+        this.starPowerTicks = starPowerTicks;
+    }
+
+    public int getStarRunTicks() {
+        return starRunTicks;
+    }
+
+    public void setStarRunTicks(int starRunTicks) {
+        this.starRunTicks = starRunTicks;
+    }
+
+    public int getAxeCooldownTicks() {
+        return axeCooldownTicks;
+    }
+
+    public void setAxeCooldownTicks(int axeCooldownTicks) {
+        this.axeCooldownTicks = axeCooldownTicks;
+    }
+
+    public int getGrabTimeoutTicks() {
+        return grabTimeoutTicks;
+    }
+
+    public void setGrabTimeoutTicks(int grabTimeoutTicks) {
+        this.grabTimeoutTicks = grabTimeoutTicks;
     }
 }

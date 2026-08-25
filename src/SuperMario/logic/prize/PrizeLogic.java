@@ -1,5 +1,6 @@
 package SuperMario.logic.prize;
 
+import SuperMario.config.GameConstants;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
 import SuperMario.logic.hero.HeroLogic;
@@ -11,8 +12,6 @@ import SuperMario.model.prize.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class PrizeLogic {
 
@@ -138,28 +137,15 @@ public final class PrizeLogic {
 
     public static void update(SuperStar star) {
         Physics.updateLocation(star);
-        setTimerToJump(star);
+        scheduleJump(star);
     }
 
-    public static void setTimerToJump(SuperStar star) {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                if (Math.floor(star.getY()) == (720 - 96 - 48 + 1) && !star.isJumping()) {
-                    star.setJumping(true);
-                    star.setVelY(7);
-                }
-                star.setJumpTimerActivated(false);
-            }
-        };
-
-        if (!star.isJumpTimerActivated()
+    private static void scheduleJump(SuperStar star) {
+        if (star.getJumpDelayTicks() == 0
                 && Math.floor(star.getY()) == (720 - 96 - 48 + 1)
                 && !star.isJumping()
                 && !star.isFalling()) {
-            star.setJumpTimerActivated(true);
-            Timer timer = new Timer();
-            timer.schedule(task, 1000);
+            star.setJumpDelayTicks(GameConstants.msToTicks(GameConstants.SUPER_STAR_JUMP_DELAY_MS));
         }
     }
 

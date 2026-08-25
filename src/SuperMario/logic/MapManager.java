@@ -12,6 +12,7 @@ import SuperMario.logic.collision.MapCollisionCallbacks;
 import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.logic.map.MapWorldLogic;
+import SuperMario.logic.timer.EntityTimerLogic;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
@@ -21,11 +22,9 @@ import SuperMario.model.obstacle.CoinBrick;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
-import java.util.Timer;
 
 public class MapManager implements MapCollisionCallbacks {
 
-    private Timer grabTimer;
     private Map map;
     private Map crossover;
     private Hero hero;
@@ -128,6 +127,7 @@ public class MapManager implements MapCollisionCallbacks {
     }
 
     public void resetCurrentMap(GameEngine engine) {
+        EntityTimerLogic.clear();
         Hero hero = getHero();
         hero.setVelX(0);
         hero.setVelY(0);
@@ -371,16 +371,6 @@ public class MapManager implements MapCollisionCallbacks {
     @Override
     public double getYBeforeCrossover() {
         return yBeforeCrossover;
-    }
-
-    @Override
-    public void setGrabTimer(Timer timer) {
-        grabTimer = timer;
-    }
-
-    @Override
-    public Timer getGrabTimer() {
-        return grabTimer;
     }
 
     private void playMapBackground() {

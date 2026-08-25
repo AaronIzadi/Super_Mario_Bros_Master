@@ -4,6 +4,7 @@ import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.UI.UIManager;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
+import SuperMario.logic.map.BossHudLogic;
 import SuperMario.graphic.view.states.StoreScreenSelection;
 import SuperMario.input.ImageLoader;
 import SuperMario.model.hero.Hero;
@@ -40,6 +41,7 @@ public class GameEngine {
     private void initialize() {
         userData = UserData.getInstance();
         imageLoader = ImageLoader.getInstance();
+        BossHudLogic.initialize(imageLoader);
         soundManager = new SoundManager();
         stateManager = new GameStateManager();
         cameraManager = new CameraManager(this);

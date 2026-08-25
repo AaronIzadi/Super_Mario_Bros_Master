@@ -1,6 +1,5 @@
 package SuperMario.model.map;
 
-import SuperMario.input.ImageLoader;
 import SuperMario.logic.map.BossHudLogic;
 
 import java.awt.image.BufferedImage;
@@ -13,7 +12,6 @@ public class HitPoints {
     private static final HitPoints instance = new HitPoints();
 
     private HitPoints() {
-        frames = ImageLoader.getInstance().getHitPointFrames();
     }
 
     public static HitPoints getInstance() {

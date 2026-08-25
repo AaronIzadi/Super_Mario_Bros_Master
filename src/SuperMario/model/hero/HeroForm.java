@@ -1,8 +1,8 @@
 package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.logic.hero.HeroFormLogic;
 import SuperMario.input.ImageLoader;
+import SuperMario.logic.hero.HeroFormLogic;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
@@ -30,10 +30,6 @@ public class HeroForm {
         this.isSuper = isSuper;
         this.canShootFire = canShootFire;
         HeroFormLogic.configureFrames(this, leftImages, rightImages);
-
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.setHeroType(heroType);
-        fireballStyle = imageLoader.getFireballImage();
     }
 
     public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY, boolean isCrouching) {

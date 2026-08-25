@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
 public class Piranha extends Enemy {
 
     private Animation animation;
+    private int movementDelayTicks;
+    private double pendingVelY;
 
     public Piranha(double x, double y, BufferedImage style) {
         super(x, y, style);
@@ -24,5 +26,21 @@ public class Piranha extends Enemy {
 
     public Animation getAnimation() {
         return animation;
+    }
+
+    public int getMovementDelayTicks() {
+        return movementDelayTicks;
+    }
+
+    public void setMovementDelayTicks(int movementDelayTicks) {
+        this.movementDelayTicks = movementDelayTicks;
+    }
+
+    public double getPendingVelY() {
+        return pendingVelY;
+    }
+
+    public void setPendingVelY(double pendingVelY) {
+        this.pendingVelY = pendingVelY;
     }
 }
