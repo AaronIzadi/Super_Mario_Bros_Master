@@ -24,7 +24,7 @@ public class InputManager {
 
 
     public InputManager(GameEngine engine, UserData userData, MapManager mapManager, CameraManager cameraManager) {
-        this.inputReceiver = InputReceiver.getInstance();
+        this.inputReceiver = new InputReceiver(engine);
         this.engine = engine;
         this.userData = userData;
         this.mapManager = mapManager;
@@ -167,7 +167,6 @@ public class InputManager {
                             engine.getSoundManager().pauseBackGround();
                         }
                         stateManager.setGameState(GameState.RUNNING);
-                        ;
                         break;
                     }
                 }
@@ -181,7 +180,6 @@ public class InputManager {
 
         } else if (stateManager.getGameState() == GameState.GAME_OVER && inputReceiver.isEscape()) {
             stateManager.setGameState(GameState.RUNNING);
-            ;
             engine.reset();
         } else if (stateManager.getGameState() == GameState.MISSION_PASSED) {
 

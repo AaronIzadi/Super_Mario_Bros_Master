@@ -30,10 +30,10 @@ public class Bowser extends Enemy {
     private boolean canHurt = false;
     private boolean jump = false;
 
-    public Bowser(double x, double y, BufferedImage style) {
+    public Bowser(double x, double y, BufferedImage style, HitPoints hitPoints) {
         super(x, y, style);
         setDimension(125, 144);
-        hitPoints = HitPoints.getInstance();
+        this.hitPoints = hitPoints;
         BowserLogic.setHp(this, 20);
         setVelX(-1.5);
         fire = new ArrayList<>();
@@ -54,10 +54,6 @@ public class Bowser extends Enemy {
 
     public void setRightFrames(BufferedImage[] frames) {
         this.rightFrames = frames;
-    }
-
-    public void setFrames() {
-        BowserLogic.setFrames(this);
     }
 
     public ArrayList<Fire> getFire() {

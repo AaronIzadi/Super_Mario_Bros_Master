@@ -7,7 +7,6 @@ import SuperMario.graphic.view.states.GameState;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
 import SuperMario.model.hero.HeroType;
-import SuperMario.model.map.HitPoints;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +36,7 @@ public class UIManager extends JPanel {
 
         this.engine = engine;
 
-        ImageLoader loader = ImageLoader.getInstance();
+        ImageLoader loader = engine.getImageLoader();
 
         this.heartIcon = loader.getHeartIcon();
         this.coinIcon = loader.getCoinIcon();
@@ -204,7 +203,7 @@ public class UIManager extends JPanel {
     }
 
     private void drawCrossoverBackground(Graphics2D g2) {
-        g2.drawImage(ImageLoader.getInstance().getCrossoverBackground(), 0, 0, null);
+        g2.drawImage(engine.getImageLoader().getCrossoverBackground(), 0, 0, null);
     }
 
     private void drawRemainingTime(Graphics2D g2) {
@@ -253,7 +252,9 @@ public class UIManager extends JPanel {
     }
 
     private void drawHitPoint(Graphics2D g2) {
-        g2.drawImage(HitPoints.getInstance().getStyle(), 300, 100, null);
+        if (engine.getMapManager().getMap() != null && engine.getMapManager().getMap().getBowser() != null) {
+            g2.drawImage(engine.getMapManager().getMap().getBowser().getHitPoints().getStyle(), 300, 100, null);
+        }
     }
 
 

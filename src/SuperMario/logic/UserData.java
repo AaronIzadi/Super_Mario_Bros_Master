@@ -1,6 +1,5 @@
 package SuperMario.logic;
 
-
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.HeroType;
@@ -14,19 +13,14 @@ public class UserData {
     private String mapPath;
     private int worldNumber;
     private boolean[] typesOwned;
-    private static final UserData instance = new UserData();
     private final LoadGameRepository loadGameRepository;
     private final SaveGameRepository saveGameRepository;
 
-    private UserData() {
+    public UserData() {
         this.loadGameRepository = new LoadGameRepository();
         this.saveGameRepository = new SaveGameRepository();
         this.typesOwned = new boolean[5];
         setTypesOwned();
-    }
-
-    public static UserData getInstance() {
-        return instance;
     }
 
     private void setTypesOwned() {

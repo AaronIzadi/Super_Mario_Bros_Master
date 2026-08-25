@@ -20,7 +20,6 @@ public abstract class Hero extends GameObject {
     private boolean tookStar;
     private boolean isGrabbed;
     private boolean isAxeActivated;
-    private boolean isAxeCoolDownFinished = true;
     private Axe axe;
     private int numberOfTryToEscape;
     private double standingStart;
@@ -156,11 +155,7 @@ public abstract class Hero extends GameObject {
     }
 
     public boolean isAxeCoolDownFinished() {
-        return isAxeCoolDownFinished;
-    }
-
-    public void setAxeCoolDownFinished(boolean axeCoolDownFinished) {
-        isAxeCoolDownFinished = axeCoolDownFinished;
+        return axeCooldownTicks <= 0;
     }
 
     public double getStandingStart() {

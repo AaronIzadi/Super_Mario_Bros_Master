@@ -5,8 +5,10 @@ import SuperMario.input.SoundLoader;
 public class SoundManager {
 
     private final SoundLoader soundLoader;
+    private final GameEngine engine;
 
-    public SoundManager() {
+    public SoundManager(GameEngine engine) {
+        this.engine = engine;
         this.soundLoader = new SoundLoader();
     }
 
@@ -26,7 +28,7 @@ public class SoundManager {
         soundLoader.pauseBackground();
     }
 
-    public void heroWinsOverBowser(){
+    public void heroWinsOverBowser() {
         soundLoader.playBowserDies();
         soundLoader.stopBowserBackground();
         soundLoader.playStageClear();
@@ -98,20 +100,19 @@ public class SoundManager {
 
     public void pauseBackGround() {
         soundLoader.pauseBackground();
-        GameEngine.getInstance().setMute(true);
+        engine.setMute(true);
     }
 
     public void resumeBackground() {
         soundLoader.resumeBackground();
-        GameEngine.getInstance().setMute(false);
+        engine.setMute(false);
     }
 
-    public void restartBackground(){
+    public void restartBackground() {
         soundLoader.restartBackground();
     }
 
     public void playStomp() {
         soundLoader.playStomp();
     }
-
 }

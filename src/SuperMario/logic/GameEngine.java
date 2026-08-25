@@ -4,11 +4,10 @@ import SuperMario.config.GameConstants;
 import SuperMario.graphic.view.UI.UIManager;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
-import SuperMario.logic.map.BossHudLogic;
+import SuperMario.logic.hero.HeroFormLogic;
 import SuperMario.graphic.view.states.StoreScreenSelection;
 import SuperMario.input.ImageLoader;
 import SuperMario.model.hero.Hero;
-import SuperMario.model.hero.HeroForm;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -39,13 +38,12 @@ public class GameEngine {
     }
 
     private void initialize() {
-        userData = UserData.getInstance();
+        userData = new UserData();
         imageLoader = ImageLoader.getInstance();
-        BossHudLogic.initialize(imageLoader);
-        soundManager = new SoundManager();
+        soundManager = new SoundManager(this);
         stateManager = new GameStateManager();
         cameraManager = new CameraManager(this);
-        mapManager = MapManager.getInstance();
+        mapManager = new MapManager();
         mapManager.initialize(this);
 
         inputManager = new InputManager(this, userData, mapManager, cameraManager);
@@ -140,7 +138,7 @@ public class GameEngine {
             heroFormId = 2;
         }
         userData.getHero().setHeroForm(
-                new HeroForm(
+                HeroFormLogic.createForm(
                         imageLoader.getHeroLeftFrames(heroFormId),
                         imageLoader.getHeroRightFrames(heroFormId),
                         userData.getHero().isSuper(),

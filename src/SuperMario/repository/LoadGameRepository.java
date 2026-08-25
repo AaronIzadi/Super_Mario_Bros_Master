@@ -80,7 +80,7 @@ public class LoadGameRepository {
                 break;
             }
         }
-        UserData userData = UserData.getInstance();
+        UserData userData = new UserData();
 
         hero.getHeroForm().setCanShootFire(canShootFire);
         hero.setRemainingLives(lives);

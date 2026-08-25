@@ -17,28 +17,24 @@ import java.util.TimerTask;
 
 import static java.awt.event.KeyEvent.*;
 
-
 public class InputReceiver implements KeyListener, MouseListener {
 
-    private static final InputReceiver instance = new InputReceiver();
+    private final GameEngine engine;
     private final Set<Integer> keyPressed;
     private boolean isUpAndDownPressed;
     private Timer timer;
     ButtonAction currentAction = ButtonAction.NO_ACTION;
 
-    private InputReceiver() {
+    public InputReceiver(GameEngine engine) {
+        this.engine = engine;
         keyPressed = new HashSet<>();
-    }
-
-    public static InputReceiver getInstance() {
-        return instance;
     }
 
     @Override
     public void keyPressed(KeyEvent event) {
         int keyCode = event.getKeyCode();
         keyPressed.add(keyCode);
-        GameState state = GameEngine.getInstance().getStateManager().getGameState();
+        GameState state = engine.getStateManager().getGameState();
         boolean notRunningState = state == GameState.START_SCREEN || state == GameState.LOAD_GAME || state == GameState.PAUSED;
         if (keyCode == VK_DOWN) {
             if (notRunningState) {
@@ -75,13 +71,12 @@ public class InputReceiver implements KeyListener, MouseListener {
                 currentAction = ButtonAction.GO_TO_START_SCREEN;
             }
         } else if (keyCode == VK_SPACE) {
-            if (GameEngine.getInstance().getUserData().getHero().getAxe() != null) {
+            if (engine.getUserData().getHero().getAxe() != null) {
                 currentAction = ButtonAction.THROW_AXE;
             } else {
                 currentAction = ButtonAction.FIRE;
             }
         }
-
 
         try {
             notifyInput(currentAction);
@@ -106,7 +101,7 @@ public class InputReceiver implements KeyListener, MouseListener {
 
     private void notifyInput(ButtonAction action) throws IOException, ParseException {
         if (action != ButtonAction.NO_ACTION) {
-            GameEngine.getInstance().getInputManager().receiveInput();
+            engine.getInputManager().receiveInput();
         }
     }
 

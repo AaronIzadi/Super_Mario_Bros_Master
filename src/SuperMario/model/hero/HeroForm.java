@@ -1,9 +1,6 @@
 package SuperMario.model.hero;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.input.ImageLoader;
-import SuperMario.logic.hero.HeroFormLogic;
-import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
 
@@ -29,19 +26,6 @@ public class HeroForm {
         this.heroType = heroType;
         this.isSuper = isSuper;
         this.canShootFire = canShootFire;
-        HeroFormLogic.configureFrames(this, leftImages, rightImages);
-    }
-
-    public BufferedImage getCurrentStyle(boolean toRight, boolean movingInX, boolean movingInY, boolean isCrouching) {
-        return HeroFormLogic.getCurrentStyle(this, toRight, movingInX, movingInY, isCrouching);
-    }
-
-    public void onTouchEnemy(ImageLoader imageLoader) {
-        HeroFormLogic.resetToSmallOnDamage(this, imageLoader);
-    }
-
-    public Fireball fire(boolean toRight, double x, double y) {
-        return HeroFormLogic.createFireball(this, toRight, x, y);
     }
 
     public int getHeroType() {

@@ -1,10 +1,13 @@
 package SuperMario.graphic.manager;
 
 import SuperMario.config.GameConstants;
+import SuperMario.logic.enemy.BowserLogic;
+import SuperMario.logic.map.BossHudLogic;
 import SuperMario.model.enemy.*;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.map.Castle;
 import SuperMario.model.map.Flag;
+import SuperMario.model.map.HitPoints;
 import SuperMario.model.map.Map;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.Mario;
@@ -287,10 +290,11 @@ public class MapCreator {
                     enemy.setFrames(frames);
                     map.addEnemy(enemy);
                 } else if (currentPixel == boss) {
-                    Bowser bowser = new Bowser(xLocation, yLocation, this.boss);
+                    HitPoints hitPoints = BossHudLogic.createHitPoints(imageLoader.getHitPointFrames());
+                    Bowser bowser = new Bowser(xLocation, yLocation, this.boss, hitPoints);
                     bowser.setLeftFrames(imageLoader.getBossLeftFrames());
                     bowser.setRightFrames(imageLoader.getBossRightFrames());
-                    bowser.setFrames();
+                    BowserLogic.setFrames(bowser);
                     bowser.setHero(this.hero);
                     map.setBowser(bowser);
                     map.addEnemy(bowser);

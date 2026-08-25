@@ -4,7 +4,6 @@ import SuperMario.config.GameConstants;
 import SuperMario.graphic.manager.MapCreator;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
-import SuperMario.input.ImageLoader;
 import SuperMario.logic.brick.BrickLogic;
 import SuperMario.logic.collision.CollisionCoordinator;
 import SuperMario.logic.collision.CollisionContext;
@@ -40,13 +39,7 @@ public class MapManager implements MapCollisionCallbacks {
     private SoundManager soundManager;
     private UserData userData;
 
-    private static final MapManager instance = new MapManager();
-
-    private MapManager() {
-    }
-
-    public static MapManager getInstance() {
-        return instance;
+    public MapManager() {
     }
 
     public void initialize(GameEngine engine) {
@@ -111,7 +104,7 @@ public class MapManager implements MapCollisionCallbacks {
     }
 
     private boolean isMapCreated(String path, Hero hero) {
-        ImageLoader.getInstance().setHeroType(hero.getType());
+        engine.getImageLoader().setHeroType(hero.getType());
         MapCreator mapCreator = new MapCreator(hero);
         map = mapCreator.createMap("/maps/" + path);
         map.setHero(hero);
@@ -154,7 +147,7 @@ public class MapManager implements MapCollisionCallbacks {
 
     @Override
     public void createCrossover(String path, Hero hero) {
-        ImageLoader.getInstance().setHeroType(hero.getType());
+        engine.getImageLoader().setHeroType(hero.getType());
         MapCreator mapCreator = new MapCreator();
         crossover = mapCreator.createCrossOver("/maps/" + path, hero);
     }
