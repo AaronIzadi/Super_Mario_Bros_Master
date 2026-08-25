@@ -1,196 +1,287 @@
 # 🍄 Super Mario Bros Master
 
-A comprehensive Java implementation of the classic Super Mario Bros platform game, featuring multiple playable characters, enemies, power-ups, and a complete game management system.
+A **Java Swing implementation of the classic Super Mario Bros. experience** 🎮 featuring multiple playable heroes, enemies, power-ups, boss fights, save/load functionality, and crossover levels.
 
-## 🎮 Overview
+> 🏰 Jump into the Mushroom Kingdom, collect power-ups, defeat enemies, and take on Bowser! 🔥
 
-Super Mario Bros Master is a faithful recreation of the beloved classic platformer where players guide their chosen hero through the Mushroom Kingdom, collecting coins, defeating enemies, and saving the day. The game features an advanced object-oriented architecture with save/load functionality, multiple game states, and authentic retro assets.
+For background on the original game, see [Super Mario Bros. on Wikipedia](https://en.wikipedia.org/wiki/Super_Mario_Bros.?utm_source=chatgpt.com).
 
-For more about the original game, visit the [Super Mario Bros Wikipedia page](https://en.wikipedia.org/wiki/Super_Mario_Bros.).
+---
 
 ## ✨ Features
 
-### 🦸 Playable Characters
-Choose from **five unique heroes**, each with their own special abilities:
-- **Mario** - The classic hero
-- **Luigi** - Mario's brother
-- **Princess Peach** - The princess herself
-- **Rosalina** - Celestial guardian
-- **Toad** - Loyal Mushroom Kingdom resident
+### 🧑‍🤝‍🧑 Playable Characters
 
-### 👾 Enemies
-Battle against five challenging enemy types:
-- **Bowser** - The main antagonist
-- **Koopa Troopa** - Shell-dwelling turtle soldiers
-- **Goomba** - Walking mushroom minions
-- **Piranha Plant** - Pipe-dwelling predators
-- **Spiny** - Spiked enemies
+Choose your hero and take on the adventure:
 
-### 🎁 Power-ups & Collectibles
-Discover surprise bricks containing:
-- **Coins** - Collect for points
-- **Heart Mushroom** - Restore health
-- **Super Mushroom** - Grow in size and power
-- **Super Star** - Temporary invincibility
-- **Fire Flower** - Shoot fireballs
+* 🍄 **Mario**
+* 🟢 **Luigi**
+* 👑 **Princess Peach**
+* 🌌 **Rosalina**
+* 🍄 **Toad** - 🔓 unlockable in the store
 
-### 🧱 Obstacles
-Navigate through various environmental challenges:
-- Bricks
-- Pipes
-- Slime
-- And more!
+### 👾 Enemies & Bosses
 
-### 🔫 Weapons
-Use offensive items to defeat enemies:
-- **Fire** - Projectile attacks
-- **Axe** - Melee weapon
+Watch your step! ⚠️
 
-## 🏗️ Architecture
+* 👣 Goomba
+* 🐢 Koopa Troopa
+* 🌱 Piranha Plant
+* 🦔 Spiny
+* 🐲 **Bowser** - Final boss
 
-### Core Models
+### ⭐ Power-Ups & Collectibles
 
-The game is built on **seven main model classes**:
+Power up, get stronger, and survive longer! 💪
 
-1. **Hero** - Base class for playable characters
-2. **Enemy** - Base class for hostile entities
-3. **Obstacle** - Environmental hazards and platforms
-4. **Prize** - Power-ups and collectibles
-5. **Weapon** - Offensive items
-6. **Map** - Game world container (supports dual maps for crossovers!)
-7. **GameObject** (Abstract) - Base class for most game entities
+* 🪙 Coins
+* 🍄 Super Mushroom
+* 🌸 Fire Flower
+* ⭐ Super Star
+* ❤️ Heart Mushroom
 
-#### GameObject Structure
-```java
-private double x, y;
-private double velX, velY;
-private Dimension dimension;
-private BufferedImage style;
-private boolean toRight;
-private double gravityAcc;
-private boolean falling, jumping;
+### 🎮 Game Systems
+
+* 🌍 Multiple worlds
+* 👑 Boss fights
+* 🚩 Checkpoints
+* 🚇 Crossover tunnel levels
+* 💾 JSON save/load system
+* 🗂️ Three save slots
+* ⏱️ Frame-based game loop (~60 Hz)
+* ⏳ Tick-based timers
+* 📷 Dual-camera scrolling for main & crossover maps
+
+---
+
+## 🏗️ Project Structure
+
+```text
+src/SuperMario/
+├── config/          ⚙️ GameConstants
+│                     └─ Physics, timings, window configuration
+│
+├── model/           🧩 Data-only entities
+│                     └─ Hero, Enemy, Map, prizes, …
+│
+├── logic/           🧠 Game rules, physics, collisions & timers
+│   ├── collision/   💥 Collision handlers & coordinator
+│   ├── enemy/      👾 Enemy & Bowser behavior
+│   ├── hero/       🦸 Hero movement, forms & axe
+│   ├── map/        🗺️ World updates & drawing orchestration
+│   ├── prize/      🎁 PrizeHandler
+│   ├── timer/      ⏱️ GameTimer & EntityTimerLogic
+│   └── render/     🎨 EntityRenderer
+│
+├── graphic/         🖥️ Swing UI, input, maps & animations
+├── input/           🔊 ImageLoader, SoundLoader & fonts
+└── repository/      💾 JSON save/load persistence
+
+src/resources/media/ 🎨 Sprites, maps & audio
+src/data/            💾 Save game files
+src/library/         📦 Legacy json-simple JAR
 ```
 
-### Input & Resource Management
-- **ImageLoader** - Handles all sprite and image loading
-- **SoundManager** - Manages audio and music
-- **FontLoader** - Loads custom retro fonts
-- **InputManager** - Keyboard input handling
+### 🧱 Layering
 
-### Game States
-The game includes multiple screen states:
-- **StartScreen** - Main menu
-- **Store** - Character selection
-- **About** - Game information
-- **Help** - Instructions
-- **LoadGame** - Save file management
-- **Pause** - In-game pause menu
-- **CheckPoint** - Level completion
+The project follows a clean separation of responsibilities:
 
-### GameEngine
+**🧩 Models** → hold state & bounds
+**🧠 Logic** → handles gameplay & rules
+**🎨 Graphic** → handles rendering & menus
 
-The heart of the project that orchestrates all managers:
+This keeps the game logic independent from the presentation layer and makes the codebase easier to maintain and extend. 🚀
 
-```java
-private GameLoopManager loopManager;
-private InputManager inputManager;
-private UIManager uiManager;
-private MapManager mapManager;
-private UserData userData;
-private CameraManager cameraManager;
-private SoundManager soundManager;
-private GameStateManager stateManager;
-private ImageLoader imageLoader;
+---
+
+## 📋 Prerequisites
+
+Before running the game, make sure you have:
+
+* ☕ **JDK 17+**
+
+    * Maven `pom.xml` targets Java 17
+* 🐘 **Maven 3.6+** — optional but recommended
+* 💡 **IntelliJ IDEA** — optional, with the included `Super_Mario_master.iml`
+
+### ⚠️ Assets
+
+Game assets must be available under:
+
+```text
+src/resources/media/
 ```
 
-Key selections managed:
-- `StartScreenSelection`
-- `LoadGameScreenSelection`
-- `PauseScreenSelection`
-- `StoreScreenSelection`
-- `CheckPointSelection`
-- `MapSelection`
+🎯 **Run the game from the project root** so that resource paths resolve correctly.
 
-## 🎨 Assets
+---
 
-All original Super Mario Bros assets are included:
-- **Sprites** - Authentic pixel art graphics
-- **Audio** - Classic sound effects and music
-- **Fonts** - Retro-style text rendering
+## ▶️ Build & Run
+
+### 🐘 Maven — Recommended
+
+From the project root:
+
+```bash
+mvn compile
+mvn exec:java
+```
+
+The exec plugin automatically uses the project root as the working directory.
+
+---
+
+### 💻 Manual Compilation — Without Maven
+
+#### 🪟 PowerShell
+
+```powershell
+$sources = Get-ChildItem -Path src -Recurse -Filter *.java | ForEach-Object { $_.FullName }
+javac -encoding UTF-8 -d out -cp "src\library\json-simple-1.1.1.jar" $sources
+java -cp "out;src\library\json-simple-1.1.1.jar" SuperMario.logic.Launcher
+```
+
+#### 🐧 macOS / Linux
+
+```bash
+find src -name '*.java' > sources.txt
+javac -encoding UTF-8 -d out -cp "src/library/json-simple-1.1.1.jar" @sources.txt
+java -cp "out:src/library/json-simple-1.1.1.jar" SuperMario.logic.Launcher
+```
+
+---
+
+### 💡 IntelliJ IDEA
+
+1. 📂 Open the project/module `Super_Mario_master`.
+2. ⚙️ Set the run configuration's working directory to the **project root**.
+3. ▶️ Run:
+
+```text
+SuperMario.logic.Launcher
+```
+
+### 🚀 Main Class
+
+```text
+SuperMario.logic.Launcher
+```
+
+---
+
+## 🎮 Controls
+
+| 🎮 Key             | ⚡ Action                                  |
+| ------------------ | ----------------------------------------- |
+| ⬅️ Left / ➡️ Right | Move                                      |
+| ⬆️ Up              | Jump / Menu up                            |
+| ⬇️ Down            | Crouch / Menu down                        |
+| ⬆️ + ⬇️ Hold ~2s   | 🪓 Activate axe when super & enough coins |
+| ␣ Space            | 🔥 Fireball / 🪓 Throw axe when held      |
+| ↵ Enter            | ✅ Confirm menu selection                  |
+| Esc                | ⏸️ Pause / Return to start screen         |
+
+> 💡 **Tip:** Some abilities depend on the hero's current form and available coins.
+
+---
+
+## 🧠 Architecture
+
+The game is organized around several core managers and services:
+
+### 🎮 GameEngine
+
+The main **entry singleton** that wires together managers and starts the game loop.
+
+### ⏱️ GameLoopManager
+
+Responsible for:
+
+* Fixed-tick updates
+* Map timers
+* Game-over checks
+
+### 🗺️ MapManager
+
+Handles:
+
+* Level lifecycle
+* Collision entry point
+* Score
+* Time management
+
+### 💥 CollisionCoordinator
+
+Coordinates collisions by delegating them to specialized collision handlers.
+
+### 🎁 PrizeHandler
+
+Centralizes prize-related gameplay behavior:
+
+* 👆 Touch detection
+* 🎁 Prize revealing
+* 🔄 Updates
+* 🎨 Drawing
+
+### 🖼️ ImageLoader
+
+A shared asset-loading singleton used throughout the game.
+
+Other services are owned by `GameEngine` where possible, helping keep dependencies organized.
+
+---
 
 ## 💾 Save System
 
-Game progress is saved and can be loaded at any time:
-- Save files stored as JSON (`.txt` format in `src` folder)
-- Managed by **UserData** singleton class
-- Tracks user information and current map state
-- Resume from checkpoints
+The game includes a JSON-based save/load system with **three save slots**. 🗂️
 
-## 🔧 Technical Highlights
+Save files are stored as JSON text files under:
 
-### Advanced Systems
-- **Dual Camera System** - Handles main camera and crossover camera for multi-map levels
-- **Animation Engine** - Smooth sprite animations for all entities
-- **UIManager** - Comprehensive user interface system
-- **MapManager** - Dynamic level loading and management
-- **Physics Engine** - Gravity, velocity, jumping, and collision detection
+```text
+src/data/
+```
 
-### Design Patterns Used
-- **Singleton Pattern** - UserData management
-- **Abstract Factory Pattern** - GameObject hierarchy
-- **Observer Pattern** - Game state management
-- **Component Pattern** - Modular game entity design
+This allows players to save their progress and continue their adventure later. 🍄
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
-- Java Development Kit (JDK) 8 or higher
-- IDE (IntelliJ IDEA, Eclipse, or VS Code recommended)
+## 📦 Dependencies
 
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/AaronIzadi/Super_Mario_Bros_Master.git
-   ```
+| 📦 Dependency                                                                         | 🎯 Purpose        |
+| ------------------------------------------------------------------------------------- | ----------------- |
+| [json-simple 1.1.1](https://github.com/fangyidong/json-simple?utm_source=chatgpt.com) | 💾 JSON save/load |
 
-2. Open the project in your preferred IDE
+Maven resolves the dependency from **Maven Central**.
 
-3. Run the Launch (main) class to start the game
+For manual compilation, the bundled JAR is used:
 
-### Controls
-- **Arrow Keys** - Move left/right
-- **Space/Up Arrow** - Jump
-- **Shift** - Sprint
-- **F** - Fire (when powered up)
-- **ESC** - Pause menu
+```text
+src/library/json-simple-1.1.1.jar
+```
 
-## 🎯 Development Challenges
+---
 
-The project tackled several complex systems:
-- **Camera Management** - Implementing smooth scrolling with dual camera support for crossover levels
-- **Animation System** - Frame-perfect sprite animations
-- **UI/Map Integration** - Seamless coordination between interface and game world
-- **Save/Load Architecture** - Reliable JSON-based persistence
+## 🎓 License & Assets
 
-## 🤝 Contributing
+This is an **educational project** 📚.
 
-Contributions, issues, and feature requests are welcome! Feel free to check the issues page or submit a pull request.
+> ⚠️ **Super Mario Bros. assets, characters, names, and trademarks belong to Nintendo.**
 
-## 📝 License
+This project is not affiliated with or endorsed by Nintendo.
 
-This project is for educational purposes. All Super Mario Bros assets and intellectual property belong to Nintendo.
+---
 
 ## 👨‍💻 Author
 
 **Aaron Izadi**
-- GitHub: [@AaronIzadi](https://github.com/AaronIzadi)
 
-## 🌟 Acknowledgments
-
-- Nintendo for the original Super Mario Bros game
-- The open-source community for inspiration and resources
-- All contributors and players
+🐙 [GitHub](https://github.com/AaronIzadi?utm_source=chatgpt.com)
 
 ---
 
-⭐ **Enjoy the game and happy coding!** 🍄
+## ⭐ Project Highlights
+
+**☕ Java 17** · **🎨 Swing** · **🎮 Game Development** · **🏗️ OOP** · **🧠 Game Logic** · **💥 Collision Detection** · **⏱️ Game Loop** · **💾 JSON Persistence** · **🧩 Modular Architecture**
+
+> 🍄 **It's-a-me, Java!**
+> A full-featured Super Mario-inspired game built from scratch with Java Swing. 🎮🔥
