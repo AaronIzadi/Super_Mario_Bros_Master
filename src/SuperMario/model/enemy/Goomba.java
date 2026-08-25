@@ -1,6 +1,7 @@
 package SuperMario.model.enemy;
 
 import SuperMario.graphic.view.animation.Animation;
+import SuperMario.logic.enemy.EnemyLogic;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,15 +18,16 @@ public class Goomba extends Enemy {
 
     @Override
     public void draw(Graphics g) {
-        super.draw(g);
-        animate();
+        EnemyLogic.draw(this, g);
+    }
+
+    @Override
+    public void updateLocation() {
+        EnemyLogic.update(this);
     }
 
     public void animate() {
-        boolean isAnimationTicked = animation.animate(5);
-        if (isAnimationTicked) {
-            setStyle(animation.getCurrentFrame());
-        }
+        EnemyLogic.animate(this);
     }
 
     public void setFrames(BufferedImage[] frames) {

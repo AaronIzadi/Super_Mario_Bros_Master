@@ -1,9 +1,8 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
-import SuperMario.logic.MapManager;
+import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
 import java.awt.*;
@@ -20,49 +19,17 @@ public class CoinBrick extends SurpriseBrick {
         setBreakable(false);
         setEmpty(false);
         this.prize = prize;
-        setAnimation();
-        frames = animation.getLength();
-    }
-
-    private void setAnimation() {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        BufferedImage[] frames = imageLoader.getBrickFrames();
-
-        animation = new Animation(frames);
+        BrickLogic.initializeCoinBrick(this);
     }
 
     @Override
     public Prize reveal(GameEngine engine) {
-        if (prize != null) {
-            prize.reveal();
-
-            setEmpty(true);
-            setBreakable(true);
-            Prize toReturn = this.prize;
-            this.prize = null;
-            return toReturn;
-        } else {
-            MapManager manager = engine.getMapManager();
-            if (!manager.getHero().isSuper())
-                return null;
-
-            manager.addRevealedBrick(this);
-            engine.getSoundManager().playBreakBrick();
-
-            double newX = getX() - 27, newY = getY() - 27;
-            setLocation(newX, newY);
-
-            return null;
-        }
+        return BrickLogic.reveal(this, engine);
     }
 
     @Override
     public void draw(Graphics g) {
-        BufferedImage style = getStyle();
-
-        if (style != null) {
-            g.drawImage(style, (int) getX(), (int) getY(), null);
-        }
+        BrickLogic.draw(this, g);
     }
 
     public int getFrames() {
@@ -71,6 +38,14 @@ public class CoinBrick extends SurpriseBrick {
 
     public Animation getAnimation() {
         return animation;
+    }
+
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public void setFrameCount(int frames) {
+        this.frames = frames;
     }
 
     public void decrementFrames() {
@@ -83,11 +58,7 @@ public class CoinBrick extends SurpriseBrick {
 
     @Override
     public void animate() {
-        boolean isAnimationTicked = animation.animate(30);
-        if (isAnimationTicked) {
-            setStyle(animation.getCurrentFrame());
-            frames--;
-        }
+        BrickLogic.animate(this);
     }
 
     @Override

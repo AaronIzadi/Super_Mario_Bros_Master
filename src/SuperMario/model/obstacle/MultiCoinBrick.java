@@ -1,9 +1,7 @@
 package SuperMario.model.obstacle;
 
-
-
 import SuperMario.logic.GameEngine;
-import SuperMario.model.prize.Coin;
+import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
 import java.awt.image.BufferedImage;
@@ -23,29 +21,12 @@ public class MultiCoinBrick extends SurpriseBrick {
 
     @Override
     public Prize reveal(GameEngine engine) {
-
-        BufferedImage newStyle = engine.getImageLoader().getRevealedPrizeBrick();
-
-        Prize toReturn = null;
-
-        if (numberOfCoinsLeft > 0) {
-            Coin coin = new Coin(((Coin) prize).getX(), ((Coin) prize).getY(), ((Coin) prize).getStyle(), 10);
-            numberOfCoinsLeft--;
-            toReturn = prize;
-            prize.reveal();
-            prize = coin;
-        }
-
-        if (numberOfCoinsLeft <= 0) {
-            setEmpty(true);
-            setStyle(newStyle);
-        }
-
-        return toReturn;
+        return BrickLogic.reveal(this, engine);
     }
 
     @Override
     public void animate() {
+        BrickLogic.animate(this);
     }
 
     public int getNumberOfCoinsLeft() {

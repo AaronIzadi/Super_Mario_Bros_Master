@@ -1,6 +1,7 @@
 package SuperMario.model.prize;
 
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.model.hero.Hero;
 
 import java.awt.image.BufferedImage;
@@ -13,11 +14,12 @@ public class FireFlower extends PrizeItems {
     }
 
     @Override
-    public void updateLocation() { }
+    public void updateLocation() {
+        PrizeLogic.update(this);
+    }
 
     @Override
     public void onTouch(Hero hero, GameEngine engine) {
-        super.onTouch(hero, engine);
-        engine.getSoundManager().playPowerUp();
+        PrizeLogic.onTouch(this, hero, engine);
     }
 }

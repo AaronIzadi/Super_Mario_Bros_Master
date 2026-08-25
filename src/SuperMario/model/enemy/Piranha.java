@@ -1,11 +1,10 @@
 package SuperMario.model.enemy;
 
 import SuperMario.graphic.view.animation.Animation;
+import SuperMario.logic.enemy.EnemyLogic;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Piranha extends Enemy {
 
@@ -18,47 +17,24 @@ public class Piranha extends Enemy {
 
     @Override
     public void draw(Graphics g) {
-        if (getY() >= 580) {
-            setY(580);
-            setVelY(0);
-            setTimerToGoUp();
-        }
-        if (getY() <= 480) {
-            setY(480);
-            setVelY(0);
-            setTimerToGoDown();
-        }
-        super.draw(g);
-        animate();
+        EnemyLogic.draw(this, g);
+    }
+
+    @Override
+    public void updateLocation() {
+        EnemyLogic.update(this);
     }
 
     public void setTimerToGoDown() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setVelY(-1);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 2000);
+        EnemyLogic.setTimerToGoDown(this);
     }
 
     public void setTimerToGoUp() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setVelY(1);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000);
+        EnemyLogic.setTimerToGoUp(this);
     }
 
     public void animate() {
-        boolean isAnimationTicked = animation.animate(7);
-        if (isAnimationTicked) {
-            setStyle(animation.getCurrentFrame());
-        }
+        EnemyLogic.animate(this);
     }
 
     public void setFrames(BufferedImage[] frames) {
@@ -71,10 +47,5 @@ public class Piranha extends Enemy {
 
     public Animation getAnimation() {
         return animation;
-    }
-
-    @Override
-    public void updateLocation() {
-        super.updateLocation();
     }
 }

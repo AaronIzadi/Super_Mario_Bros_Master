@@ -298,4 +298,10 @@ public final class HeroLogic {
                 return 5;
         }
     }
+
+    public static void applyCharacterTraits(Hero hero) {
+        if (hero.getType() == HeroType.TOAD) {
+            hero.setRemainingLives(5);
+        }
+    }
 }

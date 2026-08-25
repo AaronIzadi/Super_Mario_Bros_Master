@@ -19,7 +19,7 @@ public final class EnemyLogic {
     }
 
     public static void draw(Goomba goomba, Graphics g) {
-        EntityRenderer.draw(goomba, g);
+        EntityRenderer.drawSprite(goomba, g);
         animate(goomba);
     }
 
@@ -45,7 +45,7 @@ public final class EnemyLogic {
             if (koopa.getVelX() > 0) {
                 g.drawImage(koopa.getRightImage(), (int) koopa.getX(), (int) koopa.getY(), null);
             } else {
-                EntityRenderer.draw(koopa, g);
+                EntityRenderer.drawSprite(koopa, g);
             }
         }
     }
@@ -89,7 +89,7 @@ public final class EnemyLogic {
             piranha.setVelY(0);
             setTimerToGoDown(piranha);
         }
-        EntityRenderer.draw(piranha, g);
+        EntityRenderer.drawSprite(piranha, g);
         animate(piranha);
     }
 
@@ -135,7 +135,7 @@ public final class EnemyLogic {
             g.drawImage(spiny.getRightImage(), (int) spiny.getX(), (int) spiny.getY(), null);
             spiny.setToRight(true);
         } else {
-            EntityRenderer.draw(spiny, g);
+            EntityRenderer.drawSprite(spiny, g);
             spiny.setToRight(false);
         }
     }

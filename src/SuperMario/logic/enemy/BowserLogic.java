@@ -30,7 +30,7 @@ public final class BowserLogic {
         } else {
             animate(bowser);
         }
-        EntityRenderer.draw(bowser, g);
+        EntityRenderer.drawSprite(bowser, g);
     }
 
     public static void setHp(Bowser bowser, int hp) {
@@ -232,7 +232,7 @@ public final class BowserLogic {
     }
 
     public static void draw(Bomb bomb, Graphics g) {
-        EntityRenderer.draw(bomb, g);
+        EntityRenderer.drawSprite(bomb, g);
         if (bomb.hasIntersect()) {
             bomb.setStyle(ImageLoader.getInstance().getBombOn());
         }

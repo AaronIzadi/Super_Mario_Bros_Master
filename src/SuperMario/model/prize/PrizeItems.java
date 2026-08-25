@@ -1,11 +1,9 @@
 package SuperMario.model.prize;
 
-import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
-import SuperMario.model.hero.HeroForm;
-
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,38 +17,9 @@ public abstract class PrizeItems extends GameObject implements Prize {
         setDimension(48, 48);
     }
 
+    @Override
     public void onTouch(Hero hero, GameEngine engine) {
-
-        hero.acquirePoints(getPoint());
-
-
-        if (!hero.isSuper()) {
-            hero.setY(hero.getBottomBounds().getY() - hero.getDimension().getHeight());
-            hero.setDimension(48, 96);
-        }
-        if (!hero.getHeroForm().isSuper()) {
-            setHeroForm(hero, HeroForm.SUPER);
-        } else {
-            setHeroForm(hero, HeroForm.FIRE);
-        }
-
-        engine.getSoundManager().playPowerUp();
-    }
-
-    private void setHeroForm(Hero hero, int heroFormType) {
-
-        HeroForm newForm = null;
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(heroFormType);
-        BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(heroFormType);
-
-        if (heroFormType == HeroForm.SUPER) {
-            newForm = new HeroForm(leftFrames, rightFrames, true, false, hero.getType());
-        } else if (heroFormType == HeroForm.FIRE) {
-            newForm = new HeroForm(leftFrames, rightFrames, true, true, hero.getType());
-        }
-
-        hero.setHeroForm(newForm);
+        PrizeLogic.onTouch(this, hero, engine);
     }
 
     @Override
@@ -60,22 +29,17 @@ public abstract class PrizeItems extends GameObject implements Prize {
 
     @Override
     public void updateLocation() {
-        if (revealed) {
-            super.updateLocation();
-        }
+        PrizeLogic.update(this);
     }
 
     @Override
     public void draw(Graphics g) {
-        if (revealed) {
-            g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
-        }
+        PrizeLogic.draw(this, g);
     }
 
     @Override
     public void reveal() {
-        setY(getY() - 48);
-        revealed = true;
+        PrizeLogic.reveal(this);
     }
 
     public void setPoint(int point) {

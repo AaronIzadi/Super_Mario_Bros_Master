@@ -39,7 +39,7 @@ public final class PrizeLogic {
 
     public static void draw(Coin coin, Graphics g) {
         if (coin.isRevealed()) {
-            EntityRenderer.draw(coin, g);
+            EntityRenderer.drawSprite(coin, g);
         }
     }
 
@@ -80,6 +80,22 @@ public final class PrizeLogic {
         hero.setTookStar(true);
         engine.getSoundManager().playSuperStar();
         hero.setTimer();
+    }
+
+    public static void onTouch(Prize prize, Hero hero, GameEngine engine) {
+        if (prize instanceof Coin) {
+            onTouch((Coin) prize, hero, engine);
+        } else if (prize instanceof SuperMushroom) {
+            onTouch((SuperMushroom) prize, hero, engine);
+        } else if (prize instanceof FireFlower) {
+            onTouch((FireFlower) prize, hero, engine);
+        } else if (prize instanceof HeartMushroom) {
+            onTouch((HeartMushroom) prize, hero, engine);
+        } else if (prize instanceof SuperStar) {
+            onTouch((SuperStar) prize, hero, engine);
+        } else if (prize instanceof PrizeItems) {
+            onTouch((PrizeItems) prize, hero, engine);
+        }
     }
 
     private static void setHeroForm(Hero hero, int heroFormType) {
@@ -140,7 +156,7 @@ public final class PrizeLogic {
 
     public static void draw(PrizeItems prize, Graphics g) {
         if (prize.isRevealed()) {
-            EntityRenderer.draw(prize, g);
+            EntityRenderer.drawSprite(prize, g);
         }
     }
 }

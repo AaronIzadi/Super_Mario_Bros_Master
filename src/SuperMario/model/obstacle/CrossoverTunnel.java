@@ -1,5 +1,6 @@
 package SuperMario.model.obstacle;
 
+import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.hero.Hero;
 
 import java.awt.image.BufferedImage;
@@ -12,8 +13,7 @@ public class CrossoverTunnel extends Pipe{
     }
 
     public boolean onTouchHero(Hero hero){
-        hero.setVelY(-5);
-        return hero.getY() == 600;
+        return BrickLogic.onTouchHero(this, hero);
     }
 
     public void setRevealed(boolean revealed) {

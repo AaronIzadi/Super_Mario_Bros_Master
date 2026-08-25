@@ -1,7 +1,7 @@
 package SuperMario.model.map;
 
-
 import SuperMario.input.ImageLoader;
+import SuperMario.logic.map.BossHudLogic;
 
 import java.awt.image.BufferedImage;
 
@@ -25,11 +25,7 @@ public class HitPoints {
     }
 
     public void setStyle(int hp) {
-        if (hp != 0) {
-            style = frames[hp - 1];
-        } else {
-            style = null;
-        }
+        BossHudLogic.setStyle(this, hp);
     }
 
     public BufferedImage getStyle() {

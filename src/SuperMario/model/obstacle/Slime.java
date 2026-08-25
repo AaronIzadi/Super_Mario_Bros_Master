@@ -1,9 +1,9 @@
 package SuperMario.model.obstacle;
 
+import SuperMario.logic.brick.BrickLogic;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Slime extends Brick {
     private BufferedImage slimeOnTouch;
@@ -17,16 +17,11 @@ public class Slime extends Brick {
 
     @Override
     public void draw(Graphics g) {
-        if (onTouch) {
-            g.drawImage(slimeOnTouch, (int) getX() - 4, (int) getY(), null);
-        } else {
-            g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
-        }
+        BrickLogic.draw(this, g);
     }
 
     public void setOnTouch(boolean onTouch) {
-        this.onTouch = onTouch;
-        setTimerToReStyle();
+        BrickLogic.setOnTouch(this, onTouch);
     }
 
     public void slimeOnTouch(BufferedImage slimeOnTouch) {
@@ -43,16 +38,5 @@ public class Slime extends Brick {
 
     public BufferedImage getSlimeOnTouch() {
         return slimeOnTouch;
-    }
-
-    public void setTimerToReStyle() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                onTouch = false;
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 500);
     }
 }

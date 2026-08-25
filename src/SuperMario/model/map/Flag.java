@@ -1,5 +1,6 @@
 package SuperMario.model.map;
 
+import SuperMario.logic.map.FlagLogic;
 import SuperMario.model.GameObject;
 
 import java.awt.image.BufferedImage;
@@ -14,14 +15,7 @@ public class Flag extends GameObject {
 
     @Override
     public void updateLocation(){
-        if (touched) {
-            if (getY() + getDimension().getHeight() >= 576) {
-                setFalling(false);
-                setVelY(0);
-                setY(576 - getDimension().getHeight());
-            }
-            super.updateLocation();
-        }
+        FlagLogic.updateLocation(this);
     }
 
     public boolean isTouched() {

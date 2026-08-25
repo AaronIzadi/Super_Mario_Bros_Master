@@ -1,9 +1,8 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
-import SuperMario.logic.MapManager;
+import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
 import java.awt.image.BufferedImage;
@@ -18,33 +17,12 @@ public class OrdinaryBrick extends Brick {
         super(x, y, style);
         setBreakable(true);
         setEmpty(true);
-
-        setAnimation();
-        breaking = false;
-        frames = animation.getLength() - 1;
-    }
-
-    private void setAnimation() {
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        BufferedImage[] frames = imageLoader.getBrickFrames();
-
-        animation = new Animation(frames);
+        BrickLogic.initializeOrdinaryBrick(this);
     }
 
     @Override
     public Prize reveal(GameEngine engine) {
-        MapManager manager = engine.getMapManager();
-        if (!manager.getHero().isSuper()) {
-            return null;
-        }
-        breaking = true;
-        manager.addRevealedBrick(this);
-        engine.getSoundManager().playBreakBrick();
-
-        double newX = getX() - 27, newY = getY() - 27;
-        setLocation(newX, newY);
-
-        return null;
+        return BrickLogic.reveal(this, engine);
     }
 
     public int getFrames() {
@@ -63,17 +41,19 @@ public class OrdinaryBrick extends Brick {
         return animation;
     }
 
+    public void setAnimation(Animation animation) {
+        this.animation = animation;
+    }
+
+    public void setFrameCount(int frames) {
+        this.frames = frames;
+    }
+
     public void decrementFrames() {
         frames--;
     }
 
     public void animate() {
-        if (breaking) {
-            boolean isAnimationTicked = animation.animate(30);
-            if (isAnimationTicked) {
-                setStyle(animation.getCurrentFrame());
-                frames--;
-            }
-        }
+        BrickLogic.animate(this);
     }
 }

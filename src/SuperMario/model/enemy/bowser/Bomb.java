@@ -1,12 +1,10 @@
 package SuperMario.model.enemy.bowser;
 
-import SuperMario.input.ImageLoader;
+import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.model.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Bomb extends GameObject {
     private boolean hasIntersect;
@@ -22,45 +20,16 @@ public class Bomb extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        super.draw(g);
-        if (hasIntersect) {
-            setStyle(ImageLoader.getInstance().getBombOn());
-        }
-        if (exploded) {
-            setTimerToVanish();
-        }
+        BowserLogic.draw(this, g);
+    }
+
+    @Override
+    public void updateLocation() {
+        BowserLogic.update(this);
     }
 
     public void setHasIntersect(boolean hasIntersect) {
-        this.hasIntersect = hasIntersect;
-        if (hasIntersect){
-            setTimerToExplode();
-        }
-    }
-
-    public void setTimerToExplode() {
-        hasIntersect = false;
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setStyle(ImageLoader.getInstance().getBombExplode());
-                exploded = true;
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 2500);
-    }
-
-    public void setTimerToVanish() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setStyle(null);
-                timeToVanish = true;
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 1500);
+        BowserLogic.setHasIntersect(this, hasIntersect);
     }
 
     public boolean isTimeToVanish() {

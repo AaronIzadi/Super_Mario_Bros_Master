@@ -1,9 +1,9 @@
 package SuperMario.model.enemy;
 
+import SuperMario.logic.enemy.EnemyLogic;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class KoopaTroopa extends Enemy {
 
@@ -21,15 +21,20 @@ public class KoopaTroopa extends Enemy {
 
     @Override
     public void draw(Graphics g) {
-        if (isHit()) {
-            g.drawImage(shell, (int) getX(), (int) getY() + 26, null);
-        } else {
-            if (getVelX() > 0) {
-                g.drawImage(rightImage, (int) getX(), (int) getY(), null);
-            } else {
-                g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
-            }
-        }
+        EnemyLogic.draw(this, g);
+    }
+
+    @Override
+    public void updateLocation() {
+        EnemyLogic.update(this);
+    }
+
+    public void moveAfterHit() {
+        EnemyLogic.moveAfterHit(this);
+    }
+
+    public void setTimer() {
+        EnemyLogic.setTimer(this);
     }
 
     public void setRightImage(BufferedImage rightImage) {
@@ -42,35 +47,6 @@ public class KoopaTroopa extends Enemy {
 
     public boolean isHit() {
         return isHit;
-    }
-
-    @Override
-    public void updateLocation() {
-        if (!isHit) {
-            super.updateLocation();
-            lastVelX = getVelX();
-        } else {
-            setTimer();
-        }
-    }
-
-    public void moveAfterHit() {
-        if (lastVelX > 0) {
-            setX(getX() + 24);
-        } else {
-            setX(getX() - 24);
-        }
-    }
-
-    public void setTimer() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                setHit(false);
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 3000);
     }
 
     public void setShell(BufferedImage shell) {

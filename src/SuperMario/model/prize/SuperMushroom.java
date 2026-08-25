@@ -1,6 +1,7 @@
 package SuperMario.model.prize;
 
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.model.hero.Hero;
 
 import java.awt.image.BufferedImage;
@@ -14,7 +15,6 @@ public class SuperMushroom extends PrizeItems {
 
     @Override
     public void onTouch(Hero hero, GameEngine engine) {
-        super.onTouch(hero, engine);
-        engine.getSoundManager().playPowerUp();
+        PrizeLogic.onTouch(this, hero, engine);
     }
 }

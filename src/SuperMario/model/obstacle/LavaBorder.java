@@ -1,6 +1,7 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
+import SuperMario.logic.brick.BrickLogic;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -22,12 +23,7 @@ public class LavaBorder extends Border {
 
     @Override
     public void draw(Graphics g) {
-        if (burn) {
-            animate();
-        } else {
-            setStyle(mainStyle);
-        }
-        super.draw(g);
+        BrickLogic.draw(this, g);
     }
 
     public void setBurn(boolean burn) {
@@ -39,10 +35,7 @@ public class LavaBorder extends Border {
     }
 
     public void animate() {
-        boolean isAnimationTicked = animation.animate(8);
-        if (isAnimationTicked) {
-            setStyle(animation.getCurrentFrame());
-        }
+        BrickLogic.animate(this);
     }
 
     public boolean isBurn() {

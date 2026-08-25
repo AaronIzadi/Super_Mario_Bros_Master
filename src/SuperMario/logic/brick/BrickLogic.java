@@ -21,7 +21,60 @@ public final class BrickLogic {
     }
 
     public static Prize reveal(Brick brick, GameEngine engine) {
+        if (brick instanceof OrdinaryBrick) {
+            return reveal((OrdinaryBrick) brick, engine);
+        } else if (brick instanceof SurpriseBrick) {
+            if (brick instanceof CoinBrick) {
+                return reveal((CoinBrick) brick, engine);
+            } else if (brick instanceof MultiCoinBrick) {
+                return reveal((MultiCoinBrick) brick, engine);
+            }
+            return reveal((SurpriseBrick) brick, engine);
+        }
         return null;
+    }
+
+    public static void animate(Brick brick) {
+        if (brick instanceof OrdinaryBrick) {
+            animate((OrdinaryBrick) brick);
+        } else if (brick instanceof CoinBrick) {
+            animate((CoinBrick) brick);
+        } else if (brick instanceof SurpriseBrick) {
+            animate((SurpriseBrick) brick);
+        } else if (brick instanceof CheckPoint) {
+            animate((CheckPoint) brick);
+        }
+    }
+
+    public static void draw(Obstacle obstacle, Graphics g) {
+        if (obstacle instanceof SurpriseBrick) {
+            if (obstacle instanceof CoinBrick) {
+                draw((CoinBrick) obstacle, g);
+            } else {
+                draw((SurpriseBrick) obstacle, g);
+            }
+        } else if (obstacle instanceof CheckPoint) {
+            draw((CheckPoint) obstacle, g);
+        } else if (obstacle instanceof LavaBorder) {
+            draw((LavaBorder) obstacle, g);
+        } else if (obstacle instanceof Slime) {
+            draw((Slime) obstacle, g);
+        } else {
+            EntityRenderer.draw(obstacle, g);
+        }
+    }
+
+    public static void initializeOrdinaryBrick(OrdinaryBrick brick) {
+        BufferedImage[] frames = ImageLoader.getInstance().getBrickFrames();
+        brick.setAnimation(new Animation(frames));
+        brick.setBreaking(false);
+        brick.setFrameCount(frames.length - 1);
+    }
+
+    public static void initializeCoinBrick(CoinBrick brick) {
+        BufferedImage[] frames = ImageLoader.getInstance().getBrickFrames();
+        brick.setAnimation(new Animation(frames));
+        brick.setFrameCount(frames.length);
     }
 
     public static boolean isTimeToBreak(Brick brick) {
@@ -99,7 +152,7 @@ public final class BrickLogic {
     }
 
     public static void draw(SurpriseBrick brick, Graphics g) {
-        EntityRenderer.draw(brick, g);
+        EntityRenderer.drawSprite(brick, g);
         if (!brick.isEmpty()) {
             animate(brick);
         }
@@ -132,7 +185,7 @@ public final class BrickLogic {
     }
 
     public static void draw(CoinBrick brick, Graphics g) {
-        EntityRenderer.draw(brick, g);
+        EntityRenderer.drawSprite(brick, g);
     }
 
     public static void animate(CoinBrick brick) {
@@ -188,7 +241,7 @@ public final class BrickLogic {
     }
 
     public static void draw(CheckPoint checkpoint, Graphics g) {
-        EntityRenderer.draw(checkpoint, g);
+        EntityRenderer.drawSprite(checkpoint, g);
         if (!checkpoint.isChecked() && !checkpoint.isEmpty()) {
             animate(checkpoint);
         }
@@ -211,7 +264,7 @@ public final class BrickLogic {
         } else {
             lava.setStyle(lava.getMainStyle());
         }
-        EntityRenderer.draw(lava, g);
+        EntityRenderer.drawSprite(lava, g);
     }
 
     public static void animate(LavaBorder lava) {
@@ -229,7 +282,7 @@ public final class BrickLogic {
         if (slime.isOnTouch()) {
             g.drawImage(slime.getSlimeOnTouch(), (int) slime.getX() - 4, (int) slime.getY(), null);
         } else {
-            EntityRenderer.draw(slime, g);
+            EntityRenderer.drawSprite(slime, g);
         }
     }
 

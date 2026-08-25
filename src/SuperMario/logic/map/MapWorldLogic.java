@@ -1,15 +1,26 @@
 package SuperMario.logic.map;
 
+import SuperMario.logic.brick.BrickLogic;
+import SuperMario.logic.enemy.BowserLogic;
+import SuperMario.logic.enemy.EnemyLogic;
+import SuperMario.logic.map.FlagLogic;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.logic.render.EntityRenderer;
+import SuperMario.model.enemy.Goomba;
+import SuperMario.model.enemy.KoopaTroopa;
+import SuperMario.model.enemy.Piranha;
+import SuperMario.model.enemy.Spiny;
 import SuperMario.model.enemy.bowser.Bomb;
 import SuperMario.model.enemy.bowser.Bowser;
-import SuperMario.model.enemy.Enemy;
 import SuperMario.model.enemy.bowser.Fire;
+import SuperMario.model.enemy.Enemy;
 import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
+import SuperMario.model.prize.FireFlower;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
+import SuperMario.model.prize.SuperStar;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
@@ -28,7 +39,7 @@ public final class MapWorldLogic {
         Bowser bowser = map.getBowser();
         if (bowser != null) {
 
-            bowser.attack();
+            BowserLogic.attack(bowser);
             drawBowserFire(map, g2);
 
             if (bowser.getHp() <= 10) {
@@ -42,7 +53,7 @@ public final class MapWorldLogic {
 
             bowser.getBomb().removeIf(Bomb::isTimeToVanish);
             for (Bomb bomb : bowser.getBomb()) {
-                EntityRenderer.draw(bomb, g2);
+                BowserLogic.draw(bomb, g2);
             }
 
         }
@@ -84,15 +95,15 @@ public final class MapWorldLogic {
             }
 
             for (Fire fire : bowser.getFire()) {
-                fire.updateLocation();
+                BowserLogic.update(fire);
             }
             for (Bomb bomb : bowser.getBomb()) {
-                bomb.updateLocation();
+                BowserLogic.update(bomb);
             }
         }
 
         for (Enemy enemy : map.getEnemies()) {
-            enemy.updateLocation();
+            updateEnemy(enemy);
         }
 
         updatePrizeLocation(map);
@@ -108,28 +119,27 @@ public final class MapWorldLogic {
 
         for (Iterator<Brick> brickIterator = map.getRevealedBricks().iterator(); brickIterator.hasNext(); ) {
             Brick brick = brickIterator.next();
-            CoinBrick ifOneCoin;
-            OrdinaryBrick ifOrdinary;
+            BrickLogic.animate(brick);
 
             if (brick instanceof CoinBrick) {
-                ifOneCoin = (CoinBrick) brick;
-                ifOneCoin.animate();
-                if (ifOneCoin.getFrames() < 0) {
+                CoinBrick coinBrick = (CoinBrick) brick;
+                if (coinBrick.getFrames() < 0) {
                     map.getObstacles().remove(brick);
                     map.getHero().acquirePoints(1);
                     brickIterator.remove();
                 }
-            } else {
-                ifOrdinary = (OrdinaryBrick) brick;
-                ifOrdinary.animate();
-                if (ifOrdinary.getFrames() < 0) {
+            } else if (brick instanceof OrdinaryBrick) {
+                OrdinaryBrick ordinaryBrick = (OrdinaryBrick) brick;
+                if (ordinaryBrick.getFrames() < 0) {
                     map.getObstacles().remove(brick);
                     map.getHero().acquirePoints(1);
                     brickIterator.remove();
                 }
             }
         }
-        map.getEndPoint().updateLocation();
+        if (map.getEndPoint() != null) {
+            FlagLogic.updateLocation(map.getEndPoint());
+        }
     }
 
     public static void updateLocationsForCrossover(Map map) {
@@ -150,6 +160,22 @@ public final class MapWorldLogic {
         }
     }
 
+    private static void updateEnemy(Enemy enemy) {
+        if (enemy instanceof Goomba) {
+            EnemyLogic.update((Goomba) enemy);
+        } else if (enemy instanceof KoopaTroopa) {
+            EnemyLogic.update((KoopaTroopa) enemy);
+        } else if (enemy instanceof Piranha) {
+            EnemyLogic.update((Piranha) enemy);
+        } else if (enemy instanceof Spiny) {
+            EnemyLogic.update((Spiny) enemy);
+        } else if (enemy instanceof Bowser) {
+            BowserLogic.update((Bowser) enemy);
+        } else {
+            enemy.updateLocation();
+        }
+    }
+
     private static void drawFireballs(Map map, Graphics2D g2) {
         for (Fireball fireball : map.getFireballs()) {
             EntityRenderer.draw(fireball, g2);
@@ -165,9 +191,9 @@ public final class MapWorldLogic {
     private static void drawPrizes(Map map, Graphics2D g2) {
         for (Prize prize : map.getRevealedPrizes()) {
             if (prize instanceof Coin) {
-                EntityRenderer.draw((Coin) prize, g2);
+                PrizeLogic.draw((Coin) prize, g2);
             } else if (prize instanceof PrizeItems) {
-                EntityRenderer.draw((PrizeItems) prize, g2);
+                PrizeLogic.draw((PrizeItems) prize, g2);
             }
         }
     }
@@ -179,19 +205,19 @@ public final class MapWorldLogic {
     private static void drawBricks(Map map, Graphics2D g2) {
         for (Obstacle obstacle : map.getObstacles()) {
             if (obstacle != null) {
-                EntityRenderer.draw(obstacle, g2);
+                BrickLogic.draw(obstacle, g2);
             }
         }
 
         for (Obstacle obstacle : map.getGroundBricks()) {
-            EntityRenderer.draw(obstacle, g2);
+            BrickLogic.draw(obstacle, g2);
         }
     }
 
     private static void drawEnemies(Map map, Graphics2D g2) {
         for (Enemy enemy : map.getEnemies()) {
             if (enemy != null) {
-                EntityRenderer.draw(enemy, g2);
+                enemy.draw(g2);
             }
         }
     }
@@ -204,12 +230,17 @@ public final class MapWorldLogic {
         for (Iterator<Prize> prizeIterator = map.getRevealedPrizes().iterator(); prizeIterator.hasNext(); ) {
             Prize prize = prizeIterator.next();
             if (prize instanceof Coin) {
-                ((Coin) prize).updateLocation();
-                if (((Coin) prize).getRevealBoundary() > ((Coin) prize).getY()) {
+                Coin coin = (Coin) prize;
+                PrizeLogic.update(coin);
+                if (coin.getRevealBoundary() > coin.getY()) {
                     prizeIterator.remove();
                 }
+            } else if (prize instanceof SuperStar) {
+                PrizeLogic.update((SuperStar) prize);
+            } else if (prize instanceof FireFlower) {
+                PrizeLogic.update((FireFlower) prize);
             } else if (prize instanceof PrizeItems) {
-                ((PrizeItems) prize).updateLocation();
+                PrizeLogic.update((PrizeItems) prize);
             }
         }
     }

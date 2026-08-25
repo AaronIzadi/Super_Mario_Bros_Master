@@ -1,13 +1,12 @@
 package SuperMario.model.prize;
 
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
-
 
 public class Coin extends GameObject implements Prize {
 
@@ -30,31 +29,22 @@ public class Coin extends GameObject implements Prize {
 
     @Override
     public void reveal() {
-        revealed = true;
+        PrizeLogic.reveal(this);
     }
 
     @Override
     public void onTouch(Hero hero, GameEngine engine) {
-        if (!acquired) {
-            acquired = true;
-            hero.acquirePoints(point);
-            hero.acquireCoin();
-            engine.getSoundManager().playCoin();
-        }
+        PrizeLogic.onTouch(this, hero, engine);
     }
 
     @Override
     public void updateLocation() {
-        if (revealed) {
-            setY(getY() - 5);
-        }
+        PrizeLogic.update(this);
     }
 
     @Override
     public void draw(Graphics g) {
-        if (revealed) {
-            g.drawImage(getStyle(), (int) getX(), (int) getY(), null);
-        }
+        PrizeLogic.draw(this, g);
     }
 
     public int getRevealBoundary() {

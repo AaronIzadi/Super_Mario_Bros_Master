@@ -1,8 +1,8 @@
 package SuperMario.model.obstacle;
 
-
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
 import java.awt.*;
@@ -22,19 +22,7 @@ public class SurpriseBrick extends Brick {
 
     @Override
     public Prize reveal(GameEngine engine) {
-
-        BufferedImage newStyle = engine.getImageLoader().getRevealedPrizeBrick();
-
-        if (prize != null) {
-            prize.reveal();
-        }
-
-        setEmpty(true);
-        setStyle(newStyle);
-
-        Prize toReturn = this.prize;
-        this.prize = null;
-        return toReturn;
+        return BrickLogic.reveal(this, engine);
     }
 
     @Override
@@ -44,17 +32,11 @@ public class SurpriseBrick extends Brick {
 
     @Override
     public void draw(Graphics g) {
-        super.draw(g);
-        if (!isEmpty()){
-            animate();
-        }
+        BrickLogic.draw(this, g);
     }
 
     public void animate() {
-        boolean isAnimationTicked = animation.animate(5);
-        if (isAnimationTicked) {
-            setStyle(animation.getCurrentFrame());
-        }
+        BrickLogic.animate(this);
     }
 
     public void setFrames(BufferedImage[] frames) {

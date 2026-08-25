@@ -5,6 +5,10 @@ import SuperMario.graphic.manager.MapCreator;
 import SuperMario.graphic.view.states.GameState;
 import SuperMario.graphic.view.states.MapSelection;
 import SuperMario.input.ImageLoader;
+import SuperMario.logic.brick.BrickLogic;
+import SuperMario.logic.enemy.BowserLogic;
+import SuperMario.logic.enemy.EnemyLogic;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.model.GameObject;
 import SuperMario.model.enemy.bowser.Bomb;
 import SuperMario.model.enemy.bowser.Bowser;
@@ -367,7 +371,7 @@ public class MapManager {
                 object.setVelY(0);
                 object.setY(obstacle.getY() + obstacle.getDimension().height);
                 if (obstacle instanceof Brick) {
-                    ((Brick) obstacle).reveal(engine);
+                    BrickLogic.reveal((Brick) obstacle, engine);
                 }
             }
         }
@@ -380,7 +384,7 @@ public class MapManager {
                 }
                 ((Bowser) object).setHasTouchedGround(true);
             } else if (object instanceof Bomb) {
-                ((Bomb) object).setHasIntersect(true);
+                BowserLogic.setHasIntersect((Bomb) object, true);
             }
             object.setFalling(false);
         }
@@ -407,7 +411,7 @@ public class MapManager {
             if (heroBottomBounds.intersects(obstacleTopBounds)) {
                 if (userData.getWorldNumber() == MapSelection.BOSS_FIGHT.getWorldNumber()) {
                     if (obstacle instanceof Brick) {
-                        if (((Brick) obstacle).isTimeToBreak()) {
+                        if (BrickLogic.isTimeToBreak((Brick) obstacle)) {
                             toBeRemoved.add(obstacle);
                         }
                     }
@@ -420,7 +424,7 @@ public class MapManager {
                     hero.setVelY(0);
                     heroHasBottomIntersection = true;
                     if (obstacle instanceof Slime) {
-                        ((Slime) obstacle).setOnTouch(true);
+                        BrickLogic.setOnTouch((Slime) obstacle, true);
                         hero.jumpOnSlime();
                         soundManager.playJump();
                     }
@@ -457,7 +461,7 @@ public class MapManager {
             if (heroBottomBounds.intersects(enemyTopBounds) && !(enemy instanceof Spiny) && !(enemy instanceof Piranha)) {
                 if (enemy instanceof Bowser) {
                     int newHP = ((Bowser) enemy).getHp() > 3 ? (((Bowser) enemy).getHp() - 3) : 0;
-                    ((Bowser) enemy).setHp(newHP);
+                    BowserLogic.setHp((Bowser) enemy, newHP);
                     soundManager.playStomp();
                     hero.setFalling(false);
                     hero.jump();
@@ -471,7 +475,7 @@ public class MapManager {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
                         koopaTroopa.setHit(true);
-                        koopaTroopa.moveAfterHit();
+                        EnemyLogic.moveAfterHit(koopaTroopa);
                         hero.setTimerToRun();
                     } else {
                         acquirePoints(2);
@@ -517,7 +521,7 @@ public class MapManager {
                 hero.setVelY(0);
                 hero.setY(obstacle.getY() + obstacle.getDimension().height);
                 if (obstacle instanceof Brick) {
-                    Prize prize = ((Brick) obstacle).reveal(engine);
+                    Prize prize = BrickLogic.reveal((Brick) obstacle, engine);
                     if (prize != null) {
                         currentMap.addRevealedPrize(prize);
                     }
@@ -565,7 +569,7 @@ public class MapManager {
                     if (enemy instanceof Bowser && ((Bowser) enemy).isGrabAttackOn()) {
                         if (!hero.isGrabbed()) {
                             hero.setGrabbed(true);
-                            map.getBowser().stopMoving();
+                            BowserLogic.stopMoving(map.getBowser());
                             ((Bowser) enemy).setCanHurt(false);
                             setTimerForGrabAttack();
                         }
@@ -581,7 +585,7 @@ public class MapManager {
                     }
                 } else {
                     if (enemy instanceof Bowser) {
-                        ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
+                        BowserLogic.setHp((Bowser) enemy, ((Bowser) enemy).getHp() - 1);
                         if (checkIfBowserDies()) {
                             toBeRemoved.add(enemy);
                             map.setBowser(null);
@@ -616,7 +620,7 @@ public class MapManager {
                 public void run() {
                     map.getBowser().setCanHurt(true);
                     map.getBowser().setCoolDownFinished(true);
-                    map.getBowser().moveNormal(map.getBowser().isToRight());
+                    BowserLogic.moveNormal(map.getBowser(), map.getBowser().isToRight());
                     map.getBowser().setGrabAttackOn(false);
                 }
             };
@@ -638,7 +642,7 @@ public class MapManager {
                     double x = map.getBowser().isToRight() ? (104 + 96 - 24) : (-96 + 24);
                     hero.setX(hero.getX() + x);
                     hero.setNumberOfTryToEscape(0);
-                    map.getBowser().moveNormal(map.getBowser().isToRight());
+                    BowserLogic.moveNormal(map.getBowser(), map.getBowser().isToRight());
                     map.getBowser().setGrabAttackOn(false);
                     TimerTask task = new TimerTask() {
                         @Override
@@ -710,9 +714,9 @@ public class MapManager {
             if (enemy instanceof Spiny && ((getHero().getY() + getHero().getStyle().getHeight()) == (enemy.getY() + enemy.getStyle().getHeight() + 1))) {
                 Spiny spiny = (Spiny) enemy;
                 if (Math.abs(spiny.getX() - getHero().getX()) <= 192) {
-                    spiny.moveFaster();
+                    EnemyLogic.moveFaster(spiny);
                 } else {
-                    spiny.moveNormal();
+                    EnemyLogic.moveNormal(spiny);
                 }
             }
         }
@@ -784,10 +788,10 @@ public class MapManager {
         for (Prize prize : prizes) {
             Rectangle prizeBounds = prize.getBounds();
             if (prizeBounds.intersects(heroBounds)) {
-                prize.onTouch(getHero(), engine);
+                PrizeLogic.onTouch(prize, getHero(), engine);
                 toBeRemoved.add((GameObject) prize);
             } else if (prize instanceof Coin) {
-                prize.onTouch(getHero(), engine);
+                PrizeLogic.onTouch(prize, getHero(), engine);
             }
         }
 
@@ -836,7 +840,7 @@ public class MapManager {
             }
 
             if (distance <= (2 * GameConstants.TILE_SIZE) && distance >= GameConstants.TILE_SIZE) {
-                bowser.jump();
+                BowserLogic.jump(bowser);
             }
         }
 
@@ -844,7 +848,7 @@ public class MapManager {
             Rectangle enemyBounds = enemy.getBounds();
             if (objectBounds.intersects(enemyBounds)) {
                 if (enemy instanceof Bowser) {
-                    ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
+                    BowserLogic.setHp((Bowser) enemy, ((Bowser) enemy).getHp() - 1);
                     if (checkIfBowserDies()) {
                         toBeRemoved.add(enemy);
                         map.setBowser(null);
@@ -857,7 +861,7 @@ public class MapManager {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
                         koopaTroopa.setHit(true);
-                        koopaTroopa.moveAfterHit();
+                        EnemyLogic.moveAfterHit(koopaTroopa);
                     } else {
                         acquirePoints(2);
                         toBeRemoved.add(enemy);
@@ -926,7 +930,7 @@ public class MapManager {
             if (objectBounds.intersects(enemyBounds)) {
                 if (enemy instanceof Bowser) {
                     if (object instanceof Bomb && ((Bomb) object).isExploded()) {
-                        ((Bowser) enemy).setHp(((Bowser) enemy).getHp() - 1);
+                        BowserLogic.setHp((Bowser) enemy, ((Bowser) enemy).getHp() - 1);
                         if (checkIfBowserDies()) {
                             toBeRemoved.add(enemy);
                             map.setBowser(null);
@@ -939,7 +943,7 @@ public class MapManager {
                     KoopaTroopa koopaTroopa = ((KoopaTroopa) enemy);
                     if (!koopaTroopa.isHit()) {
                         koopaTroopa.setHit(true);
-                        koopaTroopa.moveAfterHit();
+                        EnemyLogic.moveAfterHit(koopaTroopa);
                     } else {
                         toBeRemoved.add(enemy);
                     }
@@ -951,7 +955,7 @@ public class MapManager {
 
                 if (object instanceof Bomb) {
                     if (!((Bomb) object).hasIntersect() && !(enemy instanceof Bowser)) {
-                        ((Bomb) object).setHasIntersect(true);
+                        BowserLogic.setHasIntersect((Bomb) object, true);
                     } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
                         toBeRemoved.add(enemy);
                     }
@@ -964,7 +968,7 @@ public class MapManager {
         if (objectBounds.intersects(hero.getBounds())) {
             if (object instanceof Bomb) {
                 if (!((Bomb) object).hasIntersect()) {
-                    ((Bomb) object).setHasIntersect(true);
+                    BowserLogic.setHasIntersect((Bomb) object, true);
                 } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
                     hero.onTouchEnemy(engine, 0);
                     ((Bomb) object).setTimeToVanish(true);
@@ -983,7 +987,7 @@ public class MapManager {
             if (objectBounds.intersects(obstacleBounds)) {
                 if (object instanceof Bomb) {
                     if (!((Bomb) object).hasIntersect()) {
-                        ((Bomb) object).setHasIntersect(true);
+                        BowserLogic.setHasIntersect((Bomb) object, true);
                     } else if (((Bomb) object).hasIntersect() && ((Bomb) object).isExploded()) {
                         toBeRemoved.add(obstacle);
                     }
@@ -1042,13 +1046,13 @@ public class MapManager {
     public void handleCheckPoint(boolean isChecked) {
         this.isChecked = isChecked;
         if (isChecked) {
-            Point point = map.getCheckPoint().check(true);
+            Point point = BrickLogic.check(map.getCheckPoint(), true);
             xHero = point.getX();
             yHero = point.getY() - 48 + 1;
             int price = (int) (progressRate * getCoins());
             getHero().setCoins(getCoins() - price);
         } else {
-            map.getCheckPoint().check(false);
+            BrickLogic.check(map.getCheckPoint(), false);
             int reward = (int) (progressRate * getCoins() * 0.25);
             getHero().setCoins(getCoins() + reward);
         }
