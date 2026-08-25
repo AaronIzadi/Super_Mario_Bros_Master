@@ -10,10 +10,6 @@ public final class EntityRenderer {
     private EntityRenderer() {
     }
 
-    public static void draw(GameObject object, Graphics g) {
-        object.draw(g);
-    }
-
     public static void drawSprite(GameObject object, Graphics g) {
         BufferedImage style = object.getStyle();
 

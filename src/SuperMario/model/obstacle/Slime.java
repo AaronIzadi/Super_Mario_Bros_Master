@@ -1,8 +1,5 @@
 package SuperMario.model.obstacle;
 
-import SuperMario.logic.brick.BrickLogic;
-
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Slime extends Brick {
@@ -13,15 +10,6 @@ public class Slime extends Brick {
         super(x + 4, y, style);
         setBreakable(true);
         setEmpty(true);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        BrickLogic.draw(this, g);
-    }
-
-    public void setOnTouch(boolean onTouch) {
-        BrickLogic.setOnTouch(this, onTouch);
     }
 
     public void slimeOnTouch(BufferedImage slimeOnTouch) {

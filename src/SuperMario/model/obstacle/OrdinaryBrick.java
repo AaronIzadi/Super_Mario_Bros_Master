@@ -1,7 +1,6 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.logic.GameEngine;
 import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
@@ -18,11 +17,6 @@ public class OrdinaryBrick extends Brick {
         setBreakable(true);
         setEmpty(true);
         BrickLogic.initializeOrdinaryBrick(this);
-    }
-
-    @Override
-    public Prize reveal(GameEngine engine) {
-        return BrickLogic.reveal(this, engine);
     }
 
     public int getFrames() {
@@ -51,9 +45,5 @@ public class OrdinaryBrick extends Brick {
 
     public void decrementFrames() {
         frames--;
-    }
-
-    public void animate() {
-        BrickLogic.animate(this);
     }
 }

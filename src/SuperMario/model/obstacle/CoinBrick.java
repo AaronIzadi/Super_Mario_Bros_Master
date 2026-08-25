@@ -1,11 +1,9 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.logic.GameEngine;
 import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CoinBrick extends SurpriseBrick {
@@ -20,16 +18,6 @@ public class CoinBrick extends SurpriseBrick {
         setEmpty(false);
         this.prize = prize;
         BrickLogic.initializeCoinBrick(this);
-    }
-
-    @Override
-    public Prize reveal(GameEngine engine) {
-        return BrickLogic.reveal(this, engine);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        BrickLogic.draw(this, g);
     }
 
     public int getFrames() {
@@ -54,11 +42,6 @@ public class CoinBrick extends SurpriseBrick {
 
     public void setPrize(Prize prize) {
         this.prize = prize;
-    }
-
-    @Override
-    public void animate() {
-        BrickLogic.animate(this);
     }
 
     @Override

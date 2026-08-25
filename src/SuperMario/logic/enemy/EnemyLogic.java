@@ -7,6 +7,8 @@ import SuperMario.model.enemy.Goomba;
 import SuperMario.model.enemy.KoopaTroopa;
 import SuperMario.model.enemy.Piranha;
 import SuperMario.model.enemy.Spiny;
+import SuperMario.model.enemy.Enemy;
+import SuperMario.model.enemy.bowser.Bowser;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -158,5 +160,33 @@ public final class EnemyLogic {
 
     public static void update(Spiny spiny) {
         Physics.updateLocation(spiny);
+    }
+
+    public static void draw(Enemy enemy, Graphics g) {
+        if (enemy instanceof Goomba) {
+            draw((Goomba) enemy, g);
+        } else if (enemy instanceof KoopaTroopa) {
+            draw((KoopaTroopa) enemy, g);
+        } else if (enemy instanceof Piranha) {
+            draw((Piranha) enemy, g);
+        } else if (enemy instanceof Spiny) {
+            draw((Spiny) enemy, g);
+        } else if (enemy instanceof Bowser) {
+            BowserLogic.draw((Bowser) enemy, g);
+        }
+    }
+
+    public static void update(Enemy enemy) {
+        if (enemy instanceof Goomba) {
+            update((Goomba) enemy);
+        } else if (enemy instanceof KoopaTroopa) {
+            update((KoopaTroopa) enemy);
+        } else if (enemy instanceof Piranha) {
+            update((Piranha) enemy);
+        } else if (enemy instanceof Spiny) {
+            update((Spiny) enemy);
+        } else if (enemy instanceof Bowser) {
+            BowserLogic.update((Bowser) enemy);
+        }
     }
 }

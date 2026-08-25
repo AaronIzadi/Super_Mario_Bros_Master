@@ -1,9 +1,7 @@
 package SuperMario.model.enemy.bowser;
 
-import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.model.GameObject;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Bomb extends GameObject {
@@ -16,20 +14,6 @@ public class Bomb extends GameObject {
         setFalling(false);
         setJumping(true);
         setVelY(15);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        BowserLogic.draw(this, g);
-    }
-
-    @Override
-    public void updateLocation() {
-        BowserLogic.update(this);
-    }
-
-    public void setHasIntersect(boolean hasIntersect) {
-        BowserLogic.setHasIntersect(this, hasIntersect);
     }
 
     public boolean isTimeToVanish() {

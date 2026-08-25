@@ -1,7 +1,5 @@
 package SuperMario.model.obstacle;
 
-import SuperMario.logic.GameEngine;
-import SuperMario.logic.brick.BrickLogic;
 import SuperMario.model.prize.Prize;
 
 import java.awt.image.BufferedImage;
@@ -16,16 +14,8 @@ public class Brick extends Obstacle {
         setDimension(48, 48);
     }
 
-    public Prize reveal(GameEngine engine) {
-        return BrickLogic.reveal(this, engine);
-    }
-
     public Prize getPrize() {
         return null;
-    }
-
-    public boolean isTimeToBreak() {
-        return BrickLogic.isTimeToBreak(this);
     }
 
     public void setTimer(long timer) {

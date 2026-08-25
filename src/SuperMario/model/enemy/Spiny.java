@@ -1,8 +1,7 @@
 package SuperMario.model.enemy;
 
-import SuperMario.logic.enemy.EnemyLogic;
+import SuperMario.model.GameObject;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Spiny extends Enemy {
@@ -13,24 +12,6 @@ public class Spiny extends Enemy {
         super(x, y, style);
         setDimension(54, 51);
         setVelX(3);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        EnemyLogic.draw(this, g);
-    }
-
-    @Override
-    public void updateLocation() {
-        EnemyLogic.update(this);
-    }
-
-    public void moveFaster() {
-        EnemyLogic.moveFaster(this);
-    }
-
-    public void moveNormal() {
-        EnemyLogic.moveNormal(this);
     }
 
     public void setRightImage(BufferedImage rightImage) {

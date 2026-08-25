@@ -1,14 +1,10 @@
 package SuperMario.model.hero;
 
 import SuperMario.config.GameConstants;
-import SuperMario.graphic.manager.Camera;
-import SuperMario.logic.GameEngine;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.model.GameObject;
 import SuperMario.model.weapon.Axe;
-import SuperMario.model.weapon.Fireball;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public abstract class Hero extends GameObject {
@@ -41,92 +37,6 @@ public abstract class Hero extends GameObject {
         this.type = type;
         setDimension(width, height);
         HeroLogic.initializeHero(this, heroForm, isSuper, canShootFire);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        HeroLogic.draw(this, g);
-    }
-
-    public void jump() {
-        HeroLogic.jump(this);
-    }
-
-    public void jumpOnEnemy() {
-        HeroLogic.jumpOnEnemy(this);
-    }
-
-    public void jumpOnSlime() {
-        HeroLogic.jumpOnSlime(this);
-    }
-
-    public void sit() {
-        HeroLogic.sit(this);
-    }
-
-    public void getUp() {
-        HeroLogic.getUp(this);
-    }
-
-    public boolean getOnLandStandingTimer() {
-        return HeroLogic.getOnLandStandingTimer(this);
-    }
-
-    public void move(boolean toRight, Camera camera) {
-        HeroLogic.move(this, toRight, camera);
-    }
-
-    public void setTimer() {
-        HeroLogic.setTimer(this);
-    }
-
-    public void setTimerToRun() {
-        HeroLogic.setTimerToRun(this);
-    }
-
-    public boolean onTouchEnemy(GameEngine engine, int losingCoins) {
-        return HeroLogic.onTouchEnemy(this, engine, losingCoins);
-    }
-
-    public void onTouchBorder(GameEngine engine, int losingCoins) {
-        HeroLogic.onTouchBorder(this, engine, losingCoins);
-    }
-
-    public void heroDies(GameEngine engine, int lostScore, int losingCoins) {
-        HeroLogic.heroDies(this, engine, lostScore, losingCoins);
-    }
-
-    public Fireball fire() {
-        return HeroLogic.fire(this);
-    }
-
-    public boolean canActivateAxe() {
-        return HeroLogic.canActivateAxe(this);
-    }
-
-    public void activateAxe() {
-        HeroLogic.activateAxe(this);
-    }
-
-    public void deactivateAxe() {
-        HeroLogic.deactivateAxe(this);
-    }
-
-    @Override
-    public BufferedImage getStyle() {
-        return super.getStyle();
-    }
-
-    public void throwAxe() {
-        HeroLogic.throwAxe(this);
-    }
-
-    public void acquireCoin() {
-        HeroLogic.acquireCoin(this);
-    }
-
-    public void acquirePoints(int point) {
-        HeroLogic.acquirePoints(this, point);
     }
 
     public int getRemainingLives() {

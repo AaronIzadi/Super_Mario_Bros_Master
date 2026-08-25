@@ -2,6 +2,7 @@ package SuperMario.logic;
 
 import SuperMario.graphic.manager.Camera;
 import SuperMario.graphic.manager.InputReceiver;
+import SuperMario.logic.hero.HeroLogic;
 import SuperMario.graphic.view.states.*;
 
 import java.io.IOException;
@@ -97,27 +98,27 @@ public class InputManager {
             if (inputReceiver.isUpAndDownSelected()) {
                 mapManager.activateAxe();
             } else if (inputReceiver.isUp()) {
-                userData.getHero().jump();
+                HeroLogic.jump(userData.getHero());
                 mapManager.getSoundManager().playJump();
             } else if (inputReceiver.isDown()) {
-                userData.getHero().sit();
+                HeroLogic.sit(userData.getHero());
             } else if (inputReceiver.isRight()) {
                 if (userData.getHero().isGrabbed()) {
                     userData.getHero().addNumberOfTryToEscape();
                 } else {
                     Camera currentCam = stateManager.getGameState() == GameState.RUNNING ? cameraManager.getMainCamera() : cameraManager.getCrossoverCamera();
-                    userData.getHero().move(true, currentCam);
+                    HeroLogic.move(userData.getHero(), true, currentCam);
                 }
             } else if (inputReceiver.isLeft()) {
                 if (userData.getHero().isGrabbed()) {
                     userData.getHero().addNumberOfTryToEscape();
                 } else {
                     Camera currentCam = stateManager.getGameState() == GameState.RUNNING ? cameraManager.getMainCamera() : cameraManager.getCrossoverCamera();
-                    userData.getHero().move(false, currentCam);
+                    HeroLogic.move(userData.getHero(), false, currentCam);
                 }
             } else if (inputReceiver.isEmpty()) {
                 userData.getHero().setVelX(0);
-                userData.getHero().getUp();
+                HeroLogic.getUp(userData.getHero());
                 if (userData.getHero().isSuper()) {
                     userData.getHero().getDimension().height = 96;
                 }

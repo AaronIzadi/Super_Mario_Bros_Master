@@ -1,8 +1,7 @@
 package SuperMario.model.enemy;
 
-import SuperMario.logic.enemy.EnemyLogic;
+import SuperMario.model.GameObject;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class KoopaTroopa extends Enemy {
@@ -14,27 +13,9 @@ public class KoopaTroopa extends Enemy {
 
     public KoopaTroopa(double x, double y, BufferedImage style) {
         super(x, y, style);
-        setDimension(48,63);
+        setDimension(48, 63);
         setVelX(3);
         isHit = false;
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        EnemyLogic.draw(this, g);
-    }
-
-    @Override
-    public void updateLocation() {
-        EnemyLogic.update(this);
-    }
-
-    public void moveAfterHit() {
-        EnemyLogic.moveAfterHit(this);
-    }
-
-    public void setTimer() {
-        EnemyLogic.setTimer(this);
     }
 
     public void setRightImage(BufferedImage rightImage) {

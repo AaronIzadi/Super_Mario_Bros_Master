@@ -2,8 +2,6 @@ package SuperMario.model;
 
 import SuperMario.config.GameConstants;
 import SuperMario.logic.collision.CollisionBounds;
-import SuperMario.logic.physics.Physics;
-import SuperMario.logic.render.EntityRenderer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,17 +9,11 @@ import java.awt.image.BufferedImage;
 public abstract class GameObject {
 
     private double x, y;
-
     private double velX, velY;
-
     private Dimension dimension;
-
     private BufferedImage style;
-
     private boolean toRight;
-
     private double gravityAcc;
-
     private boolean falling, jumping;
 
     public GameObject(double x, double y, BufferedImage style) {
@@ -37,14 +29,6 @@ public abstract class GameObject {
         setGravityAcc(GameConstants.GRAVITY);
         jumping = false;
         falling = true;
-    }
-
-    public void draw(Graphics g) {
-        EntityRenderer.drawSprite(this, g);
-    }
-
-    public void updateLocation() {
-        Physics.updateLocation(this);
     }
 
     public void setLocation(double x, double y) {

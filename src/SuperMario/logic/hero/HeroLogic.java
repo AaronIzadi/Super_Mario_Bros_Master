@@ -228,7 +228,7 @@ public final class HeroLogic {
     }
 
     public static void throwAxe(Hero hero) {
-        hero.getAxe().setReleased(true, hero.getX());
+        WeaponLogic.setReleased(hero.getAxe(), true, hero.getX());
     }
 
     public static void acquireCoin(Hero hero) {

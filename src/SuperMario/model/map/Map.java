@@ -1,7 +1,6 @@
 package SuperMario.model.map;
 
 import SuperMario.config.GameConstants;
-import SuperMario.logic.map.MapWorldLogic;
 import SuperMario.model.enemy.Enemy;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.hero.Hero;
@@ -10,7 +9,6 @@ import SuperMario.model.prize.Prize;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -37,26 +35,6 @@ public class Map {
 
     public Map(Hero hero) {
         this.hero = hero;
-    }
-
-    public void drawMap(Graphics2D g2) {
-        MapWorldLogic.drawMap(this, g2);
-    }
-
-    public void drawCrossover(Graphics2D g2) {
-        MapWorldLogic.drawCrossover(this, g2);
-    }
-
-    public void updateLocations() {
-        MapWorldLogic.updateLocations(this);
-    }
-
-    public void updateLocationsForCrossover() {
-        MapWorldLogic.updateLocationsForCrossover(this);
-    }
-
-    public void stopBurning() {
-        MapWorldLogic.stopBurning(this);
     }
 
     public ArrayList<Obstacle> getAllObstacles() {

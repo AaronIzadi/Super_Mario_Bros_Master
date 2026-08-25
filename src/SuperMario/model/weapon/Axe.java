@@ -2,11 +2,9 @@ package SuperMario.model.weapon;
 
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
-import SuperMario.logic.weapon.WeaponLogic;
 import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Axe extends GameObject {
@@ -19,7 +17,6 @@ public class Axe extends GameObject {
     private boolean gotThere = false;
     private boolean gotBack = false;
 
-
     public Axe(double x, double y, BufferedImage style, Hero hero) {
         super(x, y, style);
         this.hero = hero;
@@ -30,26 +27,12 @@ public class Axe extends GameObject {
         setLeftStyle(ImageLoader.getInstance().getAxeUpLeft());
     }
 
-    @Override
-    public void draw(Graphics g) {
-        WeaponLogic.draw(this, g);
-    }
-
-    public void setReleased(boolean released, double xReleasePoint) {
-        WeaponLogic.setReleased(this, released, xReleasePoint);
-    }
-
     public boolean isReleased() {
         return isReleased;
     }
 
     public void setLeftStyle(BufferedImage leftStyle) {
         this.leftStyle = leftStyle;
-    }
-
-    @Override
-    public void updateLocation() {
-        WeaponLogic.update(this);
     }
 
     public Hero getHero() {

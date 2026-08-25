@@ -6,7 +6,6 @@ import SuperMario.model.enemy.Enemy;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.HitPoints;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -37,21 +36,12 @@ public class Bowser extends Enemy {
         bomb = new ArrayList<>();
     }
 
-    @Override
-    public void draw(Graphics g) {
-        BowserLogic.draw(this, g);
-    }
-
-    public void setHp(int hp) {
-        BowserLogic.setHp(this, hp);
+    public int getHp() {
+        return hp;
     }
 
     public void setHero(Hero hero) {
         this.hero = hero;
-    }
-
-    public int getHp() {
-        return hp;
     }
 
     public void setLeftFrames(BufferedImage[] frames) {
@@ -64,35 +54,6 @@ public class Bowser extends Enemy {
 
     public void setFrames() {
         BowserLogic.setFrames(this);
-    }
-
-    public void animate() {
-        BowserLogic.animate(this);
-    }
-
-    @Override
-    public void updateLocation() {
-        BowserLogic.update(this);
-    }
-
-    public void attack() {
-        BowserLogic.attack(this);
-    }
-
-    public void canJump(boolean isFar) {
-        BowserLogic.canJump(this, isFar);
-    }
-
-    public void jump() {
-        BowserLogic.jump(this);
-    }
-
-    public void moveNormal(boolean toRight) {
-        BowserLogic.moveNormal(this, toRight);
-    }
-
-    public void stopMoving() {
-        BowserLogic.stopMoving(this);
     }
 
     public ArrayList<Fire> getFire() {

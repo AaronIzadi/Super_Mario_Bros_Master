@@ -3,17 +3,16 @@ package SuperMario.logic.map;
 import SuperMario.logic.brick.BrickLogic;
 import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.logic.enemy.EnemyLogic;
-import SuperMario.logic.map.FlagLogic;
+import SuperMario.logic.hero.HeroLogic;
+import SuperMario.logic.physics.Physics;
 import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.logic.render.EntityRenderer;
-import SuperMario.model.enemy.Goomba;
-import SuperMario.model.enemy.KoopaTroopa;
-import SuperMario.model.enemy.Piranha;
-import SuperMario.model.enemy.Spiny;
+import SuperMario.logic.weapon.WeaponLogic;
 import SuperMario.model.enemy.bowser.Bomb;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.enemy.bowser.Fire;
 import SuperMario.model.enemy.Enemy;
+import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
@@ -38,7 +37,6 @@ public final class MapWorldLogic {
 
         Bowser bowser = map.getBowser();
         if (bowser != null) {
-
             BowserLogic.attack(bowser);
             drawBowserFire(map, g2);
 
@@ -55,43 +53,42 @@ public final class MapWorldLogic {
             for (Bomb bomb : bowser.getBomb()) {
                 BowserLogic.draw(bomb, g2);
             }
-
         }
 
         drawEnemies(map, g2);
         drawBricks(map, g2);
         drawFireballs(map, g2);
         if (map.getCastle() != null) {
-            EntityRenderer.draw(map.getCastle(), g2);
+            EntityRenderer.drawSprite(map.getCastle(), g2);
         }
         if (map.getEndPoint() != null) {
-            EntityRenderer.draw(map.getEndPoint(), g2);
+            EntityRenderer.drawSprite(map.getEndPoint(), g2);
         }
-        drawHero(map, g2);
+        HeroLogic.draw(map.getHero(), g2);
     }
 
     public static void drawCrossover(Map map, Graphics2D g2) {
         drawBricks(map, g2);
         drawPrizes(map, g2);
-        drawHero(map, g2);
+        HeroLogic.draw(map.getHero(), g2);
     }
 
     public static void updateLocations(Map map) {
-        if (!map.getHero().isGrabbed()) {
-            map.getHero().updateLocation();
+        Hero hero = map.getHero();
+        if (!hero.isGrabbed()) {
+            Physics.updateLocation(hero);
         }
 
         Bowser bowser = map.getBowser();
         if (bowser != null) {
+            bowser.setToRight(hero.getX() > bowser.getX());
 
-            bowser.setToRight(map.getHero().getX() > bowser.getX());
-
-            if (map.getHero().isGrabbed()) {
-                map.getHero().setVelY(0);
-                map.getHero().setVelX(0);
-                map.getHero().setY(bowser.getY() + 48);
+            if (hero.isGrabbed()) {
+                hero.setVelY(0);
+                hero.setVelX(0);
+                hero.setY(bowser.getY() + 48);
                 double x = bowser.isToRight() ? (bowser.getX() + 104 - 24) : (bowser.getX() - 24);
-                map.getHero().setX(x);
+                hero.setX(x);
             }
 
             for (Fire fire : bowser.getFire()) {
@@ -103,18 +100,18 @@ public final class MapWorldLogic {
         }
 
         for (Enemy enemy : map.getEnemies()) {
-            updateEnemy(enemy);
+            EnemyLogic.update(enemy);
         }
 
         updatePrizeLocation(map);
 
         Axe axe = map.getAxe();
         if (axe != null && axe.isReleased()) {
-            axe.updateLocation();
+            WeaponLogic.update(axe);
         }
 
         for (Fireball fireball : map.getFireballs()) {
-            fireball.updateLocation();
+            WeaponLogic.update(fireball);
         }
 
         for (Iterator<Brick> brickIterator = map.getRevealedBricks().iterator(); brickIterator.hasNext(); ) {
@@ -125,30 +122,31 @@ public final class MapWorldLogic {
                 CoinBrick coinBrick = (CoinBrick) brick;
                 if (coinBrick.getFrames() < 0) {
                     map.getObstacles().remove(brick);
-                    map.getHero().acquirePoints(1);
+                    HeroLogic.acquirePoints(hero, 1);
                     brickIterator.remove();
                 }
             } else if (brick instanceof OrdinaryBrick) {
                 OrdinaryBrick ordinaryBrick = (OrdinaryBrick) brick;
                 if (ordinaryBrick.getFrames() < 0) {
                     map.getObstacles().remove(brick);
-                    map.getHero().acquirePoints(1);
+                    HeroLogic.acquirePoints(hero, 1);
                     brickIterator.remove();
                 }
             }
         }
+
         if (map.getEndPoint() != null) {
             FlagLogic.updateLocation(map.getEndPoint());
         }
     }
 
     public static void updateLocationsForCrossover(Map map) {
-        map.getHero().updateLocation();
+        Physics.updateLocation(map.getHero());
         updatePrizeLocation(map);
 
         Axe axe = map.getAxe();
         if (axe != null && axe.isReleased()) {
-            axe.updateLocation();
+            WeaponLogic.update(axe);
         }
     }
 
@@ -160,31 +158,15 @@ public final class MapWorldLogic {
         }
     }
 
-    private static void updateEnemy(Enemy enemy) {
-        if (enemy instanceof Goomba) {
-            EnemyLogic.update((Goomba) enemy);
-        } else if (enemy instanceof KoopaTroopa) {
-            EnemyLogic.update((KoopaTroopa) enemy);
-        } else if (enemy instanceof Piranha) {
-            EnemyLogic.update((Piranha) enemy);
-        } else if (enemy instanceof Spiny) {
-            EnemyLogic.update((Spiny) enemy);
-        } else if (enemy instanceof Bowser) {
-            BowserLogic.update((Bowser) enemy);
-        } else {
-            enemy.updateLocation();
-        }
-    }
-
     private static void drawFireballs(Map map, Graphics2D g2) {
         for (Fireball fireball : map.getFireballs()) {
-            EntityRenderer.draw(fireball, g2);
+            EntityRenderer.drawSprite(fireball, g2);
         }
     }
 
     private static void drawBowserFire(Map map, Graphics2D g2) {
         for (Fire fire : map.getBowser().getFire()) {
-            EntityRenderer.draw(fire, g2);
+            EntityRenderer.drawSprite(fire, g2);
         }
     }
 
@@ -217,13 +199,9 @@ public final class MapWorldLogic {
     private static void drawEnemies(Map map, Graphics2D g2) {
         for (Enemy enemy : map.getEnemies()) {
             if (enemy != null) {
-                enemy.draw(g2);
+                EnemyLogic.draw(enemy, g2);
             }
         }
-    }
-
-    private static void drawHero(Map map, Graphics2D g2) {
-        map.getHero().draw(g2);
     }
 
     private static void updatePrizeLocation(Map map) {

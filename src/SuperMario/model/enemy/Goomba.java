@@ -1,9 +1,8 @@
 package SuperMario.model.enemy;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.logic.enemy.EnemyLogic;
+import SuperMario.model.GameObject;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Goomba extends Enemy {
@@ -14,20 +13,6 @@ public class Goomba extends Enemy {
         super(x, y, style);
         setDimension(48, 48);
         setVelX(3);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        EnemyLogic.draw(this, g);
-    }
-
-    @Override
-    public void updateLocation() {
-        EnemyLogic.update(this);
-    }
-
-    public void animate() {
-        EnemyLogic.animate(this);
     }
 
     public void setFrames(BufferedImage[] frames) {

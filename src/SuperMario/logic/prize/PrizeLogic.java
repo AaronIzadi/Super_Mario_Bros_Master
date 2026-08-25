@@ -2,6 +2,7 @@ package SuperMario.logic.prize;
 
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.hero.HeroLogic;
 import SuperMario.logic.physics.Physics;
 import SuperMario.logic.render.EntityRenderer;
 import SuperMario.model.hero.Hero;
@@ -21,8 +22,8 @@ public final class PrizeLogic {
     public static void onTouch(Coin coin, Hero hero, GameEngine engine) {
         if (!coin.isAcquired()) {
             coin.setAcquired(true);
-            hero.acquirePoints(coin.getPoint());
-            hero.acquireCoin();
+            HeroLogic.acquirePoints(hero, coin.getPoint());
+            HeroLogic.acquireCoin(hero);
             engine.getSoundManager().playCoin();
         }
     }
@@ -44,7 +45,7 @@ public final class PrizeLogic {
     }
 
     public static void onTouch(PrizeItems prize, Hero hero, GameEngine engine) {
-        hero.acquirePoints(prize.getPoint());
+        HeroLogic.acquirePoints(hero, prize.getPoint());
 
         if (!hero.isSuper()) {
             hero.setY(hero.getBottomBounds().getY() - hero.getDimension().getHeight());
@@ -70,7 +71,7 @@ public final class PrizeLogic {
     }
 
     public static void onTouch(HeartMushroom heart, Hero hero, GameEngine engine) {
-        hero.acquirePoints(heart.getPoint());
+        HeroLogic.acquirePoints(hero, heart.getPoint());
         hero.setRemainingLives(hero.getRemainingLives() + 1);
         engine.getSoundManager().playOneUp();
     }
@@ -79,7 +80,15 @@ public final class PrizeLogic {
         onTouch((PrizeItems) star, hero, engine);
         hero.setTookStar(true);
         engine.getSoundManager().playSuperStar();
-        hero.setTimer();
+        HeroLogic.setTimer(hero);
+    }
+
+    public static void reveal(Prize prize) {
+        if (prize instanceof Coin) {
+            reveal((Coin) prize);
+        } else if (prize instanceof PrizeItems) {
+            reveal((PrizeItems) prize);
+        }
     }
 
     public static void onTouch(Prize prize, Hero hero, GameEngine engine) {

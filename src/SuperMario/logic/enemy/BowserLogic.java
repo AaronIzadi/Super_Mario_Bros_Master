@@ -3,6 +3,7 @@ package SuperMario.logic.enemy;
 import SuperMario.graphic.view.animation.Animation;
 import SuperMario.input.ImageLoader;
 import SuperMario.logic.GameEngine;
+import SuperMario.logic.hero.HeroLogic;
 import SuperMario.logic.map.BossHudLogic;
 import SuperMario.logic.physics.Physics;
 import SuperMario.logic.render.EntityRenderer;
@@ -93,7 +94,7 @@ public final class BowserLogic {
             fire(bowser);
         } else if (random == 1 && Math.abs(hero.getX() - bowser.getX()) <= (2 * 48)) {
             grabAttack(bowser, hero);
-        } else if (random == 2 && hero.getOnLandStandingTimer()) {
+        } else if (random == 2 && HeroLogic.getOnLandStandingTimer(hero)) {
             jumpAttack(bowser);
         } else if (random == 3) {
             bomb(bowser);

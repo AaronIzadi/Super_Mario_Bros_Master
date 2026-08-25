@@ -3,6 +3,7 @@ package SuperMario.logic.weapon;
 import SuperMario.config.GameConstants;
 import SuperMario.logic.physics.Physics;
 import SuperMario.logic.render.EntityRenderer;
+import SuperMario.logic.hero.HeroLogic;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
@@ -80,7 +81,7 @@ public final class WeaponLogic {
         double distance = Math.hypot(dx, dy);
 
         if (distance < GameConstants.AXE_CATCH_RADIUS) {
-            hero.deactivateAxe();
+            HeroLogic.deactivateAxe(hero);
             return;
         }
 

@@ -7,6 +7,7 @@ import SuperMario.logic.MapManager;
 import SuperMario.logic.render.EntityRenderer;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
+import SuperMario.logic.prize.PrizeLogic;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
 
@@ -60,7 +61,7 @@ public final class BrickLogic {
         } else if (obstacle instanceof Slime) {
             draw((Slime) obstacle, g);
         } else {
-            EntityRenderer.draw(obstacle, g);
+            EntityRenderer.drawSprite(obstacle, g);
         }
     }
 
@@ -129,7 +130,7 @@ public final class BrickLogic {
 
         Prize prize = brick.getPrize();
         if (prize != null) {
-            prize.reveal();
+            PrizeLogic.reveal(prize);
         }
 
         brick.setEmpty(true);
@@ -161,7 +162,7 @@ public final class BrickLogic {
     public static Prize reveal(CoinBrick brick, GameEngine engine) {
         Prize prize = brick.getPrize();
         if (prize != null) {
-            prize.reveal();
+            PrizeLogic.reveal(prize);
 
             brick.setEmpty(true);
             brick.setBreakable(true);
@@ -208,7 +209,7 @@ public final class BrickLogic {
             Coin coin = new Coin(((Coin) prize).getX(), ((Coin) prize).getY(), ((Coin) prize).getStyle(), 10);
             brick.setNumberOfCoinsLeft(coinsLeft - 1);
             toReturn = prize;
-            prize.reveal();
+            PrizeLogic.reveal(prize);
             brick.setPrize(coin);
         }
 

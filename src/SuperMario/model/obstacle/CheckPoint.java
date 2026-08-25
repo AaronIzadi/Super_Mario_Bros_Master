@@ -1,9 +1,7 @@
 package SuperMario.model.obstacle;
 
 import SuperMario.graphic.view.animation.Animation;
-import SuperMario.logic.brick.BrickLogic;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class CheckPoint extends Brick {
@@ -16,19 +14,6 @@ public class CheckPoint extends Brick {
         setBreakable(false);
         setEmpty(false);
         isRevealed = false;
-    }
-
-    public Point check(boolean checked) {
-        return BrickLogic.check(this, checked);
-    }
-
-    @Override
-    public void draw(Graphics g) {
-        BrickLogic.draw(this, g);
-    }
-
-    public void animate() {
-        BrickLogic.animate(this);
     }
 
     public void setFrames(BufferedImage[] frames) {
