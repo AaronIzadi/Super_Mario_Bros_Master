@@ -12,6 +12,7 @@ import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.logic.map.MapWorldLogic;
 import SuperMario.logic.timer.EntityTimerLogic;
+import SuperMario.logic.weapon.WeaponLogic;
 import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
@@ -188,7 +189,7 @@ public class MapManager implements MapCollisionCallbacks {
     void fire() {
         Fireball fireball = HeroLogic.fire(getHero());
         Map currentMap = stateManager.getGameState() == GameState.RUNNING ? map : crossover;
-        if (fireball != null) {
+        if (fireball != null && !WeaponLogic.intersectsBrick(fireball, currentMap)) {
             currentMap.addFireball(fireball);
             soundManager.playFireball();
             Bowser bowser = currentMap.getBowser();

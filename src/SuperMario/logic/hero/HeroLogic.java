@@ -91,7 +91,7 @@ public final class HeroLogic {
     }
 
     public static void sit(Hero hero) {
-        if (hero.isSuper() && !hero.isJumping() && hero.getVelX() == 0) {
+        if (hero.isSuper() && !hero.isCrouching() && !hero.isJumping() && hero.getVelX() == 0) {
             hero.setCrouching(true);
             hero.getDimension().height = GameConstants.CROUCH_HEIGHT;
             hero.setY(hero.getY() + GameConstants.CROUCH_OFFSET);
@@ -102,6 +102,9 @@ public final class HeroLogic {
         if (hero.isCrouching()) {
             hero.setCrouching(false);
             hero.setY(hero.getY() - GameConstants.CROUCH_OFFSET);
+            if (hero.isSuper()) {
+                hero.getDimension().height = GameConstants.SUPER_HERO_HEIGHT;
+            }
         }
     }
 
@@ -173,7 +176,12 @@ public final class HeroLogic {
     }
 
     public static Fireball fire(Hero hero) {
-        return HeroFormLogic.createFireball(hero.getHeroForm(), hero.getToRight(), hero.getX(), hero.getY());
+        return HeroFormLogic.createFireball(
+                hero.getHeroForm(),
+                hero.getToRight(),
+                hero.getX(),
+                hero.getY(),
+                hero.getDimension().height);
     }
 
     public static boolean canActivateAxe(Hero hero) {

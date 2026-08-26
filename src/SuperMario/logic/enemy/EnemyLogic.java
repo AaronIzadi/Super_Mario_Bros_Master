@@ -69,20 +69,6 @@ public final class EnemyLogic {
     }
 
     public static void draw(Piranha piranha, Graphics g) {
-        if (piranha.getY() >= 580) {
-            piranha.setY(580);
-            if (piranha.getVelY() != 0) {
-                piranha.setVelY(0);
-                schedulePiranhaMovement(piranha, 1, GameConstants.PIRANHA_GO_UP_DELAY_MS);
-            }
-        }
-        if (piranha.getY() <= 480) {
-            piranha.setY(480);
-            if (piranha.getVelY() != 0) {
-                piranha.setVelY(0);
-                schedulePiranhaMovement(piranha, -1, GameConstants.PIRANHA_GO_DOWN_DELAY_MS);
-            }
-        }
         EntityRenderer.drawSprite(piranha, g);
         animate(piranha);
     }
@@ -91,6 +77,26 @@ public final class EnemyLogic {
         if (piranha.getMovementDelayTicks() == 0) {
             piranha.setPendingVelY(velY);
             piranha.setMovementDelayTicks(GameConstants.msToTicks(delayMs));
+        }
+    }
+
+    private static void handlePiranhaBoundaries(Piranha piranha) {
+        if (piranha.getY() >= 580) {
+            piranha.setY(580);
+            if (piranha.getVelY() < 0) {
+                piranha.setVelY(0);
+                schedulePiranhaMovement(piranha, 1, GameConstants.PIRANHA_GO_UP_DELAY_MS);
+            } else if (piranha.getVelY() == 0 && piranha.getMovementDelayTicks() == 0) {
+                schedulePiranhaMovement(piranha, 1, GameConstants.PIRANHA_GO_UP_DELAY_MS);
+            }
+        } else if (piranha.getY() <= 480) {
+            piranha.setY(480);
+            if (piranha.getVelY() > 0) {
+                piranha.setVelY(0);
+                schedulePiranhaMovement(piranha, -1, GameConstants.PIRANHA_GO_DOWN_DELAY_MS);
+            } else if (piranha.getVelY() == 0 && piranha.getMovementDelayTicks() == 0) {
+                schedulePiranhaMovement(piranha, -1, GameConstants.PIRANHA_GO_DOWN_DELAY_MS);
+            }
         }
     }
 
@@ -107,6 +113,7 @@ public final class EnemyLogic {
 
     public static void update(Piranha piranha) {
         Physics.updateLocation(piranha);
+        handlePiranhaBoundaries(piranha);
     }
 
     public static void draw(Spiny spiny, Graphics g) {

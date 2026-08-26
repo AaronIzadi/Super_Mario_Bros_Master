@@ -5,9 +5,11 @@ import SuperMario.model.GameObject;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.Obstacle;
+import SuperMario.model.obstacle.OrdinaryBrick;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
+import SuperMario.model.prize.PrizeType;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,12 +28,20 @@ final class PrizeCollisionHandler {
         for (Prize prize : prizes) {
             if (prize instanceof PrizeItems) {
                 PrizeItems boost = (PrizeItems) prize;
+                if (boost.getType() == PrizeType.FIRE_FLOWER) {
+                    continue;
+                }
+
                 Rectangle prizeBottomBounds = boost.getBottomBounds();
                 Rectangle prizeRightBounds = boost.getRightBounds();
                 Rectangle prizeLeftBounds = boost.getLeftBounds();
                 boost.setFalling(true);
 
                 for (Obstacle obstacle : obstacles) {
+                    if (!isStablePrizeSurface(obstacle, currentMap)) {
+                        continue;
+                    }
+
                     Rectangle obstacleBounds;
 
                     if (boost.isFalling()) {
@@ -90,5 +100,12 @@ final class PrizeCollisionHandler {
         }
 
         CollisionObjectRemoval.removeObjects(ctx, toBeRemoved);
+    }
+
+    private static boolean isStablePrizeSurface(Obstacle obstacle, Map map) {
+        if (obstacle instanceof OrdinaryBrick && ((OrdinaryBrick) obstacle).isBreaking()) {
+            return false;
+        }
+        return !map.getRevealedBricks().contains(obstacle);
     }
 }

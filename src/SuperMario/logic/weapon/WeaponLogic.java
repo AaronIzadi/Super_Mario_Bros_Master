@@ -7,6 +7,9 @@ import SuperMario.logic.physics.Physics;
 import SuperMario.logic.render.EntityRenderer;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.model.hero.Hero;
+import SuperMario.model.map.Map;
+import SuperMario.model.obstacle.Brick;
+import SuperMario.model.obstacle.Obstacle;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
@@ -17,8 +20,34 @@ public final class WeaponLogic {
     private WeaponLogic() {
     }
 
-    public static void update(Fireball fireball) {
+    public static boolean intersectsBrick(Fireball fireball, Map map) {
+        return intersectsBrick(fireball.getBounds(), map);
+    }
+
+    public static boolean update(Fireball fireball, Map map) {
+        double previousX = fireball.getX();
+        double previousY = fireball.getY();
         Physics.updateLocation(fireball);
+        return intersectsBrick(movementBounds(fireball, previousX, previousY), map);
+    }
+
+    private static boolean intersectsBrick(Rectangle bounds, Map map) {
+        for (Obstacle obstacle : map.getAllObstacles()) {
+            if (obstacle instanceof Brick && bounds.intersects(obstacle.getBounds())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Rectangle movementBounds(Fireball fireball, double previousX, double previousY) {
+        Rectangle current = fireball.getBounds();
+        Rectangle previous = new Rectangle((int) previousX, (int) previousY, current.width, current.height);
+        int x1 = Math.min(current.x, previous.x);
+        int y1 = Math.min(current.y, previous.y);
+        int x2 = Math.max(current.x + current.width, previous.x + previous.width);
+        int y2 = Math.max(current.y + current.height, previous.y + previous.height);
+        return new Rectangle(x1, y1, x2 - x1, y2 - y1);
     }
 
     public static Axe createAxe(Hero hero) {

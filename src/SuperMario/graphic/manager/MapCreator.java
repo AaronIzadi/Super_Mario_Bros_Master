@@ -283,7 +283,7 @@ public class MapCreator {
                     enemy.setRightImage(spinyRight);
                     map.addEnemy(enemy);
                 } else if (currentPixel == piranha) {
-                    Piranha enemy = new Piranha(xLocation + 22, yLocation, this.piranhaClose);
+                    Piranha enemy = new Piranha(xLocation + 22, 580, this.piranhaClose);
                     BufferedImage[] frames = new BufferedImage[2];
                     frames[0] = this.piranhaClose;
                     frames[1] = this.piranhaOpen;

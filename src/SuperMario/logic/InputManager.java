@@ -95,6 +95,10 @@ public class InputManager {
 
         } else if (stateManager.getGameState() == GameState.RUNNING || stateManager.getGameState() == GameState.CROSSOVER) {
 
+            if (!inputReceiver.isDown()) {
+                HeroLogic.getUp(userData.getHero());
+            }
+
             if (inputReceiver.isUpAndDownSelected()) {
                 mapManager.activateAxe();
             } else if (inputReceiver.isUp()) {
@@ -118,10 +122,6 @@ public class InputManager {
                 }
             } else if (inputReceiver.isEmpty()) {
                 userData.getHero().setVelX(0);
-                HeroLogic.getUp(userData.getHero());
-                if (userData.getHero().isSuper()) {
-                    userData.getHero().getDimension().height = 96;
-                }
             } else if (inputReceiver.isSpace()) {
                 if (userData.getHero().isAxeActivated()) {
                     mapManager.throwAxe();

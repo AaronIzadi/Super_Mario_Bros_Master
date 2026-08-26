@@ -3,6 +3,7 @@ package SuperMario.logic.map;
 import SuperMario.logic.brick.BrickLogic;
 import SuperMario.logic.enemy.BowserLogic;
 import SuperMario.logic.enemy.EnemyLogic;
+import SuperMario.logic.hero.HeroFormLogic;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.logic.physics.Physics;
 import SuperMario.logic.prize.PrizeHandler;
@@ -21,7 +22,9 @@ import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public final class MapWorldLogic {
 
@@ -37,17 +40,8 @@ public final class MapWorldLogic {
             BowserLogic.attack(bowser);
             drawBowserFire(map, g2);
 
-            if (bowser.getHp() <= 10) {
-                for (Obstacle border : map.getGroundBricks()) {
-                    if (border instanceof LavaBorder) {
-                        ((LavaBorder) border).setBurn(true);
-                    }
-                }
-                map.getObstacles().clear();
-            }
-
             bowser.getBomb().removeIf(Bomb::isTimeToVanish);
-            for (Bomb bomb : bowser.getBomb()) {
+            for (Bomb bomb : snapshot(bowser.getBomb())) {
                 BowserLogic.draw(bomb, g2);
             }
         }
@@ -75,10 +69,12 @@ public final class MapWorldLogic {
         if (!hero.isGrabbed()) {
             Physics.updateLocation(hero);
         }
+        updateHeroWalkingAnimation(hero);
 
         Bowser bowser = map.getBowser();
         if (bowser != null) {
             bowser.setToRight(hero.getX() > bowser.getX());
+            updateBowserLowHpEffects(map, bowser);
 
             if (hero.isGrabbed()) {
                 hero.setVelY(0);
@@ -107,9 +103,7 @@ public final class MapWorldLogic {
             WeaponLogic.update(axe);
         }
 
-        for (Fireball fireball : map.getFireballs()) {
-            WeaponLogic.update(fireball);
-        }
+        updateFireballs(map);
 
         for (Iterator<Brick> brickIterator = map.getRevealedBricks().iterator(); brickIterator.hasNext(); ) {
             Brick brick = brickIterator.next();
@@ -138,12 +132,36 @@ public final class MapWorldLogic {
     }
 
     public static void updateLocationsForCrossover(Map map) {
-        Physics.updateLocation(map.getHero());
+        Hero hero = map.getHero();
+        Physics.updateLocation(hero);
+        updateHeroWalkingAnimation(hero);
         updatePrizeLocation(map);
 
         Axe axe = map.getAxe();
         if (axe != null && axe.isReleased()) {
             WeaponLogic.update(axe);
+        }
+
+        updateFireballs(map);
+    }
+
+    private static void updateFireballs(Map map) {
+        for (Iterator<Fireball> fireballIterator = map.getFireballs().iterator(); fireballIterator.hasNext(); ) {
+            Fireball fireball = fireballIterator.next();
+            if (WeaponLogic.update(fireball, map)) {
+                fireballIterator.remove();
+            }
+        }
+    }
+
+    private static void updateBowserLowHpEffects(Map map, Bowser bowser) {
+        if (bowser.getHp() <= 10) {
+            for (Obstacle border : map.getGroundBricks()) {
+                if (border instanceof LavaBorder) {
+                    ((LavaBorder) border).setBurn(true);
+                }
+            }
+            map.getObstacles().clear();
         }
     }
 
@@ -155,20 +173,30 @@ public final class MapWorldLogic {
         }
     }
 
+    private static void updateHeroWalkingAnimation(Hero hero) {
+        if (hero.getVelX() != 0 && hero.getVelY() == 0) {
+            HeroFormLogic.animateWalking(hero.getHeroForm(), hero.getToRight());
+        }
+    }
+
+    private static <T> List<T> snapshot(List<T> items) {
+        return new ArrayList<>(items);
+    }
+
     private static void drawFireballs(Map map, Graphics2D g2) {
-        for (Fireball fireball : map.getFireballs()) {
+        for (Fireball fireball : snapshot(map.getFireballs())) {
             EntityRenderer.drawSprite(fireball, g2);
         }
     }
 
     private static void drawBowserFire(Map map, Graphics2D g2) {
-        for (Fire fire : map.getBowser().getFire()) {
+        for (Fire fire : snapshot(map.getBowser().getFire())) {
             EntityRenderer.drawSprite(fire, g2);
         }
     }
 
     private static void drawPrizes(Map map, Graphics2D g2) {
-        for (Prize prize : map.getRevealedPrizes()) {
+        for (Prize prize : snapshot(map.getRevealedPrizes())) {
             PrizeHandler.draw(prize, g2);
         }
     }
@@ -178,19 +206,19 @@ public final class MapWorldLogic {
     }
 
     private static void drawBricks(Map map, Graphics2D g2) {
-        for (Obstacle obstacle : map.getObstacles()) {
+        for (Obstacle obstacle : snapshot(map.getObstacles())) {
             if (obstacle != null) {
                 BrickLogic.draw(obstacle, g2);
             }
         }
 
-        for (Obstacle obstacle : map.getGroundBricks()) {
+        for (Obstacle obstacle : snapshot(map.getGroundBricks())) {
             BrickLogic.draw(obstacle, g2);
         }
     }
 
     private static void drawEnemies(Map map, Graphics2D g2) {
-        for (Enemy enemy : map.getEnemies()) {
+        for (Enemy enemy : snapshot(map.getEnemies())) {
             if (enemy != null) {
                 EnemyLogic.draw(enemy, g2);
             }

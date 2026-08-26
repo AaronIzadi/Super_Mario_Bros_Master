@@ -30,7 +30,6 @@ public final class HeroFormLogic {
             style = toRight ? form.getRightJumpingFrame() : form.getLeftJumpingFrame();
         } else if (movingInX) {
             Animation currentAnimation = toRight ? form.getRightAnimation() : form.getLeftAnimation();
-            currentAnimation.animate(20);
             style = currentAnimation.getCurrentFrame();
         } else if (isCrouching) {
             style = toRight ? form.getRightSittingFrame() : form.getLeftSittingFrame();
@@ -41,15 +40,23 @@ public final class HeroFormLogic {
         return style;
     }
 
+    public static void animateWalking(HeroForm form, boolean toRight) {
+        Animation animation = toRight ? form.getRightAnimation() : form.getLeftAnimation();
+        if (animation != null) {
+            animation.animate(20);
+        }
+    }
+
     public static void resetToSmallOnDamage(HeroForm form, ImageLoader imageLoader) {
         BufferedImage[] leftFrames = imageLoader.getHeroLeftFrames(0);
         BufferedImage[] rightFrames = imageLoader.getHeroRightFrames(0);
         configureFrames(form, leftFrames, rightFrames);
     }
 
-    public static Fireball createFireball(HeroForm form, boolean toRight, double x, double y) {
+    public static Fireball createFireball(HeroForm form, boolean toRight, double x, double y, int heroHeight) {
         if (form.canShootFire()) {
-            return new Fireball(x, y + 48, form.getFireballStyle(), toRight);
+            double fireballY = y + heroHeight / 2.0 - 12;
+            return new Fireball(x, fireballY, form.getFireballStyle(), toRight);
         }
         return null;
     }

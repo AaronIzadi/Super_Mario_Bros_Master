@@ -9,6 +9,7 @@ import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.GroundBrick;
+import SuperMario.model.obstacle.Hole;
 import SuperMario.model.obstacle.Obstacle;
 import SuperMario.model.weapon.Axe;
 import SuperMario.model.weapon.Fireball;
@@ -24,7 +25,7 @@ final class HeroWeaponCollisionHandler {
     static void checkWeaponContact(CollisionContext ctx) {
         MapCollisionCallbacks callbacks = ctx.callbacks();
         Map currentMap = callbacks.getActiveMap();
-        ArrayList<Fireball> fireballs = currentMap.getFireballs();
+        ArrayList<Fireball> fireballs = new ArrayList<>(currentMap.getFireballs());
         Axe axe = callbacks.getMap().getHero().getAxe();
 
         if (axe != null) {
@@ -38,10 +39,31 @@ final class HeroWeaponCollisionHandler {
         CollisionObjectRemoval.removeObjects(ctx, ctx.toBeRemoved());
     }
 
+    private static boolean intersectsAlongPath(GameObject object, Rectangle target) {
+        Rectangle current = object.getBounds();
+        if (current.intersects(target)) {
+            return true;
+        }
+
+        int travelX = (int) Math.round(object.getVelX());
+        if (travelX == 0) {
+            return false;
+        }
+
+        Rectangle swept = new Rectangle(current);
+        if (travelX > 0) {
+            swept.width += travelX;
+        } else {
+            swept.x += travelX;
+            swept.width -= travelX;
+        }
+        return swept.intersects(target);
+    }
+
     private static void checkWeaponCollision(CollisionContext ctx, GameObject object) {
         MapCollisionCallbacks callbacks = ctx.callbacks();
         Map currentMap = callbacks.getActiveMap();
-        ArrayList<Enemy> enemies = currentMap.getEnemies();
+        ArrayList<Enemy> enemies = new ArrayList<>(currentMap.getEnemies());
         ArrayList<Obstacle> obstacles = currentMap.getAllObstacles();
         ArrayList<GameObject> toBeRemoved = ctx.toBeRemoved();
         Hero hero = callbacks.getHero();
@@ -98,19 +120,19 @@ final class HeroWeaponCollisionHandler {
             }
         }
 
-        if (object instanceof Fireball || (object instanceof Axe && hero.getAxe().isReleased())) {
-            Axe thrownAxe = object instanceof Axe ? (Axe) object : null;
+        if (object instanceof Axe && hero.getAxe() != null && hero.getAxe().isReleased()) {
+            Axe thrownAxe = (Axe) object;
             for (Obstacle obstacle : obstacles) {
-                if (obstacle instanceof GroundBrick) {
+                if (obstacle instanceof GroundBrick || obstacle instanceof Hole) {
                     continue;
                 }
-                if (thrownAxe != null
-                        && Math.abs(thrownAxe.getX() - thrownAxe.getXReleasePoint()) < GameConstants.AXE_MIN_TRAVEL_BEFORE_BLOCK) {
+                if (Math.abs(thrownAxe.getX() - thrownAxe.getXReleasePoint()) < GameConstants.AXE_MIN_TRAVEL_BEFORE_BLOCK) {
                     continue;
                 }
                 Rectangle obstacleBounds = obstacle.getBounds();
-                if (objectBounds.intersects(obstacleBounds)) {
+                if (intersectsAlongPath(object, obstacleBounds)) {
                     toBeRemoved.add(object);
+                    break;
                 }
             }
         }
