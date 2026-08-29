@@ -18,7 +18,7 @@ Choose your hero and take on the adventure:
 * 🟢 **Luigi**
 * 👑 **Princess Peach**
 * 🌌 **Rosalina**
-* 🍄 **Toad** - 🔓 unlockable in the store
+* 🍄 **Toad** 
 
 ### 👾 Enemies & Bosses
 
