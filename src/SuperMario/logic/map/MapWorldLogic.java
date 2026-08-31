@@ -18,7 +18,7 @@ import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
-import SuperMario.model.weapon.Axe;
+import SuperMario.model.weapon.Hammer;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
@@ -98,9 +98,9 @@ public final class MapWorldLogic {
 
         updatePrizeLocation(map);
 
-        Axe axe = map.getAxe();
-        if (axe != null && axe.isReleased()) {
-            WeaponLogic.update(axe);
+        Hammer hammer = map.getHammer();
+        if (hammer != null && hammer.isReleased()) {
+            WeaponLogic.update(hammer);
         }
 
         updateFireballs(map);
@@ -137,9 +137,9 @@ public final class MapWorldLogic {
         updateHeroWalkingAnimation(hero);
         updatePrizeLocation(map);
 
-        Axe axe = map.getAxe();
-        if (axe != null && axe.isReleased()) {
-            WeaponLogic.update(axe);
+        Hammer hammer = map.getHammer();
+        if (hammer != null && hammer.isReleased()) {
+            WeaponLogic.update(hammer);
         }
 
         updateFireballs(map);

@@ -11,7 +11,7 @@ import SuperMario.model.map.Map;
 import SuperMario.model.obstacle.GroundBrick;
 import SuperMario.model.obstacle.Hole;
 import SuperMario.model.obstacle.Obstacle;
-import SuperMario.model.weapon.Axe;
+import SuperMario.model.weapon.Hammer;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
@@ -26,10 +26,10 @@ final class HeroWeaponCollisionHandler {
         MapCollisionCallbacks callbacks = ctx.callbacks();
         Map currentMap = callbacks.getActiveMap();
         ArrayList<Fireball> fireballs = new ArrayList<>(currentMap.getFireballs());
-        Axe axe = callbacks.getMap().getHero().getAxe();
+        Hammer hammer = callbacks.getMap().getHero().getHammer();
 
-        if (axe != null) {
-            checkWeaponCollision(ctx, axe);
+        if (hammer != null) {
+            checkWeaponCollision(ctx, hammer);
         }
 
         for (Fireball fireball : fireballs) {
@@ -120,13 +120,13 @@ final class HeroWeaponCollisionHandler {
             }
         }
 
-        if (object instanceof Axe && hero.getAxe() != null && hero.getAxe().isReleased()) {
-            Axe thrownAxe = (Axe) object;
+        if (object instanceof Hammer && hero.getHammer() != null && hero.getHammer().isReleased()) {
+            Hammer thrownHammer = (Hammer) object;
             for (Obstacle obstacle : obstacles) {
                 if (obstacle instanceof GroundBrick || obstacle instanceof Hole) {
                     continue;
                 }
-                if (Math.abs(thrownAxe.getX() - thrownAxe.getXReleasePoint()) < GameConstants.AXE_MIN_TRAVEL_BEFORE_BLOCK) {
+                if (Math.abs(thrownHammer.getX() - thrownHammer.getXReleasePoint()) < GameConstants.HAMMER_MIN_TRAVEL_BEFORE_BLOCK) {
                     continue;
                 }
                 Rectangle obstacleBounds = obstacle.getBounds();

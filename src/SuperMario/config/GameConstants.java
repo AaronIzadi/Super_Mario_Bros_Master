@@ -27,7 +27,7 @@ public final class GameConstants {
 
     public static final int STAR_POWER_DURATION_MS = 15_000;
     public static final int STAR_RUN_DURATION_MS = 1_000;
-    public static final int AXE_COOLDOWN_MS = 3_000;
+    public static final int HAMMER_COOLDOWN_MS = 3_000;
 
     public static final int KOOPA_SHELL_RECOVERY_MS = 3_000;
     public static final int PIRANHA_GO_DOWN_DELAY_MS = 2_000;
@@ -43,23 +43,23 @@ public final class GameConstants {
     public static final int GRAB_RECOVERY_MS = 4_000;
 
     /** Horizontal throw speed (pixels per tick). */
-    public static final double AXE_THROW_SPEED = 9.0;
+    public static final double HAMMER_THROW_SPEED = 9.0;
     /** Initial upward velocity for the throw arc. */
-    public static final double AXE_THROW_LIFT = 2.0;
-    /** Gravity applied while the axe is in flight (lighter than the hero). */
-    public static final double AXE_FLIGHT_GRAVITY = 0.28;
+    public static final double HAMMER_THROW_LIFT = 2.0;
+    /** Gravity applied while the hammer is in flight (lighter than the hero). */
+    public static final double HAMMER_FLIGHT_GRAVITY = 0.28;
     /** Horizontal drag per tick while outbound (0–1). */
-    public static final double AXE_AIR_DRAG = 0.992;
-    /** Max travel distance before the axe turns back. */
-    public static final int AXE_MAX_RANGE = 4 * TILE_SIZE;
+    public static final double HAMMER_AIR_DRAG = 0.992;
+    /** Max travel distance before the hammer turns back. */
+    public static final int HAMMER_MAX_RANGE = 4 * TILE_SIZE;
     /** Max homing speed on return. */
-    public static final double AXE_RETURN_SPEED_MAX = 11.0;
-    /** Distance to the catch point at which the axe is collected. */
-    public static final double AXE_CATCH_RADIUS = 30.0;
-    /** Ignore block collisions until the axe has traveled this far from the throw point. */
-    public static final double AXE_MIN_TRAVEL_BEFORE_BLOCK = TILE_SIZE * 1.5;
-    /** Vertical offset above the hero while the axe is held. */
-    public static final int AXE_HOLD_OFFSET_Y = 10;
+    public static final double HAMMER_RETURN_SPEED_MAX = 11.0;
+    /** Distance to the catch point at which the hammer is collected. */
+    public static final double HAMMER_CATCH_RADIUS = 30.0;
+    /** Ignore block collisions until the hammer has traveled this far from the throw point. */
+    public static final double HAMMER_MIN_TRAVEL_BEFORE_BLOCK = TILE_SIZE * 1.5;
+    /** Vertical offset above the hero while the hammer is held. */
+    public static final int HAMMER_HOLD_OFFSET_Y = 10;
     public static final int STANDING_TIMER_MS = 4_000;
 
     public static final int HERO_DEFAULT_SIZE = TILE_SIZE;

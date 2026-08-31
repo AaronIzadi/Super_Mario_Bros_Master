@@ -3,7 +3,7 @@ package SuperMario.model.hero;
 import SuperMario.config.GameConstants;
 import SuperMario.logic.hero.HeroLogic;
 import SuperMario.model.GameObject;
-import SuperMario.model.weapon.Axe;
+import SuperMario.model.weapon.Hammer;
 
 import java.awt.image.BufferedImage;
 
@@ -19,14 +19,14 @@ public abstract class Hero extends GameObject {
     private boolean crouching;
     private boolean tookStar;
     private boolean isGrabbed;
-    private boolean isAxeActivated;
-    private Axe axe;
+    private boolean isHammerActivated;
+    private Hammer hammer;
     private int numberOfTryToEscape;
     private double standingStart;
     private double standingTimer;
     private int starPowerTicks;
     private int starRunTicks;
-    private int axeCooldownTicks;
+    private int hammerCooldownTicks;
     private int grabTimeoutTicks;
 
     public Hero(double x, double y) {
@@ -118,12 +118,12 @@ public abstract class Hero extends GameObject {
         this.crouching = crouching;
     }
 
-    public boolean isAxeActivated() {
-        return isAxeActivated;
+    public boolean isHammerActivated() {
+        return isHammerActivated;
     }
 
-    public void setAxeActivated(boolean axeActivated) {
-        isAxeActivated = axeActivated;
+    public void setHammerActivated(boolean hammerActivated) {
+        isHammerActivated = hammerActivated;
     }
 
     public void setGrabbed(boolean grabbed) {
@@ -146,16 +146,16 @@ public abstract class Hero extends GameObject {
         return numberOfTryToEscape;
     }
 
-    public Axe getAxe() {
-        return axe;
+    public Hammer getHammer() {
+        return hammer;
     }
 
-    public void setAxe(Axe axe) {
-        this.axe = axe;
+    public void setHammer(Hammer hammer) {
+        this.hammer = hammer;
     }
 
-    public boolean isAxeCoolDownFinished() {
-        return axeCooldownTicks <= 0;
+    public boolean isHammerCoolDownFinished() {
+        return hammerCooldownTicks <= 0;
     }
 
     public double getStandingStart() {
@@ -190,12 +190,12 @@ public abstract class Hero extends GameObject {
         this.starRunTicks = starRunTicks;
     }
 
-    public int getAxeCooldownTicks() {
-        return axeCooldownTicks;
+    public int getHammerCooldownTicks() {
+        return hammerCooldownTicks;
     }
 
-    public void setAxeCooldownTicks(int axeCooldownTicks) {
-        this.axeCooldownTicks = axeCooldownTicks;
+    public void setHammerCooldownTicks(int hammerCooldownTicks) {
+        this.hammerCooldownTicks = hammerCooldownTicks;
     }
 
     public int getGrabTimeoutTicks() {

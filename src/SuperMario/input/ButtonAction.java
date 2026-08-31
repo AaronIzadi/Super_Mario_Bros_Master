@@ -5,7 +5,7 @@ public enum ButtonAction {
     MOVE_RIGHT,
     MOVE_LEFT,
     FIRE,
-    THROW_AXE,
+    THROW_HAMMER,
     PAUSE_RESUME,
     ACTION_COMPLETED,
     SELECT,
@@ -13,6 +13,6 @@ public enum ButtonAction {
     GO_DOWN,
     GO_TO_START_SCREEN,
     NO_ACTION,
-    ACTIVATE_AXE,
+    ACTIVATE_HAMMER,
     SIT,
 }

@@ -9,7 +9,7 @@ import SuperMario.logic.weapon.WeaponLogic;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.hero.HeroForm;
 import SuperMario.model.hero.HeroType;
-import SuperMario.model.weapon.Axe;
+import SuperMario.model.weapon.Hammer;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.*;
@@ -50,19 +50,19 @@ public final class HeroLogic {
 
         EntityRenderer.drawSprite(hero, g);
 
-        Axe axe = hero.getAxe();
-        if (axe != null) {
-            if (!axe.isReleased()) {
+        Hammer hammer = hero.getHammer();
+        if (hammer != null) {
+            if (!hammer.isReleased()) {
                 if (hero.getToRight()) {
-                    axe.setX(hero.getX() + 24);
+                    hammer.setX(hero.getX() + 24);
                 } else {
-                    axe.setX(hero.getX() - GameConstants.TILE_SIZE);
+                    hammer.setX(hero.getX() - GameConstants.TILE_SIZE);
                 }
-                axe.setVelX(hero.getVelX());
-                axe.setVelY(hero.getVelY());
-                axe.setY(hero.getY() - GameConstants.AXE_HOLD_OFFSET_Y);
+                hammer.setVelX(hero.getVelX());
+                hammer.setVelY(hero.getVelY());
+                hammer.setY(hero.getY() - GameConstants.HAMMER_HOLD_OFFSET_Y);
             }
-            WeaponLogic.draw(axe, g);
+            WeaponLogic.draw(hammer, g);
         }
     }
 
@@ -184,25 +184,25 @@ public final class HeroLogic {
                 hero.getDimension().height);
     }
 
-    public static boolean canActivateAxe(Hero hero) {
-        return hero.getCoins() >= 3 && hero.isSuper() && hero.getAxeCooldownTicks() <= 0;
+    public static boolean canActivateHammer(Hero hero) {
+        return hero.getCoins() >= 3 && hero.isSuper() && hero.getHammerCooldownTicks() <= 0;
     }
 
-    public static void activateAxe(Hero hero) {
-        if (canActivateAxe(hero)) {
+    public static void activateHammer(Hero hero) {
+        if (canActivateHammer(hero)) {
             hero.setCoins(hero.getCoins() - 3);
-            hero.setAxe(WeaponLogic.createAxe(hero));
+            hero.setHammer(WeaponLogic.createHammer(hero));
         }
     }
 
-    public static void deactivateAxe(Hero hero) {
-        hero.setAxe(null);
-        hero.setAxeActivated(false);
-        hero.setAxeCooldownTicks(GameConstants.msToTicks(GameConstants.AXE_COOLDOWN_MS));
+    public static void deactivateHammer(Hero hero) {
+        hero.setHammer(null);
+        hero.setHammerActivated(false);
+        hero.setHammerCooldownTicks(GameConstants.msToTicks(GameConstants.HAMMER_COOLDOWN_MS));
     }
 
-    public static void throwAxe(Hero hero) {
-        WeaponLogic.setReleased(hero.getAxe(), true, hero.getX());
+    public static void throwHammer(Hero hero) {
+        WeaponLogic.setReleased(hero.getHammer(), true, hero.getX());
     }
 
     public static void acquireCoin(Hero hero) {

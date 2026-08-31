@@ -66,8 +66,8 @@ public final class EntityTimerLogic {
             }
         }
 
-        if (hero.getAxeCooldownTicks() > 0) {
-            hero.setAxeCooldownTicks(hero.getAxeCooldownTicks() - 1);
+        if (hero.getHammerCooldownTicks() > 0) {
+            hero.setHammerCooldownTicks(hero.getHammerCooldownTicks() - 1);
         }
 
         if (hero.isGrabbed() && hero.getGrabTimeoutTicks() > 0) {

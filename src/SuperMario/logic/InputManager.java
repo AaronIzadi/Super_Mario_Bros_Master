@@ -100,7 +100,7 @@ public class InputManager {
             }
 
             if (inputReceiver.isUpAndDownSelected()) {
-                mapManager.activateAxe();
+                mapManager.activateHammer();
             } else if (inputReceiver.isUp()) {
                 HeroLogic.jump(userData.getHero());
                 mapManager.getSoundManager().playJump();
@@ -123,8 +123,8 @@ public class InputManager {
             } else if (inputReceiver.isEmpty()) {
                 userData.getHero().setVelX(0);
             } else if (inputReceiver.isSpace()) {
-                if (userData.getHero().isAxeActivated()) {
-                    mapManager.throwAxe();
+                if (userData.getHero().isHammerActivated()) {
+                    mapManager.throwHammer();
                 } else {
                     mapManager.fire();
                 }

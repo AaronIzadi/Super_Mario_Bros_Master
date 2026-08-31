@@ -6,7 +6,7 @@ import SuperMario.model.enemy.bowser.Bowser;
 import SuperMario.model.hero.Hero;
 import SuperMario.model.obstacle.*;
 import SuperMario.model.prize.Prize;
-import SuperMario.model.weapon.Axe;
+import SuperMario.model.weapon.Hammer;
 import SuperMario.model.weapon.Fireball;
 
 import java.awt.image.BufferedImage;
@@ -24,7 +24,7 @@ public class Map {
     private final ArrayList<Fireball> fireballs = new ArrayList<>();
     private CheckPoint checkPoint;
     private Bowser bowser;
-    private Axe axe;
+    private Hammer hammer;
     private Castle castle;
     private Flag endPoint;
     private BufferedImage backgroundImage;
@@ -58,16 +58,16 @@ public class Map {
         fireballs.add(fireball);
     }
 
-    public void addAxe(Axe axe) {
-        this.axe = axe;
+    public void addHammer(Hammer hammer) {
+        this.hammer = hammer;
     }
 
-    public void removeAxe() {
-        this.axe = null;
+    public void removeHammer() {
+        this.hammer = null;
     }
 
-    public Axe getAxe() {
-        return axe;
+    public Hammer getHammer() {
+        return hammer;
     }
 
     public void setEndPoint(Flag endPoint) {

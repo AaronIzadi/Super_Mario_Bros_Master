@@ -67,7 +67,7 @@ src/SuperMario/
 ├── logic/           🧠 Game rules, physics, collisions & timers
 │   ├── collision/   💥 Collision handlers & coordinator
 │   ├── enemy/      👾 Enemy & Bowser behavior
-│   ├── hero/       🦸 Hero movement, forms & axe
+│   ├── hero/       🦸 Hero movement, forms & hammer
 │   ├── map/        🗺️ World updates & drawing orchestration
 │   ├── prize/      🎁 PrizeHandler
 │   ├── timer/      ⏱️ GameTimer & EntityTimerLogic
@@ -176,8 +176,8 @@ SuperMario.logic.Launcher
 | ⬅️ Left / ➡️ Right | Move                                      |
 | ⬆️ Up              | Jump / Menu up                            |
 | ⬇️ Down            | Crouch / Menu down                        |
-| ⬆️ + ⬇️ Hold ~2s   | 🪓 Activate axe when super & enough coins |
-| ␣ Space            | 🔥 Fireball / 🪓 Throw axe when held      |
+| ⬆️ + ⬇️ Hold ~2s   | 🔨 Activate hammer when super & enough coins |
+| ␣ Space            | 🔥 Fireball / 🔨 Throw hammer when held      |
 | ↵ Enter            | ✅ Confirm menu selection                  |
 | Esc                | ⏸️ Pause / Return to start screen         |
 

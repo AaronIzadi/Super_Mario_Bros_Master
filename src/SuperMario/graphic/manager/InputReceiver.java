@@ -41,7 +41,7 @@ public class InputReceiver implements KeyListener, MouseListener {
                 currentAction = ButtonAction.GO_DOWN;
             } else {
                 if (keyPressed.contains(VK_UP)) {
-                    currentAction = ButtonAction.ACTIVATE_AXE;
+                    currentAction = ButtonAction.ACTIVATE_HAMMER;
                     setTimer();
                 } else {
                     currentAction = ButtonAction.SIT;
@@ -52,7 +52,7 @@ public class InputReceiver implements KeyListener, MouseListener {
                 currentAction = ButtonAction.GO_UP;
             } else {
                 if (keyPressed.contains(VK_DOWN)) {
-                    currentAction = ButtonAction.ACTIVATE_AXE;
+                    currentAction = ButtonAction.ACTIVATE_HAMMER;
                     setTimer();
                 } else {
                     currentAction = ButtonAction.JUMP;
@@ -71,8 +71,8 @@ public class InputReceiver implements KeyListener, MouseListener {
                 currentAction = ButtonAction.GO_TO_START_SCREEN;
             }
         } else if (keyCode == VK_SPACE) {
-            if (engine.getUserData().getHero().getAxe() != null) {
-                currentAction = ButtonAction.THROW_AXE;
+            if (engine.getUserData().getHero().getHammer() != null) {
+                currentAction = ButtonAction.THROW_HAMMER;
             } else {
                 currentAction = ButtonAction.FIRE;
             }
@@ -109,7 +109,7 @@ public class InputReceiver implements KeyListener, MouseListener {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if (currentAction == ButtonAction.ACTIVATE_AXE) {
+                if (currentAction == ButtonAction.ACTIVATE_HAMMER) {
                     isUpAndDownPressed = true;
                 }
             }

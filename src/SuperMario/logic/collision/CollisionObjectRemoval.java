@@ -10,7 +10,7 @@ import SuperMario.model.obstacle.Brick;
 import SuperMario.model.prize.Coin;
 import SuperMario.model.prize.Prize;
 import SuperMario.model.prize.PrizeItems;
-import SuperMario.model.weapon.Axe;
+import SuperMario.model.weapon.Hammer;
 import SuperMario.model.weapon.Fireball;
 
 import java.util.ArrayList;
@@ -45,8 +45,8 @@ final class CollisionObjectRemoval {
                 if (callbacks.getMap().getBowser() != null) {
                     currentMap.getBowser().getBomb().remove(object);
                 }
-            } else if (object instanceof Axe) {
-                HeroLogic.deactivateAxe(callbacks.getHero());
+            } else if (object instanceof Hammer) {
+                HeroLogic.deactivateHammer(callbacks.getHero());
             }
         }
     }

@@ -6,20 +6,20 @@ import SuperMario.model.hero.Hero;
 
 import java.awt.image.BufferedImage;
 
-public class Axe extends GameObject {
+public class Hammer extends GameObject {
 
     private final Hero hero;
     private boolean isReleased = false;
     private BufferedImage leftStyle;
-    private final Animation axeAnimation;
+    private final Animation hammerAnimation;
     private double xReleasePoint;
     private boolean gotThere = false;
     private boolean gotBack = false;
 
-    public Axe(double x, double y, BufferedImage style, Hero hero, Animation axeAnimation, BufferedImage leftStyle) {
+    public Hammer(double x, double y, BufferedImage style, Hero hero, Animation hammerAnimation, BufferedImage leftStyle) {
         super(x, y, style);
         this.hero = hero;
-        this.axeAnimation = axeAnimation;
+        this.hammerAnimation = hammerAnimation;
         this.leftStyle = leftStyle;
         setDimension(68, 68);
         setFalling(false);
@@ -38,8 +38,8 @@ public class Axe extends GameObject {
         return hero;
     }
 
-    public Animation getAxeAnimation() {
-        return axeAnimation;
+    public Animation getHammerAnimation() {
+        return hammerAnimation;
     }
 
     public BufferedImage getLeftStyle() {

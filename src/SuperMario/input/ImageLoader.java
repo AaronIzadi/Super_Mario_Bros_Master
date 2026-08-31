@@ -20,7 +20,7 @@ public class ImageLoader {
     private final BufferedImage startScreenImage, aboutScreenImage, helpScreenImage, checkPoint, gameOverScreen, storeScreenImage, loadGameScreen, pauseScreen;
     private final BufferedImage heartIcon;
     private final BufferedImage coinIcon;
-    private final BufferedImage axe0, axe1, axe2, axe3;
+    private final BufferedImage hammer0, hammer1, hammer2, hammer3, hammerUpLeft;
     private final BufferedImage bomb, bombOff, bombOn, bombExplode;
     private final BufferedImage fire0, fire1, fire2;
     private final BufferedImage selectIcon;
@@ -55,10 +55,11 @@ public class ImageLoader {
         this.bombExplode = loadImage("/boss/Bomb/bomb4.png");
         this.revealedCheckPoint = loadImage("/check-point.png");
         BufferedImage sprite = loadImage("/sprite.png");
-        this.axe0 = loadImage("/axe0.png");
-        this.axe1 = loadImage("/axe1.png");
-        this.axe2 = loadImage("/axe2.png");
-        this.axe3 = loadImage("/axe3.png");
+        this.hammer0 = loadImage("/hammer-0.png");
+        this.hammer1 = loadImage("/hammer-1.png");
+        this.hammer2 = loadImage("/hammer-2.png");
+        this.hammer3 = loadImage("/hammer-3.png");
+        this.hammerUpLeft = loadImage("/hammer-up-left.png");
         this.fire0 = loadImage("/fire-0.png");
         this.fire1 = loadImage("/fire-1.png");
         this.fire2 = loadImage("/fire-2.png");
@@ -399,22 +400,22 @@ public class ImageLoader {
         return icon;
     }
 
-    public BufferedImage[] axeFrames() {
-        BufferedImage[] axeFrames = new BufferedImage[4];
-        axeFrames[0] = axe0;
-        axeFrames[1] = axe1;
-        axeFrames[2] = axe2;
-        axeFrames[3] = axe3;
+    public BufferedImage[] hammerFrames() {
+        BufferedImage[] hammerFrames = new BufferedImage[4];
+        hammerFrames[0] = hammer0;
+        hammerFrames[1] = hammer1;
+        hammerFrames[2] = hammer2;
+        hammerFrames[3] = hammer3;
 
-        return axeFrames;
+        return hammerFrames;
     }
 
-    public BufferedImage getAxeUpRight() {
-        return axe0;
+    public BufferedImage getHammerUpRight() {
+        return hammer0;
     }
 
-    public BufferedImage getAxeUpLeft() {
-        return axe3;
+    public BufferedImage getHammerUpLeft() {
+        return hammerUpLeft;
     }
 
     public BufferedImage getShell() {

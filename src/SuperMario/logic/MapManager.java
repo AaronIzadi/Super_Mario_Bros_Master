@@ -199,17 +199,17 @@ public class MapManager implements MapCollisionCallbacks {
         }
     }
 
-    void activateAxe() {
-        if (getHero().getAxe() == null) {
-            map.removeAxe();
+    void activateHammer() {
+        if (getHero().getHammer() == null) {
+            map.removeHammer();
         }
 
-        if (map.getAxe() == null) {
-            HeroLogic.activateAxe(getHero());
+        if (map.getHammer() == null) {
+            HeroLogic.activateHammer(getHero());
             Map currentMap = stateManager.getGameState() == GameState.RUNNING ? map : crossover;
-            if (getHero().getAxe() != null) {
-                getHero().setAxeActivated(true);
-                currentMap.addAxe(getHero().getAxe());
+            if (getHero().getHammer() != null) {
+                getHero().setHammerActivated(true);
+                currentMap.addHammer(getHero().getHammer());
             }
         }
     }
@@ -226,9 +226,9 @@ public class MapManager implements MapCollisionCallbacks {
         return false;
     }
 
-    void throwAxe() {
-        if (getHero().isAxeActivated()) {
-            HeroLogic.throwAxe(getHero());
+    void throwHammer() {
+        if (getHero().isHammerActivated()) {
+            HeroLogic.throwHammer(getHero());
         }
     }
 
